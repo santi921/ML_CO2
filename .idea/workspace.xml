@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0443935f-faae-46b4-9fcb-38fc5a359c1b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/atomref.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/quinones.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/0.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/1.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/11.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/12.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/13.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/14.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/15.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/16.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/17.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/18.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/2.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/22.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/24.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/36.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/37.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/38.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/39.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/4.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/40.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/41.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/42.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/43.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/44.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/45.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/46.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/47.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/48.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/49.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/5.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/50.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/51.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/52.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/53.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/54.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/56.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/57.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/58.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/59.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/60.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/61.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/62.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/63.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/64.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/65.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/66.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/67.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/68.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/69.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/70.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/71.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/72.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/73.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/74.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/75.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/76.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/77.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/78.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A01.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A02.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A03.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A04.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A05.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A06.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A07.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A08.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A09.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A10.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A11.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A12.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A14.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A14B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A15.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A15B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A16.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A16B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A17.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A17B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A18.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A18B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A19.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A19B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A20.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/A20B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B01.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B03.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B04.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B05.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B06.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B07.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B08.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B08B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_CH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_NH2.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_NHCOCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_OCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_OH.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B09_Ph.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B10.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B10B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B11.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B11B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B13.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B13B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B14.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B14B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B15.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/B15B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C01.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C02.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C03.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C03B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C04.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C04B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C05.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/C05B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D01.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D02.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D03.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_CH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_NH2.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_NHCOCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_OCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_OH.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D04_Ph.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_CH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_NH2.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_NHCOCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_OCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_OH.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D05_Ph.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D06.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D06B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D07.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/D07B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E01.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E02.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E03.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E04.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_CH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_NH2.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_NHCOCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_OCH3.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_OH.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E05_Ph.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E06.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E06B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E07.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/sdf/E07B.sdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/0.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/1.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/11.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/12.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/13.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/14.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/15.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/16.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/17.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/18.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/2.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/22.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/24.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/36.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/37.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/38.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/39.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/4.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/40.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/41.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/42.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/43.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/44.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/45.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/46.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/47.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/48.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/49.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/5.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/50.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/51.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/52.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/53.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/54.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/56.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/57.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/58.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/59.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/60.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/61.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/62.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/63.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/64.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/65.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/66.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/67.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/68.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/69.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/70.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/71.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/72.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/73.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/74.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/75.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/76.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/77.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/78.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A01.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A02.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A03.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A04.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A05.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A06.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A07.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A08.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A09.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A10.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A11.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A12.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A14.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A14B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A15.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A15B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A16.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A16B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A17.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A17B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A18.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A18B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A19.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A19B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A20.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/A20B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B01.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B03.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B04.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B05.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B06.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B07.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B08.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B08B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_CH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_NH2.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_NHCOCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_OCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_OH.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B09_Ph.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B10.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B10B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B11.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B11B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B13.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B13B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B14.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B14B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B15.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/B15B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C01.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C02.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C03.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C03B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C04.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C04B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C05.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/C05B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D01.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D02.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D03.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_CH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_NH2.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_NHCOCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_OCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_OH.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D04_Ph.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_CH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_NH2.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_NHCOCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_OCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_OH.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D05_Ph.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D06.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D06B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D07.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/D07B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E01.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E02.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E03.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E04.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_CH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_NH2.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_NHCOCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_OCH3.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_OH.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E05_Ph.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E06.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E06B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E07.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/xyz/E07B.xyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/.ipynb_checkpoints/Method_Test-checkpoint.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/Method_Test.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/descriptor_calc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/helpers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/molsimplify.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/selfies.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/temp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/acetate.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/acetate.xyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/chiral_stereo_test.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/chiral_stereo_test.xyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/ethane.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/ethane.xyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/propylbenzene.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/propylbenzene.xyz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/requirements.yml" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/requirements.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/xyz2mol/xyz2mol.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/xyz2mol.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1b6jWDTMwMOZEPXDKY5S2r4eJ7u" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="run.code.analysis.last.selected.profile" value="aDefault" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0443935f-faae-46b4-9fcb-38fc5a359c1b" name="Default Changelist" comment="" />
+      <created>1587959467105</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587959467105</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="0" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588409245828">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="0" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1588409245828" />
+    <state x="221" y="357" width="507" height="407" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1588409573383">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="221" y="357" width="507" height="407" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1588409573383" />
+    <state x="724" y="357" width="461" height="504" key="#com.intellij.tools.ToolEditorDialog" timestamp="1588131441726">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="724" y="357" width="461" height="504" key="#com.intellij.tools.ToolEditorDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1588131441726" />
+    <state x="704" y="408" width="502" height="296" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1587960544409">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="704" y="408" width="502" height="296" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1587960544409" />
+    <state x="297" y="173" width="442" height="519" key="FileChooserDialogImpl" timestamp="1588131471950">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="297" y="173" width="442" height="519" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1588131471950" />
+    <state x="369" y="352" width="1162" height="417" key="FileDocumentManager.FileCacheConflict" timestamp="1587960552140">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="369" y="352" width="1162" height="417" key="FileDocumentManager.FileCacheConflict/0.27.1920.1053@0.27.1920.1053" timestamp="1587960552140" />
+    <state x="27" y="61" width="992" height="737" key="SettingsEditor" timestamp="1588409471573">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="27" y="61" width="992" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1588409471573" />
+    <state x="1165" y="468" width="540" height="178" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1588327085184">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="1165" y="468" width="540" height="178" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1588327085184" />
+  </component>
+</project>
