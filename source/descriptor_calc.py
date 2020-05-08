@@ -61,8 +61,5 @@ plt.legend()
 plt.show()
 
 # tonight
-# Todo: encode using vae - guzik vae
-# todo: encode via selfies.py
-# todo: design our descriptors - pending our meeting, generate later
 # todo: train our own VAEs? use ZZ and daniel's database
 # todo: lasso\pca to select features

@@ -1,9 +1,7 @@
 
 
 import glob
-import os
-import sys
-
+import numpy as np
 from molSimplify.Classes.mol3D import *
 from molSimplify.Informatics.autocorrelation import *
 from molSimplify.Informatics.graph_analyze import *
@@ -11,42 +9,96 @@ from molSimplify.Informatics.misc_descriptors import *
 
 
 
+def full_autocorr(dir = "../data/xyz/"):
 
-# check and create new folder
-if not os.path.isdir('qm9_geos/'):
-		os.makedirs('qm9_geos')
+	# begin parsing
+	str_temp = dir + "/*.xyz"
+	target_paths=sorted(glob.glob(str_temp))
+	count = 0
+	max_size = 0
+	list_of_runs = list()
+	smi_dict = dict()
+	auto_corr_mat = []
 
-# begin parsing
-print('starting loop over data, please be patient...')
-target_paths=sorted(glob.glob('../data/xyz/*.xyz'))
-print('found ' + str(len(target_paths)) + ' molecules to read')
+	for geos in target_paths:
 
-count = 0
-max_size = 0
-list_of_runs = list()
-smi_dict = dict()
-for geos in target_paths:
+		this_mol = mol3D() # mol3D instance
+		this_mol.readfromxyz(geos) # read geo
+		results_auto = generate_full_complex_autocorrelations(this_mol, depth=3, loud=True)
+		auto_corr_mat.append(results_auto["results"])
+
+	auto_corr_mat = np.array(auto_corr_mat)
+	print(auto_corr_mat)
+	return auto_corr_mat
+
+def ligand_autocorr(dir = "../data/xyz/"):
+	# begin parsing
+	str_temp = dir + "/*.xyz"
+	target_paths=sorted(glob.glob(str_temp))
+	count = 0
+	max_size = 0
+	list_of_runs = list()
+	smi_dict = dict()
+	auto_corr_mat = []
+
+	for geos in target_paths:
+
+		this_mol = mol3D() # mol3D instance
+		this_mol.readfromxyz(geos) # read geo
+		#requires metal in the system
+		results_auto = generate_all_ligand_autocorrelations(this_mol, depth=3, loud=True)
+		auto_corr_mat.append(results_auto["results"])
+
+	auto_corr_mat = np.array(auto_corr_mat)
+	return auto_corr_mat
+
+def deltametrics(dir = "../data/xyz/"):
+	# begin parsing
+	str_temp = dir + "/*.xyz"
+	target_paths=sorted(glob.glob(str_temp))
+	count = 0
+	max_size = 0
+	list_of_runs = list()
+	smi_dict = dict()
+	results_delta = []
+	results_delta_all = []
+
+	for geos in target_paths:
 
 		this_mol = mol3D() # mol3D instance
 		this_mol.readfromxyz(geos) # read geo
 
-		results_dictionary = generate_full_complex_autocorrelations(this_mol, depth=3, loud=True)
-		print(results_dictionary["results"])
-		count += 1
-		sys.stdout.write('\r number of molecules read = '+str(count) + "/"+str(len(target_paths)))
-		sys.stdout.flush()
-print('complete!')
+		#if metals present
+		#results_delta = generate_metal_deltametrics(this_mol, loud = "something")
+		results_delta_all = deltametrics(this_mol)
+		print(results_delta["results"])
 
-#functions of note
-#generate_full_complex_autocorrelations
+	results_delta = np.array(results_delta)
+	return results_delta
 
-#def generate_full_complex_autocorrelations(mol, loud,  depth=4, oct=True,flag_name=False, modifier=False,use_dist=False, NumB=False, Zeff=False):
-#generate_multiatom_deltametrics(mol, loud, depth=4, oct=True, flag_name=False, additional_elements=False):
+def metal_deltametrics(dir = "../data/xyz/"):
+	# begin parsing
+	str_temp = dir + "/*.xyz"
+	target_paths=sorted(glob.glob(str_temp))
+	count = 0
+	max_size = 0
+	list_of_runs = list()
+	smi_dict = dict()
+	results_delta = []
+	results_delta_all = []
 
-# guzik uses autocorrelation and deltametric functions
-# MAD3 features
+	for geos in target_paths:
 
+		this_mol = mol3D() # mol3D instance
+		this_mol.readfromxyz(geos) # read geo
 
+		#if metals present
+		#results_delta = generate_metal_deltametrics(this_mol, loud = "something")
+		results_delta_all = deltametrics(this_mol)
+		print(results_delta["results"])
+
+	results_delta = np.array(results_delta)
+	return results_delta
 
 
 
