@@ -1,64 +1,86 @@
 import os
 import numpy as np
-import matplotlib.pyplot as plt
-
+from helpers import xyz_to_smiles
 
 from rdkit.Chem import AllChem, Descriptors, DataStructs
 from rdkit.Chem import Fingerprints, SDMolSupplier, RDKFingerprint
 from rdkit.Avalon import pyAvalonTools
+import rdkit.Chem as rdkit_util
 
-temp = os.popen("ls ../data/sdf/").read()
-temp = str(temp).split()
 
-bit_length = 256
 
-sim_matrix_morgan = []
-sim_matrix_rdk = []
-sim_matrix_aval = []
-sim_matrix_layer = []
+def rd_kit_morgan(dir_sdf = "../data/sdf/"):
 
-baseline = SDMolSupplier("../data/sdf/" + temp[0])
+	temp_str = "ls " + dir_sdf
+	temp = os.popen(temp_str).read()
+	temp = str(temp).split()
+	bit_length = 256
+	sim_matrix_morgan = []
+	baseline = SDMolSupplier("../data/sdf/" + temp[0])
+	for item in temp:
+		suppl = SDMolSupplier("../data/sdf/" + item)
+		#Note: morgan can output vectors as two types
+		fp = AllChem.GetMorganFingerprint(suppl[0], 2)
+		fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 2, nBits=bit_length)
+		sim_matrix_morgan.append(fp_bit)
 
-baseline_morgan = AllChem.GetMorganFingerprintAsBitVect(baseline[0], 2, nBits=bit_length)
-baseline_rdk = AllChem.RDKFingerprint(baseline[0], maxPath=2)
-baseline_aval = pyAvalonTools.GetAvalonFP(baseline[0], 128)
-baseline_layer = AllChem.LayeredFingerprint(baseline[0])
+	sim_matrix_morgan = np.array(sim_matrix_morgan)
+	return sim_matrix_morgan
 
-for item in temp:
-    suppl = SDMolSupplier("../data/sdf/" + item)
 
-    fp = AllChem.GetMorganFingerprint(suppl[0], 2)
+def rd_kit_rd(dir_sdf = "../data/sdf/"):
 
-    fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 2, nBits=bit_length)
-    fp_rdk = AllChem.RDKFingerprint(suppl[0], maxPath=2)
-    fp_aval = pyAvalonTools.GetAvalonFP(suppl[0], 128)
-    fp_layer = AllChem.LayeredFingerprint(suppl[0])
+	temp_str = "ls " + dir_sdf
+	temp = os.popen(temp_str).read()
+	temp = str(temp).split()
 
-    sim_matrix_morgan.append(
-        DataStructs.FingerprintSimilarity(baseline_morgan, fp_bit, metric=DataStructs.TanimotoSimilarity))
-    sim_matrix_rdk.append(
-        DataStructs.FingerprintSimilarity(baseline_rdk, fp_rdk, metric=DataStructs.TanimotoSimilarity))
-    sim_matrix_aval.append(
-        DataStructs.FingerprintSimilarity(baseline_aval, fp_aval, metric=DataStructs.TanimotoSimilarity))
-    sim_matrix_layer.append(
-        DataStructs.FingerprintSimilarity(baseline_layer, fp_layer, metric=DataStructs.TanimotoSimilarity))
+	sim_matrix_rdk = []
+	baseline = SDMolSupplier("../data/sdf/" + temp[0])
+	baseline_rdk = AllChem.RDKFingerprint(baseline[0], maxPath=2)
 
-sim_matrix_morgan = np.array(sim_matrix_morgan)
-sim_matrix_rdk = np.array(sim_matrix_rdk)
-sim_matrix_aval = np.array(sim_matrix_aval)
-sim_matrix_layer = np.array(sim_matrix_layer)
+	for item in temp:
+		suppl = SDMolSupplier("../data/sdf/" + item)
+		fp_rdk = AllChem.RDKFingerprint(suppl[0], maxPath=2)
+		sim_matrix_rdk.append(DataStructs.FingerprintSimilarity(baseline_rdk, fp_rdk, metric=DataStructs.TanimotoSimilarity))
 
-label_morgan = "morgan" + str(bit_length)
-plt.hist(sim_matrix_morgan, label = label_morgan)
-plt.hist(sim_matrix_rdk, label = "rdk2")
-plt.hist(sim_matrix_aval, label = "avalon128")
-plt.hist(sim_matrix_layer, label = "layer")
-print(np.mean(sim_matrix_rdk))
-plt.xlabel("Similarity to Baseline")
-plt.ylabel("Counts")
-plt.title("Different Fingerprinting Methods, Similarity to Baseline")
-plt.legend()
-plt.show()
+	sim_matrix_rdk = np.array(sim_matrix_rdk)
+	return sim_matrix_rdk
+
+
+def rd_kit_aval(dir_sdf = "../data/sdf/"):
+
+	temp_str = "ls " + dir_sdf
+	temp = os.popen(temp_str).read()
+	temp = str(temp).split()
+
+	bit_length = 256
+	sim_matrix_aval = []
+	baseline = SDMolSupplier("../data/sdf/" + temp[0])
+
+	baseline_aval = pyAvalonTools.GetAvalonFP(baseline[0], 128)
+
+	for item in temp:
+		suppl = SDMolSupplier("../data/sdf/" + item)
+		fp_aval = pyAvalonTools.GetAvalonFP(suppl[0], 128)
+		sim_matrix_aval.append(fp_aval)
+	sim_matrix_aval = np.array(sim_matrix_aval)
+	return sim_matrix_aval
+
+
+def rd_kit_morgan(dir_sdf = "../data/sdf/"):
+	temp_str = "ls " + dir_sdf
+	temp = os.popen(temp_str).read()
+	temp = str(temp).split()
+	sim_matrix_layer = []
+
+	for item in temp:
+		suppl = SDMolSupplier("../data/sdf/" + item)
+		fp_layer = AllChem.LayeredFingerprint(suppl[0])
+		sim_matrix_layer.append(fp_layer)
+		sim_matrix_layer = np.array(sim_matrix_layer)
+
+	return sim_matrix_layer
+
 
 # tonight
 # todo: train our own VAEs? use ZZ and daniel's database
