@@ -1,8 +1,6 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-
-
 from rdkit.Chem import AllChem, Descriptors, DataStructs
 from rdkit.Chem import Fingerprints, SDMolSupplier, RDKFingerprint
 from rdkit.Avalon import pyAvalonTools
@@ -59,7 +57,3 @@ plt.ylabel("Counts")
 plt.title("Different Fingerprinting Methods, Similarity to Baseline")
 plt.legend()
 plt.show()
-
-# tonight
-# todo: train our own VAEs? use ZZ and daniel's database
-# todo: lasso\pca to select features
