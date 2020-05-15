@@ -20,17 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0443935f-faae-46b4-9fcb-38fc5a359c1b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/enviro/.chemvae.yml.swp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/descalc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/source/test_files/selfies_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/descriptor_calc.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/test_files/descriptor_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/geomtery_guess.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/geometry_guess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/molsimplify.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/molsimplify_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/outlier_detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/test_files/outlier_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/selfies_scratch.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/selfies_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/vae.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/vae_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/enviro/.molsimp.yml.swp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/enviro/.tf_gpu.yml.swp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/rdkit_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/enviro/.chemvae.yml.swp" beforeDir="false" afterPath="$PROJECT_DIR$/enviro/.chemvae.yml.swp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/test_files/descriptor_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/test_files/descriptor_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/test_files/selfies_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/test_files/selfies_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/xyz2mol/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/xyz2mol/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/LICENSE" afterDir="false" />
