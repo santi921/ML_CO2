@@ -10,12 +10,11 @@ from tensorflow.python.framework import graph_io
 from tensorflow.python.platform import gfile
 
 #working directories for these files
-loc = os.getcwd() + "/geo/ "
+loc = os.getcwd() + "/geo/"
 output_fld  = './'
 output_model_file = 'model.pb'
 temp_str    = "../../dl4chem-geometry/neuralnet_model_best.ckpt.meta"
-temp_data   = "../../dl4chem-geometry/neuralnet_model_best.ckpt.data-00000-of-00001"
-temp_dir    = "../../dl4chem-geometry"
+
 
 def save():
     sess = tf.compat.v1.Session()
@@ -45,15 +44,6 @@ def print_graph_params():
     for i in all_nodes:
         print(i)
 
-def load_retrain():
-    sess = tf.compat.v1.Session()
-    tf.compat.v1.disable_eager_execution()
-    # regenerate as a saver
-    saver = tf.compat.v1.train.import_meta_graph("./geo/model.meta")
-    saver.restore(sess,"./geo/model")
-    for op in tf.compat.v1.get_default_graph().get_operations():
-        print(op.name) # print all the operation nodes' name
-
 def load_graph():
     sess = tf.compat.v1.Session()
     tf.compat.v1.disable_eager_execution()
@@ -71,5 +61,28 @@ def load_graph():
            names.append(t.name)
     print(names)
 
-load_graph()
-#load_retrain()
+def load_tf1( save = False):
+    sess = tf.compat.v1.Session()
+    tf.compat.v1.disable_eager_execution()
+    # regenerate as a saver
+    saver = tf.compat.v1.train.import_meta_graph("./geo/model.meta")
+    saver.restore(sess,"./geo/model")
+
+    if (save == True):
+        saver.save(sess, "saved")
+
+    with gfile.FastGFile("./geo/model.pb", 'rb') as f:
+        graph_def = tf.compat.v1.GraphDef()
+        graph_def.ParseFromString(f.read())
+        sess.graph.as_default()
+        tf.compat.v1.import_graph_def(graph_def, name='')
+        tf.compat.v1.saved_model.load(sess,[tf.compat.v1.saved_model.tag_constants.TRAINING], graph_def)
+
+#def load_tf2():
+#    new = tf.keras.models.load_model(loc)
+#    print(new)
+#    new.fit()
+#    new.summary()
+
+#load_graph()
+load_tf1()

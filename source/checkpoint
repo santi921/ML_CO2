@@ -1,2 +1,2 @@
-model_checkpoint_path: "trial file"
-all_model_checkpoint_paths: "trial file"
+model_checkpoint_path: "saved"
+all_model_checkpoint_paths: "saved"
