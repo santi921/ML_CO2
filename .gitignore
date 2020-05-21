@@ -1,5 +1,9 @@
-.swp
+*.swp
 __pycache__
 xyz2mol
-.xml
-,pyc
+*.xml
+*.pyc
+*.smi
+*.log
+*.xyz
+*.sdf
