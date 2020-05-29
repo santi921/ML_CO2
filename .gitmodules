@@ -1,0 +1,3 @@
+[submodule "source/PersistImages_Chemistry"]
+	path = source/PersistImages_Chemistry
+	url = https://gitlab.com/voglab/PersistentImages_Chemistry

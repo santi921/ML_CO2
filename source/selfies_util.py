@@ -7,14 +7,17 @@ def selfies(dir="../data/xyz/"):
 
     temp = xyz_to_smiles(dir)
     ret = []
+    names = []
 
     for i in temp:
-        selfies_temp = encoder(i)
-        ret.append(selfies_temp)
+        try:
+            selfies_temp = encoder(i)
+            names.append(i)
+            ret.append(selfies_temp)
+        except:
+            print("not encoded")
+
+
     ret = np.array(ret)
+    return names, ret
 
-    return ret
-
-def selfies_train():
-    #todo
-    return
