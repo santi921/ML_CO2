@@ -7,3 +7,13 @@ xyz2mol
 *.log
 *.xyz
 *.sdf
+*.meta
+*model*
+*geo/*
+*__tb/*
+*h5
+*pkl
+*.idea/*
+*ipynb
+*PersistentImages_Chemistry/*
+*PersistImages_Chemistry*

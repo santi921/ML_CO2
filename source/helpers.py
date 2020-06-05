@@ -1,8 +1,8 @@
 import os
+import sys
 import numpy as np
 import pybel
 import time
-import pandas as pd
 from rdkit.Avalon import pyAvalonTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import SDMolSupplier
@@ -16,7 +16,7 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
     morgan = []
     names = []
 
-    for item in temp:
+    for tmp, item in enumerate(temp):
         suppl = SDMolSupplier(dir  + item)
 
         if (bit == True):
@@ -25,6 +25,9 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
                 fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], int(2), nBits=int(bit_length))
                 morgan.append(fp_bit)
                 names.append(item)
+
+                sys.stdout.write("\r/ " % tmp + str(len(temp)))
+                sys.stdout.flush()
             except:
                 pass
         else:
@@ -33,9 +36,14 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
                 morgan.append(fp)
                 names.append(item)
 
+                sys.stdout.write("\r/ " % tmp + str(len(temp)))
+                sys.stdout.flush()
+
             except:
+                print("error")
                 pass
 
+    print(len(morgan))
     morgan = np.array(morgan)
     return names, morgan
 
@@ -47,15 +55,22 @@ def rdk(dir="../data/sdf/DB/"):
     rdk = []
     names = []
 
-    for item in temp:
+    for tmp,item in enumerate(temp):
         suppl = SDMolSupplier(dir + item)
         try:
             fp_rdk = AllChem.RDKFingerprint(suppl[0], maxPath=2)
             rdk.append(fp_rdk)
             names.append(item)
+
+            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.flush()
+
         except:
+            print("error")
             pass
     rdk = np.array(rdk)
+
+    print(len(rdk))
     return names, rdk
 
 
@@ -66,14 +81,21 @@ def aval(dir="../data/sdf/DB/", bit_length=128):
     avalon = []
     names = []
 
-    for item in temp:
+    for tmp,item in enumerate(temp):
         suppl = SDMolSupplier(dir + item)
         try:
             fp_aval = pyAvalonTools.GetAvalonFP(suppl[0], bit_length)
             avalon.append(fp_aval)
             names.append(item)
+
+            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.flush()
+
         except:
+            print("error")
             pass
+
+    print(len(avalon))
     avalon = np.array(avalon)
     return names, avalon
 
@@ -85,13 +107,17 @@ def layer(dir="../data/sdf/DB/"):
     layer = []
     names = []
 
-    for item in temp:
-        suppl = SDMolSupplier("../data/sdf/DB/" + item)
+    for tmp, item in enumerate(temp):
         try:
+            suppl = SDMolSupplier( dir + item)
             fp_layer = AllChem.LayeredFingerprint(suppl[0])
             layer.append(fp_layer)
             names.append(item)
+
+            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.flush()
         except:
+            print("error")
             pass
     layer = np.array(layer)
     return names, layer
@@ -107,9 +133,20 @@ def xyz_to_sdf(dir="../data/xyz/DB/"):
     temp = os.popen(dir_str).read()
     temp = str(temp).split()
 
-    for i in temp:
-        file_str = "python ./xyz2mol/xyz2mol.py " + dir + i + " -o sdf > ../data/sdf/" + i[0:-4] + ".sdf"
-        os.system(file_str)
+    for j,i in enumerate(temp):
+        try:
+            i = i.replace("(","\(").replace(")","\)").replace("[","\[").replace("]","\]")
+            file_str = "python ./xyz2mol/xyz2mol.py " + dir + i + " -o sdf > ../data/sdf/" + i[0:-4] + ".sdf"
+            os.system(file_str)
+
+
+            sys.stdout.write("\r/ " % j + str(len(temp)))
+            sys.stdout.flush()
+
+      
+        except:
+            print("not working")
+
 
 # Input: directory of xyz files
 # Output: returns a list of smiles strings
@@ -119,10 +156,17 @@ def xyz_to_smiles(dir="../data/xyz/DB/"):
     temp = str(temp).split()
     ret_list = []
 
-    for i in temp:
-        mol = next(pybel.readfile("xyz", dir + i))
-        smi = mol.write(format="smi")
-        ret_list.append(smi.split()[0].strip())
+    for j,i in enumerate(temp):
+        try:
+            mol = next(pybel.readfile("xyz", dir + i))
+            smi = mol.write(format="smi")
+            ret_list.append(smi.split()[0].strip())
+
+            sys.stdout.write("\r/ " % j + str(len(temp)))
+            sys.stdout.flush()
+
+        except:
+            break
 
     return ret_list
 
@@ -160,6 +204,7 @@ def smiles_to_xyz( dir="../data/smiles/ZZ/"):
 #xyz_to_sdf("../data/xyz/DB_2/bis-23/")
 #xyz_to_sdf("../data/xyz/DB_2/mono/")
 #xyz_to_sdf("../data/xyz/DB_2/tris/")
+#xyz_to_sdf("../data/xyz/DB2/")
 
 # Convert ZZ's immense db to sdf
 # xyz_to_sdf("../data/xyz/ZZ/3/")

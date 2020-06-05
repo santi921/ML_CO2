@@ -1,15 +1,24 @@
 import numpy as np
 from helpers import xyz_to_smiles
 from selfies import encoder, decoder, selfies_alphabet
+import sys
 
 # worked in python 3
-def selfies(dir="../data/xyz/"):
+def selfies(dir="../data/xyz/DB/"):
 
-    temp = xyz_to_smiles(dir)
     ret = []
     names = []
+    tmp = 0
 
-    for i in temp:
+    print("..........converting xyz to smiles.......")
+    smil = xyz_to_smiles(dir)
+
+    print("complete")
+
+    print("files to describe: " + str(len(ret)) )
+
+    for i in smil:
+
         try:
             selfies_temp = encoder(i)
             names.append(i)
@@ -17,6 +26,9 @@ def selfies(dir="../data/xyz/"):
         except:
             print("not encoded")
 
+        sys.stdout.write("\r/ " % tmp + str(len(smil)))
+        sys.stdout.flush()
+        tmp+=1
 
     ret = np.array(ret)
     return names, ret

@@ -1,30 +1,31 @@
 import rdkit.Chem as rdkit_util
 from helpers import xyz_to_smiles
-from chemvae.vae_utils import *
+import os
 
-#add this to execution: export KERAS_BACKEND=tensorflow
+os.system("export KERAS_BACKEND=tensorflow")
+from chemvae.vae_utils import VAEUtils
+import numpy as np
+
 
 def vae(dir="../data/xyz/"):
-    print("something")
-    temp = xyz_to_smiles(dir)
-    print("import")
-    # here we used the nn derived from the zinc dataset
-    vae = VAEUtils(directory='../data/models/zinc_properties')
+
+    os.system("export KERAS_BACKEND=tensorflow")
     mat_vae = []
     names = []
+    vae = VAEUtils(directory='../data/models/zinc_properties')
+
+    temp = xyz_to_smiles(dir)
+    print("imported smiles")
+    # here we used the nn derived from the zinc dataset
 
     for j,i in enumerate(temp):
-        print("enters loop")
         if (rdkit_util.MolFromSmiles(i) != None):
-            print("enter ")
-            X_1 = vae.smiles_to_hot(i, canonize_smiles=True)
             try:
+                X_1 = vae.smiles_to_hot(i, canonize_smiles=True)
                 Z_1 = vae.encode(X_1)
                 mat_vae.append(Z_1)
                 names.append(i)
-                break
             except:
                 print("not correctly encoded")
-    mat_vae = np.numpy(mat_vae)
     return names, mat_vae
 
