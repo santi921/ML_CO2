@@ -1,7 +1,6 @@
-import pandas as pd
-import numpy as np
 import os
 
+import pandas as pd
 
 
 def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
@@ -22,19 +21,19 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
         if(db[-1] == "l"):
             try:
                 df_reload = pd.read_pickle(dir + db)
-                print(db + " converted: " + str(df_reload.size/2))
+                print(db + " converted: " + str(df_reload.shape[0]))
             except:
-                print(db +" isn't working")
+                print(db + " isn't working")
         else:
             try:
 
                 df_reload2 = pd.read_hdf(dir + db)
-                print(db + " converted: " + str(df_reload2.size/2 ))
+                print(db + " converted: " + str(df_reload2.shape[0]))
             except:
                 print(db + " isn't working")
 
 
-
-#check_file("../data/desc/ZZ/", "../data/sdf/ZZ/")
-#check_file("../data/desc/DB/", "../data/sdf/DB/")
-check_file("../data/desc/DB2/", "../data/sdf/DB2/")
+check_file("../data/desc/ZZ/", "../data/sdf/ZZ/")
+# check_file("../data/desc/test/", "../data/sdf/ZZ/")
+# check_file("../data/desc/DB/", "../data/sdf/DB/")
+# check_file("../data/desc/DB2/", "../data/sdf/DB2/")

@@ -1,15 +1,15 @@
 import os
 import sys
+import time
+
 import numpy as np
 import pybel
-import time
 from rdkit.Avalon import pyAvalonTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import SDMolSupplier
-import multiprocessing.dummy as mp
 
 
-def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
+def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
     ls_dir = "ls " + dir
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
@@ -17,7 +17,7 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
     names = []
 
     for tmp, item in enumerate(temp):
-        suppl = SDMolSupplier(dir  + item)
+        suppl = SDMolSupplier(dir + item)
 
         if (bit == True):
             try:
@@ -26,7 +26,7 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
                 morgan.append(fp_bit)
                 names.append(item)
 
-                sys.stdout.write("\r/ " % tmp + str(len(temp)))
+                sys.stdout.write("\r %s / " % tmp + str(len(temp)))
                 sys.stdout.flush()
             except:
                 pass
@@ -36,7 +36,7 @@ def morgan(bit_length=256, dir = "../data/sdf/DB/", bit=True):
                 morgan.append(fp)
                 names.append(item)
 
-                sys.stdout.write("\r/ " % tmp + str(len(temp)))
+                sys.stdout.write("\r %s / " % tmp + str(len(temp)))
                 sys.stdout.flush()
 
             except:
@@ -62,7 +62,7 @@ def rdk(dir="../data/sdf/DB/"):
             rdk.append(fp_rdk)
             names.append(item)
 
-            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.write("\r %s / " % tmp + str(len(temp)))
             sys.stdout.flush()
 
         except:
@@ -88,7 +88,7 @@ def aval(dir="../data/sdf/DB/", bit_length=128):
             avalon.append(fp_aval)
             names.append(item)
 
-            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.write("\r %s /" % tmp + str(len(temp)))
             sys.stdout.flush()
 
         except:
@@ -114,7 +114,7 @@ def layer(dir="../data/sdf/DB/"):
             layer.append(fp_layer)
             names.append(item)
 
-            sys.stdout.write("\r/ " % tmp + str(len(temp)))
+            sys.stdout.write("\r %s /" % tmp + str(len(temp)))
             sys.stdout.flush()
         except:
             print("error")
@@ -139,8 +139,7 @@ def xyz_to_sdf(dir="../data/xyz/DB/"):
             file_str = "python ./xyz2mol/xyz2mol.py " + dir + i + " -o sdf > ../data/sdf/" + i[0:-4] + ".sdf"
             os.system(file_str)
 
-
-            sys.stdout.write("\r/ " % j + str(len(temp)))
+            sys.stdout.write("\r %s / " % j + str(len(temp)))
             sys.stdout.flush()
 
       
@@ -162,11 +161,11 @@ def xyz_to_smiles(dir="../data/xyz/DB/"):
             smi = mol.write(format="smi")
             ret_list.append(smi.split()[0].strip())
 
-            sys.stdout.write("\r/ " % j + str(len(temp)))
+            sys.stdout.write("\r %s / " % j + str(len(temp)))
             sys.stdout.flush()
 
         except:
-            break
+            pass
 
     return ret_list
 

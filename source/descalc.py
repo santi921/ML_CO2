@@ -1,19 +1,18 @@
-
-
-
 import argparse
-import pandas as pd
-import os
+import math
+
 import numpy as np
+import pandas as pd
+
 
 def write_des(des, dir_temp):
-
-    if( des == "aval" or des == "morg" or des == "layer" or des == "rdkit"):
+    if (des == "aval" or des == "morg" or des == "layer" or des == "rdkit"):
         from helpers import rdk, aval, layer, morgan
         dir = "../data/sdf/" + dir_temp + "/"
 
     else:
         dir = "../data/xyz/" + dir_temp + "/"
+
 
 
     if (des == "aval"):
@@ -59,28 +58,62 @@ def write_des(des, dir_temp):
         print("...........rdk started..........")
         name, mat = rdk(dir)
 
+    if (np.shape(mat)[0] > 70000 and (des == "persist")):
 
-    temp_dict = {"name": name, "mat": mat}
-    df = pd.DataFrame.from_dict(temp_dict, orient="index")
-    df = df.transpose()
+        size = 25000
+        chunks = math.ceil(np.shape(mat)[0] / size)
 
-    #benchmark these two and csv potentially
+        for i in range(chunks):
+            if (i == 0):
 
-    filename = "desc_calc_" + dir_temp + "_" + des
+                temp_array = np.array(mat[0:size * (i + 1)]).astype("float32")
+                temp_dict = {"name": name[0:size * (i + 1)], "mat": temp_array}
+                df = pd.DataFrame.from_dict(temp_dict, orient="index")
+                df = df.transpose()
 
-    repo_dir = os.getcwd()[:-6]
-    df.to_pickle("../data/desc/" + filename + ".pkl")
-    df_reload = pd.read_pickle("../data/desc/" + filename + ".pkl")
-    #print(df_reload.head())
-    df.to_hdf("../data/desc/" + filename + ".h5", key = "df", mode = 'a')
-    df_reload2 = pd.read_hdf("../data/desc/" + filename + ".h5")
-    #print(df_reload2.head())
-    
+            elif (i == chunks - 1):
+                temp_array = np.array(mat[size * i:-1]).astype("float32")
+                temp_dict = {"name": name[size * i:-1], "mat": temp_array}
+                df = pd.DataFrame.from_dict(temp_dict, orient="index")
+                df = df.transpose()
 
-if __name__=="__main__":
+            else:
+                temp_array = np.array(mat[size * i:size * (i + 1)]).astype("float32")
+                temp_dict = {"name": name[size * i:size * (i + 1)], "mat": temp_array}
+                df = pd.DataFrame.from_dict(temp_dict, orient="index")
+                df = df.transpose()
+
+            filename = "desc_calc_" + dir_temp + "_" + des + "_" + str(i)
+            try:
+                # print("suppressed")
+                df.to_pickle("../data/desc/" + filename + ".pkl")
+            except:
+                pass
+
+            try:
+                # print("supressed")
+                df.to_hdf("../data/desc/" + filename + ".h5", key="df", mode='a')
+            except:
+                pass
+
+    else:
+
+        mat = np.array(mat).astype("float32")
+        temp_dict = {"name": name, "mat": mat}
+        df = pd.DataFrame.from_dict(temp_dict, orient="index")
+        df = df.transpose()
+
+        filename = "desc_calc_" + dir_temp + "_" + des
+        df.to_pickle("../data/desc/" + filename + ".pkl")
+        df.to_hdf("../data/desc/" + filename + ".h5", key="df", mode='a')
+        # df_reload = pd.read_pickle("../data/desc/" + filename + ".pkl")
+        # df_reload2 = pd.read_hdf("../data/desc/" + filename + ".h5")
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
     parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
-    parser.add_argument("--dir", action="store", dest="dir",  default="DB",    help="select directory")
+    parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
 
     results = parser.parse_args()
     des = results.desc
