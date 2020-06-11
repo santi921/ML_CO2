@@ -20,7 +20,7 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
     for db in temp:
         if(db[-1] == "l"):
             try:
-                df_reload = pd.read_pickle(dir + db)
+                ,
                 print(db + " converted: " + str(df_reload.shape[0]))
             except:
                 print(db + " isn't working")
@@ -32,8 +32,7 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
             except:
                 print(db + " isn't working")
 
-
-check_file("../data/desc/ZZ/", "../data/sdf/ZZ/")
+# check_file("../data/desc/ZZ/", "../data/sdf/ZZ/")
 # check_file("../data/desc/test/", "../data/sdf/ZZ/")
 # check_file("../data/desc/DB/", "../data/sdf/DB/")
 # check_file("../data/desc/DB2/", "../data/sdf/DB2/")

@@ -1,10 +1,10 @@
+import os
+
 import rdkit.Chem as rdkit_util
 from helpers import xyz_to_smiles
-import os
 
 os.system("export KERAS_BACKEND=tensorflow")
 from chemvae.vae_utils import VAEUtils
-import numpy as np
 
 
 def vae(dir="../data/xyz/"):

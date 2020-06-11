@@ -10,7 +10,7 @@ from rdkit.Chem import SDMolSupplier
 
 
 def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
-    ls_dir = "ls " + dir
+    ls_dir = "ls " + str(dir) + " | sort"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
     morgan = []
@@ -49,7 +49,7 @@ def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
 
 
 def rdk(dir="../data/sdf/DB/"):
-    ls_dir = "ls " + dir
+    ls_dir = "ls " + str(dir) + " | sort"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
     rdk = []
@@ -75,7 +75,7 @@ def rdk(dir="../data/sdf/DB/"):
 
 
 def aval(dir="../data/sdf/DB/", bit_length=128):
-    ls_dir = "ls " + dir
+    ls_dir = "ls " + str(dir) + " | sort"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
     avalon = []
@@ -101,7 +101,7 @@ def aval(dir="../data/sdf/DB/", bit_length=128):
 
 
 def layer(dir="../data/sdf/DB/"):
-    ls_dir = "ls " + dir
+    ls_dir = "ls " + str(dir) + " | sort"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
     layer = []
@@ -129,10 +129,9 @@ def layer(dir="../data/sdf/DB/"):
 # Input: directory of xyz files
 # Output: None, saves SDF type files to and sdf folder for later
 def xyz_to_sdf(dir="../data/xyz/DB/"):
-    dir_str = "ls " + str(dir)
+    dir_str = "ls " + str(dir) + " | sort "
     temp = os.popen(dir_str).read()
     temp = str(temp).split()
-
     for j,i in enumerate(temp):
         try:
             i = i.replace("(","\(").replace(")","\)").replace("[","\[").replace("]","\]")
@@ -147,15 +146,16 @@ def xyz_to_sdf(dir="../data/xyz/DB/"):
             print("not working")
 
 
+
 # Input: directory of xyz files
 # Output: returns a list of smiles strings
-def xyz_to_smiles(dir="../data/xyz/DB/"):
-    dir_str = "ls " + str(dir)
+def xyz_to_smiles(dir="../data/xyz/DB2/"):
+    dir_str = "ls " + str(dir) + " | sort -d "
     temp = os.popen(dir_str).read()
     temp = str(temp).split()
     ret_list = []
 
-    for j,i in enumerate(temp):
+    for j, i in enumerate(temp):
         try:
             mol = next(pybel.readfile("xyz", dir + i))
             smi = mol.write(format="smi")
@@ -166,7 +166,7 @@ def xyz_to_smiles(dir="../data/xyz/DB/"):
 
         except:
             pass
-
+    # print(ret_list[0:4])
     return ret_list
 
 
@@ -179,7 +179,7 @@ def smi_split(file=""):
 
 # converts a log files of smiles strings to a pandas db of xyz
 def smiles_to_xyz( dir="../data/smiles/ZZ/"):
-    dir_str = "ls " + str(dir)
+    dir_str = "ls " + str(dir) + " | sort"
     temp = os.popen(dir_str).read()
     temp = str(temp).split()
     t = []
@@ -202,8 +202,8 @@ def smiles_to_xyz( dir="../data/smiles/ZZ/"):
 #xyz_to_sdf("../data/xyz/DB_2/bis-26/")
 #xyz_to_sdf("../data/xyz/DB_2/bis-23/")
 #xyz_to_sdf("../data/xyz/DB_2/mono/")
-#xyz_to_sdf("../data/xyz/DB_2/tris/")
-#xyz_to_sdf("../data/xyz/DB2/")
+# xyz_to_sdf("../data/xyz/DB_2/tris/")
+# xyz_to_sdf("../data/xyz/DB2/")
 
 # Convert ZZ's immense db to sdf
 # xyz_to_sdf("../data/xyz/ZZ/3/")
@@ -212,3 +212,5 @@ def smiles_to_xyz( dir="../data/smiles/ZZ/"):
 # xyz_to_sdf("../data/xyz/ZZ/56/")
 # xyz_to_sdf("../data/xyz/ZZ/78/")
 # xyz_to_sdf("../data/xyz/ZZ/9/")
+xyz_to_sdf("../data/xyz/DB2/")
+#xyz_to_smiles("../data/xyz/DB2/")

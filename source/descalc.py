@@ -97,8 +97,9 @@ def write_des(des, dir_temp):
                 pass
 
     else:
+        if (des != "self"):
+            mat = np.array(mat).astype("float32")
 
-        mat = np.array(mat).astype("float32")
         temp_dict = {"name": name, "mat": mat}
         df = pd.DataFrame.from_dict(temp_dict, orient="index")
         df = df.transpose()
@@ -124,24 +125,25 @@ if __name__ == "__main__":
     if(des == "all"):
         #first env
         print("......rdk started.....")
-        write_des("rdk", dir_temp)
+        write_des("rdkit", dir_temp)
         print("......aval started.....")
         write_des("aval", dir_temp)
         print("......morgan started.....")
         write_des("morg", dir_temp)
         print("......layer started.....")
         write_des("layer", dir_temp)
+
         print("......persistent images started.....")
         write_des("persist", dir_temp)
-        print("......autocorrelation started.....")
-        write_des("auto", dir_temp)
-        print("......SELFIES started.....")
-        write_des("self", dir_temp)
+        # print("......autocorrelation started.....")
 
+        # write_des("auto", dir_temp)
+        # print("......SELFIES started.....")
+        # write_des("self", dir_temp)
         # honestly vae kinda sucks
-        #os.system("conda activate py35")
-        #os.system("export KERAS_BACKEND=tensorflow")
-        #write_des("vae", dir_temp)
+        # os.system("conda activate py35")
+        # os.system("export KERAS_BACKEND=tensorflow")
+        # write_des("vae", dir_temp)
 
     else:
         write_des(des, dir_temp)

@@ -5,7 +5,7 @@ from Element_PI import VariancePersistv1
 
 
 def persistent(dir="../data/xyz/", pixelsx=150, pixelsy=150, spread=0.28, Max=2.5):
-    ls_dir = "ls " + dir
+    ls_dir = "ls " + str(dir) + " | sort -d"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
     persist = []

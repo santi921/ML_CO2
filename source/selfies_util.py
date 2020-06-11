@@ -12,10 +12,9 @@ def selfies(dir="../data/xyz/DB/"):
 
     print("..........converting xyz to smiles.......")
     smil = xyz_to_smiles(dir)
+    print("\n complete")
 
-    print("complete")
-
-    print("files to describe: " + str(len(ret)) )
+    print("files to describe: " + str(len(smil)))
 
     for tmp, i in enumerate(smil):
 
@@ -26,7 +25,7 @@ def selfies(dir="../data/xyz/DB/"):
         except:
             print("not encoded")
 
-        sys.stdout.write("\r/ " % tmp + str(len(smil)))
+        sys.stdout.write("\r %s " % tmp + str(len(smil)))
         sys.stdout.flush()
 
     ret = np.array(ret)
