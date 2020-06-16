@@ -212,5 +212,5 @@ def smiles_to_xyz( dir="../data/smiles/ZZ/"):
 # xyz_to_sdf("../data/xyz/ZZ/56/")
 # xyz_to_sdf("../data/xyz/ZZ/78/")
 # xyz_to_sdf("../data/xyz/ZZ/9/")
-xyz_to_sdf("../data/xyz/DB2/")
-#xyz_to_smiles("../data/xyz/DB2/")
+# xyz_to_sdf("../data/xyz/DB2/")
+# xyz_to_smiles("../data/xyz/DB2/")

@@ -14,6 +14,7 @@ def write_des(des, dir_temp):
         dir = "../data/xyz/" + dir_temp + "/"
 
 
+    print(dir)
 
     if (des == "aval"):
         print("...........aval started..........")
@@ -120,7 +121,7 @@ if __name__ == "__main__":
     des = results.desc
     print("parser parsed")
     dir_temp = results.dir
-    print("pulled directory")
+    print("pulled director: " + dir_temp)
 
     if(des == "all"):
         #first env
