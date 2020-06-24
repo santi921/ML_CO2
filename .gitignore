@@ -14,6 +14,6 @@ xyz2mol
 *h5
 *pkl
 *.idea/*
-*ipynb
 *PersistentImages_Chemistry/*
 *PersistImages_Chemistry*
+*.ipynb_checkpoints
