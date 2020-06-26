@@ -2,15 +2,10 @@ from ripser import Rips
 from ripser import ripser
 rips = Rips()
 from sklearn.base import TransformerMixin
-import numpy as np
 import collections
-from itertools import product
-import collections
-import pandas as pd
 import numpy as np
 from scipy.stats import multivariate_normal as mvn
 from scipy.stats import norm
-import scipy.spatial as spatial
 import matplotlib.pyplot as plt
 
 
@@ -61,8 +56,6 @@ class PersImage(TransformerMixin):
         TODO: Implement this feature.
         Determine which type of weighting function used, or pass in custom weighting function.
         Currently only implements linear weighting.
-
-
     Usage
     ------
 
