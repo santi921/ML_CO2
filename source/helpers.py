@@ -154,20 +154,20 @@ def xyz_to_smiles(dir="../data/xyz/DB2/"):
     temp = os.popen(dir_str).read()
     temp = str(temp).split()
     ret_list = []
-
+    names = []
     for j, i in enumerate(temp):
         try:
             mol = next(pybel.readfile("xyz", dir + i))
             smi = mol.write(format="smi")
             ret_list.append(smi.split()[0].strip())
-
+            names.append(i)
             sys.stdout.write("\r %s / " % j + str(len(temp)))
             sys.stdout.flush()
 
         except:
             pass
     # print(ret_list[0:4])
-    return ret_list
+    return names, ret_list
 
 
 #splits a single large smi file into many smaller ones

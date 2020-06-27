@@ -153,9 +153,9 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
         print(str)
-
         df = pd.read_pickle(str)
         pkl = 1
+
     except:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
         df = pd.read_hdf(str)
@@ -164,7 +164,7 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     df["HOMO"] = ""
     df["HOMO-1"] = ""
     df["diff"] = ""
-
+    print(df.head())
     list_to_sort = []
     with open("../data/benzoquinone_DB/DATA_copy") as fp:
         line = fp.readline()
@@ -175,7 +175,20 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
 
     for i in range(df.copy().shape[0]):
         for j in list_to_sort:
+
+            # print(df["name"].iloc[i][:-4])
+            # print(j.split(":")[0])
+            if (desc == "auto"):
+                if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
+                    temp1 = float(j.split(":")[1])
+                    temp2 = float(j.split(":")[2])
+                    df["HOMO"].loc[i] = float(j.split(":")[1])
+                    df["HOMO-1"].loc[i] = float(j.split(":")[2])
+                    df["diff"].loc[i] = temp2 - temp1
+                    print(temp2 - temp1)
+
             if (df["name"].iloc[i][:-4] in j.split(";")[0]):
+                print("here")
                 temp1 = float(j.split(":")[1])
                 temp2 = float(j.split(":")[2])
 
@@ -219,6 +232,7 @@ def process_input_ZZ(dir="ZZ", desc="rdkit"):
             # print(j.split(":")[0])
             # print(df["name"].iloc[i][:-4])
             # if ( df["name"].iloc[i][:-4] == j.split(";")[0] ):
+
             if (df["name"].iloc[i][:-4] in j.split(";")[0]):
                 df["HOMO"][i] = j.split(":")[1]
                 df["HOMO-1"][i] = j.split(":")[2]
@@ -235,19 +249,20 @@ def calc(dir="DB2", desc="rdkit"):
     try:
         # process_input_DB2()
         print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
-    except:
-        # process_input_DB2()
-        print("done processing dataframe")
         str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
+
+    except:
+        # process_input_DB2()
+        print("done processing dataframe")
+        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
+        df = pd.read_pickle(str)
+        pkl = 1
+
     print(df.head())
 
     mat = df["mat"].to_numpy()
-
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
     diff = df["diff"].to_numpy()
@@ -261,6 +276,11 @@ def calc(dir="DB2", desc="rdkit"):
     # kernel(mat,diff)
     # gaussian(mat,diff)
 
+
+# process_input_DB2(desc = "auto")
+process_input_DB2(desc="auto")
+
+# calc()
 
 '''
 

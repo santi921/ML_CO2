@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import rdkit.Chem as rdkit_util
 from helpers import xyz_to_smiles
 
@@ -14,7 +15,7 @@ def vae(dir="../data/xyz/"):
     names = []
     vae = VAEUtils(directory='../data/models/zinc_properties')
 
-    temp = xyz_to_smiles(dir)
+    name_list, temp = xyz_to_smiles(dir)
     print("imported smiles")
     # here we used the nn derived from the zinc dataset
 
@@ -23,9 +24,10 @@ def vae(dir="../data/xyz/"):
             try:
                 X_1 = vae.smiles_to_hot(i, canonize_smiles=True)
                 Z_1 = vae.encode(X_1)
-                mat_vae.append(Z_1)
-                names.append(i)
+                mat_vae.append(Z_1.tolist())
+                names.append(name_list[j])
             except:
                 print("not correctly encoded")
+    mat_vae = np.array(mat_vae)
     return names, mat_vae
 

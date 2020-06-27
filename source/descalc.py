@@ -100,11 +100,11 @@ def write_des(des, dir_temp):
     else:
         if (des != "self"):
             mat = np.array(mat).astype("float32")
-
+        mat = list(mat)
         temp_dict = {"name": name, "mat": mat}
         df = pd.DataFrame.from_dict(temp_dict, orient="index")
         df = df.transpose()
-
+        print(df.head())
         filename = "desc_calc_" + dir_temp + "_" + des
         df.to_pickle("../data/desc/" + filename + ".pkl")
         df.to_hdf("../data/desc/" + filename + ".h5", key="df", mode='a')
