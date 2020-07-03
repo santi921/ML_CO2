@@ -141,11 +141,8 @@ def xyz_to_sdf(dir="../data/xyz/DB/"):
             sys.stdout.write("\r %s / " % j + str(len(temp)))
             sys.stdout.flush()
 
-      
         except:
             print("not working")
-
-
 
 # Input: directory of xyz files
 # Output: returns a list of smiles strings

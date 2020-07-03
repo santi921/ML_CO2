@@ -11,7 +11,7 @@ def selfies(dir="../data/xyz/DB/"):
     names = []
 
     print("..........converting xyz to smiles.......")
-    smil = xyz_to_smiles(dir)
+    names, smil = xyz_to_smiles(dir)
     print("\n complete")
 
     print("files to describe: " + str(len(smil)))
@@ -20,7 +20,7 @@ def selfies(dir="../data/xyz/DB/"):
 
         try:
             selfies_temp = encoder(i)
-            names.append(i)
+            names.append(names[tmp])
             ret.append(selfies_temp)
         except:
             print("not encoded")

@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
+from xgboost_util import xgboost
 
 
 def svr(x, y):
@@ -21,7 +22,7 @@ def svr(x, y):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    svr_rbf = SVR(kernel='rbf', C=1, gamma=0.1, epsilon=.1, cache_size=4000)
+    svr_rbf = SVR(kernel='rbf', C=0.001, gamma=0.1, epsilon=.1, cache_size=4000)
 
     est_rbf = make_pipeline(StandardScaler(), svr_rbf)
     t1 = time.time()
@@ -31,7 +32,7 @@ def svr(x, y):
     s1 = svr_rbf.score(list(x_test), y_test)
     print("radial basis svr score:              " + str(s1) + " time: " + str(time_el))
 
-    svr_lin = SVR(kernel='linear', C=1, gamma='auto', cache_size=4000)
+    svr_lin = SVR(kernel='linear', C=0.1, gamma='auto', cache_size=4000)
 
     est_lin = make_pipeline(StandardScaler(), svr_lin)
     t1 = time.time()
@@ -41,7 +42,7 @@ def svr(x, y):
     s2 = svr_lin.score(list(x_test), y_test)
     print("linear svr score:                    " + str(s2) + " time: " + str(time_el))
 
-    svr_poly = SVR(kernel='poly', C=1, gamma='auto', degree=6, epsilon=.1,
+    svr_poly = SVR(kernel='poly', C=100, gamma='auto', degree=6, epsilon=.1,
                    coef0=0.5, cache_size=4000)
     est_poly = make_pipeline(StandardScaler(), svr_poly)
     t1 = time.time()
@@ -70,8 +71,8 @@ def sgd (x,y):
 
 def gradient_boost_reg(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = GradientBoostingRegressor(n_estimators=1000, learning_rate=0.3,
-                                    max_depth=15)
+    reg = GradientBoostingRegressor(n_estimators=5000, learning_rate=0.2, verbose=1,
+                                    max_depth=40)
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -83,7 +84,7 @@ def gradient_boost_reg(x, y):
 
 def random_forest(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = RandomForestRegressor(max_depth=40, min_samples_split=3, n_estimators=4000, n_jobs=8)
+    reg = RandomForestRegressor(max_depth=60, min_samples_split=3, n_estimators=5000, n_jobs=16, verbose=1)
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -136,9 +137,9 @@ def bayesian(x, y):
 def sk_nn(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.0001, learning_rate="adaptive",
-                       early_stopping=True, tol=1e-9, shuffle=True, solver="adam", activation="logistic",
-                       hidden_layer_sizes=(1000, 1000, 1000, 1000, 1000), verbose=True, alpha=0.00001, )
+    reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.00001, learning_rate="adaptive",
+                       early_stopping=True, tol=1e-11, shuffle=True, solver="adam", activation="relu",
+                       hidden_layer_sizes=(1000, 1000,), verbose=True, alpha=0.00001, )
 
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
@@ -188,22 +189,21 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
                     print(temp2 - temp1)
 
             if (df["name"].iloc[i][:-4] in j.split(";")[0]):
-                print("here")
                 temp1 = float(j.split(":")[1])
                 temp2 = float(j.split(":")[2])
+
+                print(j)
 
                 df["HOMO"].loc[i] = float(j.split(":")[1])
                 df["HOMO-1"].loc[i] = float(j.split(":")[2])
                 df["diff"].loc[i] = temp2 - temp1
-                print(temp2 - temp1)
-        # print(df)
     if (pkl == 0):
         df.to_hdf(str, key="df", mode='a')
     else:
         df.to_pickle(str)
 
 
-def process_input_ZZ(dir="ZZ", desc="rdkit"):
+def process_input_ZZ(dir="ZZ", desc="vae"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
         df = pd.read_pickle(str)
@@ -249,39 +249,61 @@ def calc(dir="DB2", desc="rdkit"):
     try:
         # process_input_DB2()
         print("done processing dataframe")
+        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
+        df = pd.read_pickle(str)
+        pkl = 1
+    except:
+        # process_input_DB2()
+        print("done processing dataframe")
         str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
 
-    except:
-        # process_input_DB2()
-        print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
+    # print(df.head())
+    # print(str)
 
-    print(df.head())
-
-    mat = df["mat"].to_numpy()
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
     diff = df["diff"].to_numpy()
 
-    # sgd(mat, diff)
-    # gradient_boost_reg(mat, diff)
+    if (desc == "vae"):
+        temp = df["mat"].tolist()
+        mat = list([i.flatten() for i in temp])
+
+    elif (desc == "auto"):
+        temp = df["mat"].tolist()
+        mat = list([i.flatten() for i in temp])
+    else:
+        mat = df["mat"].to_numpy()
+
+    # sgd(mat, HOMO)
+    # gradient_boost_reg(mat, HOMO)
     # svr(mat, diff)
-    # random_forest(mat,diff)
+    # random_forest(mat,HOMO)
     # sk_nn(mat,HOMO)
+    print("Using " + desc + " as the descriptor")
+    # xgboost(mat,HOMO_1)
+    xgboost(mat, HOMO)
+    # xgboost(mat,diff)
+
     # bayesian(mat,diff)
     # kernel(mat,diff)
     # gaussian(mat,diff)
 
 
 # process_input_DB2(desc = "auto")
-process_input_DB2(desc="auto")
+# process_input_DB2(dir = "DB2",  desc="vae")
 
-# calc()
+calc(desc="vae")
+calc(desc="auto")
+calc(desc="persist")
+calc(desc="aval")
+calc(desc="layer")
+calc(desc="morg")
+calc(desc="rdkit")
 
+# morgan and layer were the best
+# potentially try wider morgan or layer
 '''
 
 with open("../data/benzoquinone_DB/DATA_copy") as fp:
