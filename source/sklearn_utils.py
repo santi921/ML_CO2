@@ -62,6 +62,7 @@ def sgd (x,y):
                        validation_fraction=0.2, learning_rate='invscaling')
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
+
     est.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
