@@ -1,0 +1,490 @@
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.789, total= 1.3min
+[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed:  1.3min remaining:    0.0s
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed:  2.6min remaining:    0.0s
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed:  3.9min remaining:    0.0s
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed:  5.2min remaining:    0.0s
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.789, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.789, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.782, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.768, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.746, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.782, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.768, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.746, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.782, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.764, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.768, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.746, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.777, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.737, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.761, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.758, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.778, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.737, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.761, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.758, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.778, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.737, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.761, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.758, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.760, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.741, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.744, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.760, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.741, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.771, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.744, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.760, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.741, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.773, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.773, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.773, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.740, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.762, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.762, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.762, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.751, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.754, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.1, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.759, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.759, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.759, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.723, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.736, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.723, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.736, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.750, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.723, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.736, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.745, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.718, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.710, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.745, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.718, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.710, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.745, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.718, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.733, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.2, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.710, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.721, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.721, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.738, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.721, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.713, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.735, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.713, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.735, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.713, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.735, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.729, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.732, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.725, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.699, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.732, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.725, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.699, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.732, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.725, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.731, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.05, lambda=0.3, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.699, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.728, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.728, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.743, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.728, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.707, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.700, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.720, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.703, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.700, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.720, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.703, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.739, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.700, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.720, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.724, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.2, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.703, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.696, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.716, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.714, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.696, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.716, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.714, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.742, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.696, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.716, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.714, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.05, learning_rate=0.3, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.697, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.689, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.697, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=40, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.689, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.722, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.694, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.697, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.709, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.1, max_depth=50, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.689, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.719, total= 1.2min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+[CV]  alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist, score=0.687, total= 1.3min
+[CV] alpha=0.5, colsample_bytree=0.1, gamma=0.1, lambda=0.1, learning_rate=0.2, max_depth=10, n_estimators=4000, n_jobs=8, objective=reg:squarederror, tree_method=gpu_hist 
+^Z

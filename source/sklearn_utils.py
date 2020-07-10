@@ -71,8 +71,8 @@ def sgd (x,y):
 
 def gradient_boost_reg(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = GradientBoostingRegressor(n_estimators=5000, learning_rate=0.2, verbose=1,
-                                    max_depth=40)
+    reg = GradientBoostingRegressor(n_estimators=2000, learning_rate=0.2, verbose=False,
+                                    max_depth=30)
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -84,7 +84,7 @@ def gradient_boost_reg(x, y):
 
 def random_forest(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = RandomForestRegressor(max_depth=60, min_samples_split=3, n_estimators=5000, n_jobs=16, verbose=1)
+    reg = RandomForestRegressor(max_depth=30, min_samples_split=3, n_estimators=5000, n_jobs=16, verbose=False)
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -139,7 +139,7 @@ def sk_nn(x, y):
 
     reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.00001, learning_rate="adaptive",
                        early_stopping=True, tol=1e-11, shuffle=True, solver="adam", activation="relu",
-                       hidden_layer_sizes=(1000, 1000,), verbose=True, alpha=0.00001, )
+                       hidden_layer_sizes=(1000, 1000,), verbose=False, alpha=0.00001, )
 
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
@@ -277,12 +277,12 @@ def calc(dir="DB2", desc="rdkit"):
         mat = df["mat"].to_numpy()
 
     # sgd(mat, HOMO)
-    # gradient_boost_reg(mat, HOMO)
     # svr(mat, diff)
+
     # random_forest(mat,HOMO)
     # sk_nn(mat,HOMO)
     print("Using " + desc + " as the descriptor")
-    # xgboost(mat,HOMO_1)
+    # gradient_boost_reg(mat, HOMO)
     xgboost(mat, HOMO)
     # xgboost(mat,diff)
 
@@ -292,15 +292,15 @@ def calc(dir="DB2", desc="rdkit"):
 
 
 # process_input_DB2(desc = "auto")
-# process_input_DB2(dir = "DB2",  desc="vae")
+# process_input_DB2(dir = "DB2",  desc="persist")
 
 calc(desc="vae")
-calc(desc="auto")
-calc(desc="persist")
+# calc(desc="auto")
+# calc(desc="persist")
 calc(desc="aval")
 calc(desc="layer")
-calc(desc="morg")
-calc(desc="rdkit")
+# calc(desc="morg")
+# calc(desc="rdkit")
 
 # morgan and layer were the best
 # potentially try wider morgan or layer
