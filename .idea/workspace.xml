@@ -19,22 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0443935f-faae-46b4-9fcb-38fc5a359c1b" name="Default Changelist" comment="">
+    <list default="true" id="0443935f-faae-46b4-9fcb-38fc5a359c1b" name="Default Changelist" comment="sklearn utilities, blocks added for all sk. algos.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.github/workflows/pythonapp.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/acetate.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/acetate.xyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/chiral_stereo_test.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/chiral_stereo_test.xyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/ethane.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/ethane.xyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/examples/propylbenzene.xyz" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/examples/propylbenzene.xyz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/requirements.yml" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/requirements.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/xyz2mol/xyz2mol.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/xyz2mol/xyz2mol.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +50,8 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/source" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
   </component>
@@ -115,6 +102,14 @@
       <option name="presentableId" value="Default" />
       <updated>1587959467105</updated>
     </task>
+    <task id="LOCAL-00001" summary="sklearn utilities, blocks added for all sk. algos.">
+      <created>1596340027428</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1596340027428</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -131,6 +126,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="sklearn utilities, blocks added for all sk. algos." />
+    <option name="LAST_COMMIT_MESSAGE" value="sklearn utilities, blocks added for all sk. algos." />
   </component>
   <component name="WindowStateProjectService">
     <state x="0" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588409245828">
@@ -141,10 +138,6 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="221" y="357" width="507" height="407" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1588409573383" />
-    <state x="1475" y="483" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590029691624">
-      <screen x="0" y="27" width="3440" height="1413" />
-    </state>
-    <state x="1475" y="483" width="524" height="508" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.27.3440.1413@0.27.3440.1413" timestamp="1590029691624" />
     <state x="724" y="357" width="461" height="504" key="#com.intellij.tools.ToolEditorDialog" timestamp="1588131441726">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -154,11 +147,15 @@
     </state>
     <state x="704" y="408" width="502" height="296" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1587960544409" />
     <state x="1261" y="538" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.3440.1413@0.27.3440.1413" timestamp="1589535266779" />
-    <state x="532" y="223" width="424" height="491" key="FileChooserDialogImpl" timestamp="1590379774919">
+    <state x="429" y="47" width="1052" height="1020" key="CommitChangelistDialog2" timestamp="1596340050576">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="429" y="47" width="1052" height="1020" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1596340050576" />
+    <state x="532" y="223" width="424" height="491" key="FileChooserDialogImpl" timestamp="1589425484243">
       <screen x="0" y="27" width="3440" height="1413" />
     </state>
     <state x="297" y="173" width="442" height="519" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1588131471950" />
-    <state x="532" y="223" width="424" height="491" key="FileChooserDialogImpl/0.27.3440.1413@0.27.3440.1413" timestamp="1590379774919" />
+    <state x="532" y="223" width="424" height="491" key="FileChooserDialogImpl/0.27.3440.1413@0.27.3440.1413" timestamp="1589425484243" />
     <state x="369" y="352" width="1162" height="417" key="FileDocumentManager.FileCacheConflict" timestamp="1587960552140">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -200,10 +197,6 @@
     </state>
     <state x="27" y="61" width="992" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1588738808651" />
     <state x="48" y="73" key="SettingsEditor/0.27.3440.1413@0.27.3440.1413" timestamp="1589365654067" />
-    <state x="1863" y="303" width="857" height="806" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1589869156787">
-      <screen x="0" y="27" width="3440" height="1413" />
-    </state>
-    <state x="1863" y="303" width="857" height="806" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.3440.1413@0.27.3440.1413" timestamp="1589869156787" />
     <state x="1153" y="469" width="402" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1588742810929">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
