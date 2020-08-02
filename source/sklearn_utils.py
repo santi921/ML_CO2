@@ -1,79 +1,308 @@
 import time
-
 import numpy as np
-import pandas as pd
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.linear_model import SGDRegressor, BayesianRidge
-from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPRegressor
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from xgboost_util import xgboost
+from sklearn import preprocessing
+from sklearn.pipeline import make_pipeline
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDRegressor, BayesianRidge
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
+def gaussian_grid(x,y):
+
+    params = {"alpha": [1e-10,1e-7,1e-4,1e-1]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    kernel = DotProduct() + WhiteKernel()
+    gaus_reg = GaussianProcessRegressor(kernel=kernel)
+    reg = GridSearchCV(gaus_reg, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def kernel_grid(x,y):
+
+    params = {"kernel":["rbf"],
+              "alpha": [1e-6,1e-4,1e-2,1,2],
+              "gamma": [1e-8,1e-6,1e-4,1e-2,1]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    kernel = KernelRidge()
+    reg = GridSearchCV(kernel, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def bayesian_grid(x,y):
+
+    params = {
+              "n_iter":[ 1000,2000,5000,10000 ],
+              "tol": [1e-3,1e-5,1e-7,1e-9],
+              "alpha_1": [1e-01, 1e-03, 1e-05, 1e-07],
+              "alpha_2": [1e-01, 1e-03, 1e-05, 1e-07],
+              "lambda_1": [1e-01, 1e-03, 1e-05, 1e-07],
+              "lambda_2": [1e-01, 1e-03, 1e-05, 1e-07]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    bayes = BayesianRidge()
+    reg = GridSearchCV(bayes, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def svr_lin_grid(x,y):
+
+    params = {"kernel": ["linear"],
+              "C": [10,1,0.1,0.01,0.001,0.0001],
+              "gamma": [0.1, 0.0001, 0.00001],
+              "cache_size": [500,1000,2000,4000,8000]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    svr_lin = SVR()
+    reg = GridSearchCV(svr_lin, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def svr_poly_grid(x,y):
+    params = {"kernel": ["poly"],
+              "C": [1,0.1,0.01,0.001,0.0001],
+              "gamma": [0.1, 0.0001, 0.00001],
+              "epsilon":[0.01,0.1,1,5,10,20],
+              "degree":[5,7,9,20],
+              "coef0":[0.2,0.4,0.5,0.6,0.8],
+              "cache_size": [500,1000,2000,4000,8000]
+              }
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    svr_poly = SVR()
+    reg = GridSearchCV(svr_poly, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def svr_rbf_grid(x,y):
+
+    params = {"kernel": ["rbf"],
+              "C": [10,1,0.1,0.01,0.001,0.0001],
+              "gamma": [0.1, 0.0001, 0.00001],
+              "epsilon":[0.01,0.1,1,5,10,20],
+              "cache_size": [500,1000,2000,4000,8000]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    svr_rbf = SVR()
+    reg = GridSearchCV(svr_rbf, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
 
 
-def svr(x, y):
-    # change C
-    # scale data
-    # L1/L2 normalization
+def sgd_grid(x, y):
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    params = {"loss": ['squared_loss'],
+              "tol": [0.1, 0.0001, 0.00001],
+              "shuffle":[ True ],
+              "penalty": ["l2"],
+              "l1_ratio": [0.15, 0.20, 0.25],
+              "epsilon": [0.01,0.1,1],
+              "eta0":[0.1,0.01,0.001],
+              "validation_fraction": [0.1]
+              }
+    #"max_iter": [10 ** 5, 10 ** 7, 10 ** 9],
 
-    svr_rbf = SVR(kernel='rbf', C=0.001, gamma=0.1, epsilon=.1, cache_size=4000)
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
 
-    est_rbf = make_pipeline(StandardScaler(), svr_rbf)
-    t1 = time.time()
-    est_rbf.fit(list(x_train), y_train)
-    t2 = time.time()
-    time_el = t2 - t1
-    s1 = svr_rbf.score(list(x_test), y_test)
-    print("radial basis svr score:              " + str(s1) + " time: " + str(time_el))
 
-    svr_lin = SVR(kernel='linear', C=0.1, gamma='auto', cache_size=4000)
+    sgd = SGDRegressor()
+    reg = GridSearchCV(sgd, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
 
-    est_lin = make_pipeline(StandardScaler(), svr_lin)
-    t1 = time.time()
-    est_lin.fit(list(x_train), y_train)
-    t2 = time.time()
-    time_el = t2 - t1
-    s2 = svr_lin.score(list(x_test), y_test)
-    print("linear svr score:                    " + str(s2) + " time: " + str(time_el))
+    print(reg.best_params_)
+    print(reg.best_score_)
+    # print(reg.best)
+def gradient_boost_reg_grid(x, y):
+    params = {"loss": ["ls"],
+              "n_estimators":[2000],
+              "learning_rate": [0.1],
+              "subsample": [0.8],
+              "criterion": ["mse"],
+              "max_depth": [10],
+              "tol": [0.0001]
+              }
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
 
-    svr_poly = SVR(kernel='poly', C=100, gamma='auto', degree=6, epsilon=.1,
-                   coef0=0.5, cache_size=4000)
-    est_poly = make_pipeline(StandardScaler(), svr_poly)
-    t1 = time.time()
-    est_poly.fit(list(x_train), y_train)
-    t2 = time.time()
-    time_el = t2 - t1
-    score = svr_poly.score(list(x_test), y_test)
-    print("polynomial svr score:                " + str(score) + " time: " + str(time_el))
+
+    grad = GradientBoostingRegressor()
+    reg = GridSearchCV(grad, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+
+def random_forest_grid(x,y):
+
+    params = {"max_depth": [10,20, 30, 40],
+              "min_samples_split": [1, 2, 4],
+              "n_jobs": [4],
+              "n_estimators":[500,1000,2000,5000]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    rf_reg = RandomForestRegressor()
+    reg = GridSearchCV(rf_reg, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+def sk_nn_grid(x,y):
+
+    params = {"alpha": [1e-10,1e-7,1e-4,1e-1],
+              "activation":["relu"],
+              "solver": ["adam"],
+              "max_iter":[1e3,1e5,1e7,1e9],
+              "tol":[1e-11,1e-7,1e-5,1e-3,1e-1,1],
+              "learning_rate_init":[0.00001, 0.0001, 0.001, 0.01],
+              "shuffle": [True]
+              }
+
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+
+    nn_reg = MLPRegressor(hidden_layer_sizes=(1000, 1000,))
+    reg = GridSearchCV(nn_reg, params, verbose=6, cv=3)
+    x = scaler.transform(x)
+    reg.fit(list(x), y)
+
+    print(reg.best_params_)
+    print(reg.best_score_)
 
 def sgd (x,y):
-    # requires scaling
-    # loss = squared_loss, huber, epsilon_insensitive
 
-    max = np.ceil(10 ** 7)
+    params = {"loss": 'squared_loss',
+              "max_iter": 10 ** 7,
+              "tol": 0.0000001,
+              "penalty": "l2", "l1_ratio": 0.15,
+              "epsilon": 0.01,
+              "learning_rate": 'invscaling'
+              }
+
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = SGDRegressor(loss='huber', max_iter=max, tol=0.00001, penalty='l2', l1_ratio=0.15, epsilon=0.01,
-                       validation_fraction=0.2, learning_rate='invscaling')
+    reg = SGDRegressor(**params)
+
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
-
     est.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
+
     score = str(est.score(list(x_test), y_test))
     print("stochastic gradient descent score:   " + str(score) + " time: " + str(time_el))
 
-
 def gradient_boost_reg(x, y):
+
+    params = {"loss":"ls",
+                "n_estimators": 2000,
+              "learning_rate": 0.1,
+              "subsample":0.8,
+              "criterion":"mse",
+              "max_depth": 10,
+              "tol":0.0001
+              }
+
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = GradientBoostingRegressor(n_estimators=2000, learning_rate=0.2, verbose=False,
-                                    max_depth=30)
+    reg = GradientBoostingRegressor(**params)
+
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -85,7 +314,15 @@ def gradient_boost_reg(x, y):
 
 def random_forest(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    reg = RandomForestRegressor(max_depth=30, min_samples_split=3, n_estimators=5000, n_jobs=16, verbose=False)
+
+    params = {"max_depth": 30,
+              "min_samples_split": 3,
+              "n_estimators": 5000,
+              "n_jobs": 16, "verbose": False
+              }
+
+    reg = RandomForestRegressor(**params)
+
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
     est.fit(list(x_train), y_train)
@@ -93,7 +330,6 @@ def random_forest(x, y):
     time_el = t2 - t1
     score = est.score(list(x_test), y_test)
     print("random forest score:                 " + str(score) + " time: " + str(time_el))
-
 
 def gaussian(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
@@ -106,7 +342,6 @@ def gaussian(x, y):
     time_el = t2 - t1
     score = est.score(list(x_test), y_test)
     print("gaussian process score:              " + str(score) + " time: " + str(time_el))
-
 
 def kernel(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
@@ -121,9 +356,9 @@ def kernel(x, y):
     score = est.score(list(x_test), y_test)
     print("kernel regression score:             " + str(score) + " time: " + str(time_el))
 
-
 def bayesian(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
     reg = BayesianRidge(n_iter=10000, tol=1e-7, copy_X=True, alpha_1=1e-03, alpha_2=1e-03,
                         lambda_1=1e-03, lambda_2=1e-03)
     est = make_pipeline(StandardScaler(), reg)
@@ -134,13 +369,48 @@ def bayesian(x, y):
     score = est.score(list(x_test), y_test)
     print("bayesian score:                      " + str(score) + " time: " + str(time_el))
 
+def svr(x, y):
+    # change C
+    # scale data
+    # L1/L2 normalization
 
-def sk_nn(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
+    svr_rbf = SVR(kernel='rbf', C=0.001, gamma=0.1, epsilon=.1, cache_size=4000)
+    est_rbf = make_pipeline(StandardScaler(), svr_rbf)
+    svr_lin = SVR(kernel='linear', C=0.1, gamma='auto', cache_size=4000)
+    est_lin = make_pipeline(StandardScaler(), svr_lin)
+    svr_poly = SVR(kernel='poly', C=100, gamma='auto', degree=6, epsilon=.1, coef0=0.5, cache_size=4000)
+    est_poly = make_pipeline(StandardScaler(), svr_poly)
+
+    t1 = time.time()
+    est_rbf.fit(list(x_train), y_train)
+    t2 = time.time()
+    time_rbf = t2 - t1
+    s1 = svr_rbf.score(list(x_test), y_test)
+
+    t1 = time.time()
+    est_lin.fit(list(x_train), y_train)
+    t2 = time.time()
+    time_svr= t2 - t1
+    s2 = svr_lin.score(list(x_test), y_test)
+
+    t1 = time.time()
+    est_poly.fit(list(x_train), y_train)
+    t2 = time.time()
+    time_poly = t2 - t1
+    score = svr_poly.score(list(x_test), y_test)
+
+    print("linear svr score:                    " + str(s2) + " time: " + str(time_rbf))
+    print("radial basis svr score:              " + str(s1) + " time: " + str(time_svr))
+    print("polynomial svr score:                " + str(score) + " time: " + str(time_poly))
+
+def sk_nn(x, y):
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.00001, learning_rate="adaptive",
                        early_stopping=True, tol=1e-11, shuffle=True, solver="adam", activation="relu",
-                       hidden_layer_sizes=(1000, 1000,), verbose=False, alpha=0.00001, )
+                       hidden_layer_sizes=(1000, 1000,), verbose=False, alpha=0.00001)
 
     est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
@@ -149,203 +419,3 @@ def sk_nn(x, y):
     time_el = t2 - t1
     score = est.score(list(x_test), y_test)
     print("Neural Network score:                " + str(score) + " time: " + str(time_el))
-
-
-def process_input_DB2(dir="DB2", desc="rdkit"):
-    try:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
-        print(str)
-        df = pd.read_pickle(str)
-        pkl = 1
-
-    except:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
-
-    df["HOMO"] = ""
-    df["HOMO-1"] = ""
-    df["diff"] = ""
-    print(df.head())
-    list_to_sort = []
-    with open("../data/benzoquinone_DB/DATA_copy") as fp:
-        line = fp.readline()
-        while line:
-            list_to_sort.append(line[0:-2])
-            line = fp.readline()
-    list_to_sort.sort()
-
-    for i in range(df.copy().shape[0]):
-        for j in list_to_sort:
-
-            # print(df["name"].iloc[i][:-4])
-            # print(j.split(":")[0])
-            if (desc == "auto"):
-                if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
-                    temp1 = float(j.split(":")[1])
-                    temp2 = float(j.split(":")[2])
-                    df["HOMO"].loc[i] = float(j.split(":")[1])
-                    df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                    df["diff"].loc[i] = temp2 - temp1
-                    print(temp2 - temp1)
-
-            if (df["name"].iloc[i][:-4] in j.split(";")[0]):
-                temp1 = float(j.split(":")[1])
-                temp2 = float(j.split(":")[2])
-
-                print(j)
-
-                df["HOMO"].loc[i] = float(j.split(":")[1])
-                df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                df["diff"].loc[i] = temp2 - temp1
-    if (pkl == 0):
-        df.to_hdf(str, key="df", mode='a')
-    else:
-        df.to_pickle(str)
-
-
-def process_input_ZZ(dir="ZZ", desc="vae"):
-    try:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
-    except:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
-
-    list_to_sort = []
-    with open("../data/benzoquinone_DB/DATA_copy") as fp:
-        line = fp.readline()
-        while line:
-            list_to_sort.append(line[0:-2])
-            line = fp.readline()
-    list_to_sort.sort()
-    # print(list_to_sort)
-
-    index_search = 0
-    # df.insert(2,"HOMO","")
-    # df.insert(3,"HOMO-1","")
-
-    for i in range(df.shape[0]):
-        # print(type(df["name"].iloc[i][:-4]))
-        for j in list_to_sort:
-            # print(j.split(":")[0])
-            # print(df["name"].iloc[i][:-4])
-            # if ( df["name"].iloc[i][:-4] == j.split(";")[0] ):
-
-            if (df["name"].iloc[i][:-4] in j.split(";")[0]):
-                df["HOMO"][i] = j.split(":")[1]
-                df["HOMO-1"][i] = j.split(":")[2]
-                df["diff"] = df["HOMO"][i] - df["HOMO-1"][i]
-        # print(df)
-    if (pkl == 0):
-        df.to_hdf(str, key="df", mode='a')
-
-    else:
-        df.to_pickle(str)
-
-
-def calc(dir="DB2", desc="rdkit"):
-    try:
-        # process_input_DB2()
-        print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
-    except:
-        # process_input_DB2()
-        print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
-
-    # print(df.head())
-    # print(str)
-
-    HOMO = df["HOMO"].to_numpy()
-    HOMO_1 = df["HOMO-1"].to_numpy()
-    diff = df["diff"].to_numpy()
-
-    if (desc == "vae"):
-        temp = df["mat"].tolist()
-        mat = list([i.flatten() for i in temp])
-
-    elif (desc == "auto"):
-        temp = df["mat"].tolist()
-        mat = list([i.flatten() for i in temp])
-    else:
-        mat = df["mat"].to_numpy()
-
-    # sgd(mat, HOMO)
-    # svr(mat, diff)
-
-    # random_forest(mat,HOMO)
-    # sk_nn(mat,HOMO)
-    print("Using " + desc + " as the descriptor")
-    # gradient_boost_reg(mat, HOMO)
-    xgboost(mat, HOMO)
-    # xgboost(mat,diff)
-
-    # bayesian(mat,diff)
-    # kernel(mat,diff)
-    # gaussian(mat,diff)
-
-
-# process_input_DB2(desc = "auto")
-# process_input_DB2(dir = "DB2",  desc="persist")
-
-calc(desc="vae")
-# calc(desc="auto")
-# calc(desc="persist")
-calc(desc="aval")
-calc(desc="layer")
-# calc(desc="morg")
-# calc(desc="rdkit")
-
-# morgan and layer were the best
-# potentially try wider morgan or layer
-'''
-
-with open("../data/benzoquinone_DB/DATA_copy") as fp:
-    line = fp.readline()
-    while line:
-        list_to_sort.append(line)
-        line = fp.readline()
-
-list_to_sort.sort()
-print(list_to_sort[0:4])
-#print(sorted[0:4])
-'''
-'''
-        if(line.split(":")[0] == df["name"].iloc[index_search][:-4]):
-            #print(line.split(":")[0])
-            print("yeet")
-            #index_search += 1
-        if (index_search < 4):
-            #print(df["mat"].iloc[index_search])
-            print(df["name"].iloc[index_search][:-4])
-            print(line.split(":")[0])
-            index_search+=1
-            #if (line.split(":")[0][0] != " " and line.split(":")[0][0] != "-"):
-
-        line = fp.readline()
-
-'''
-
-# process_input_DB2(dir = "DB2", desc="aval")
-# calc()
-
-'''
-df_reload = pd.read_pickle("../data/desc/DB/desc_calc_DB_aval.pkl")
-df_y = pd.read_excel("../data/quinones_for_Santiago.xlsx")
-x_aval = df_reload["mat"].values
-y_lnk_biradical = df_y["lnK_biradical"].values
-y_rad_HOMO = df_y["radical HOMO"].values
-y_birad_HOMO = df_y["biradical HOMO"].values
-y_CO2_HOMO = df_y["biradical_CO2 HOMO"].values
-sgd(x_aval, y_lnk_biradical)
-sgd(x_aval, y_rad_HOMO)
-sgd(x_aval, y_birad_HOMO)
-sgd(x_aval, y_CO2_HOMO)
-'''

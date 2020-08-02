@@ -1,13 +1,10 @@
 import time
-
 import numpy as np
+import xgboost as xgb
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-
-import xgboost as xgb
-
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 def xgboost(x, y):
     try:
