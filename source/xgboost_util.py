@@ -1,10 +1,14 @@
 import time
+
 import numpy as np
-import xgboost as xgb
+import scipy.stats as stats
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, GridSearchCV
+
+import xgboost as xgb
+
 
 def xgboost(x, y):
     try:
@@ -65,5 +69,35 @@ def xgboost_grid(x, y):
     reg = GridSearchCV(xgb_temp, params, verbose=6, cv=3)
     x_train = scaler.transform(x_train)
     reg.fit(x_train, y_train)
+    print(reg.best_params_)
+    print(reg.best_score_)
+
+
+def xgboost_rand(x, y):
+    try:
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    except:
+        x = list(x)
+        x = preprocessing.scale(np.array(x))
+        scaler = preprocessing.StandardScaler().fit(x)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+    params = {"objective": ['reg:squarederror'],
+              "colsample_bytree": stats.uniform(0.2, 0.8),
+              "learning_rate": stats.uniform(0, 0.5),
+              "max_depth": stats.uniform(10, 5), "gamma": stats.uniform(0, 0.1),
+              "lambda": stats.uniform(0.1, 0.2),
+              "alpha": [0.1],
+              "eta": [0.0, 0.1],
+              "n_estimators": [400, 4000],
+              "tree_method": ["gpu_hist"]}
+
+    xgb_temp = xgb.XGBRegressor()
+    reg = RandomizedSearchCV(xgb_temp, params, verbose=6, cv=3)
+    x_train = scaler.transform(x_train)
+    reg.fit(x_train, y_train)
+
     print(reg.best_params_)
     print(reg.best_score_)

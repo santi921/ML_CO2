@@ -1,9 +1,8 @@
 
 import pandas as pd
+from sklearn_utils import gradient_boost_reg, \
+    random_forest, sk_nn
 from xgboost_util import xgboost
-from sklearn_utils import sgd, sgd_grid, svr, gradient_boost_reg,\
-    random_forest, gaussian, kernel, bayesian, sk_nn,\
-    gradient_boost_reg_grid, svr_rbf_grid, svr_lin_grid, svr_poly_grid
 
 
 def process_input_DB2(dir="DB2", desc="rdkit"):
@@ -133,20 +132,14 @@ def calc(dir="DB2", desc="rdkit"):
 
     print("Using " + desc + " as the descriptor")
 
-    sgd_grid(mat,HOMO)
-    # gradient_boost_reg_grid(mat, HOMO)
-    # xgboost_grid
-    #svr_rbf_grid(mat,HOMO)
-    #svr_lin_grid(mat,HOMO)
-    #svr_poly_grid(mat,HOMO)
-
+    random_forest(mat, HOMO)
 
     # sgd(mat, HOMO)
-    # gradient_boost_reg(mat, HOMO)
-    # xgboost(mat,diff)
+    gradient_boost_reg(mat, HOMO)
+    xgboost(mat, diff)
     # random_forest(mat,HOMO)
     # svr(mat, diff)
-    # sk_nn(mat,HOMO)
+    sk_nn(mat, HOMO)
     # bayesian(mat,diff)
     # kernel(mat,diff)
     # gaussian(mat,diff)
@@ -156,11 +149,22 @@ def calc(dir="DB2", desc="rdkit"):
 # process_input_DB2(dir = "DB2",  desc="persist")
 # calc(desc="vae")
 # calc(desc="auto")
-# calc(desc="persist")
+calc(desc="persist")
 calc(desc="aval")
-# calc(desc="layer")
-# calc(desc="morg")
-# calc(desc="rdkit")
+calc(desc="layer")
+calc(desc="morg")
+calc(desc="rdkit")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
+    parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
+    parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
+
+    results = parser.parse_args()
+    des = results.desc
+    print("parser parsed")
+    dir_temp = results.dir
+    print("pulled director: " + dir_temp)
 
 # morgan and layer were the best
 # potentially try wider morgan or layer
