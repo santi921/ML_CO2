@@ -26,6 +26,7 @@ def vae(dir="../data/xyz/"):
                 Z_1 = vae.encode(X_1)
                 mat_vae.append(Z_1.tolist())
                 names.append(name_list[j])
+                print(Z_1)
             except:
                 print("not correctly encoded")
     mat_vae = np.array(mat_vae)

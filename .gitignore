@@ -17,3 +17,4 @@ xyz2mol
 *PersistentImages_Chemistry/*
 *PersistImages_Chemistry*
 *.ipynb_checkpoints
+*/.idea/*

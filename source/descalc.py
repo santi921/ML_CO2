@@ -1,11 +1,14 @@
 import argparse
 import math
+import os
 
 import numpy as np
 import pandas as pd
 
 
 def write_des(des, dir_temp):
+    # check if this folder has other folders to traverse, works up to 1 layer deep
+
     if (des == "aval" or des == "morg" or des == "layer" or des == "rdkit"):
         from helpers import rdk, aval, layer, morgan
         dir = "../data/sdf/" + dir_temp + "/"
@@ -13,8 +16,8 @@ def write_des(des, dir_temp):
     else:
         dir = "../data/xyz/" + dir_temp + "/"
 
-
     print(dir)
+    print(os.listdir(dir))
 
     if (des == "aval"):
         print("...........aval started..........")

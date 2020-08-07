@@ -57,16 +57,24 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     else:
         df.to_pickle(str)
 
-def process_input_ZZ(dir="ZZ", desc="vae"):
+
+# TODO : this
+def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
+        print(str)
         df = pd.read_pickle(str)
         pkl = 1
+
     except:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
 
+    df["HOMO"] = ""
+    df["HOMO-1"] = ""
+    df["diff"] = ""
+    print(df.head())
     list_to_sort = []
     with open("../data/benzoquinone_DB/DATA_copy") as fp:
         line = fp.readline()
@@ -74,29 +82,39 @@ def process_input_ZZ(dir="ZZ", desc="vae"):
             list_to_sort.append(line[0:-2])
             line = fp.readline()
     list_to_sort.sort()
-    # print(list_to_sort)
 
-    index_search = 0
-    # df.insert(2,"HOMO","")
-    # df.insert(3,"HOMO-1","")
-
-    for i in range(df.shape[0]):
-        # print(type(df["name"].iloc[i][:-4]))
+    for i in range(df.copy().shape[0]):
         for j in list_to_sort:
-            # print(j.split(":")[0])
+
             # print(df["name"].iloc[i][:-4])
-            # if ( df["name"].iloc[i][:-4] == j.split(";")[0] ):
+            # print(j.split(":")[0])
+            if (desc == "auto"):
+                if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
+                    temp1 = float(j.split(":")[1])
+                    temp2 = float(j.split(":")[2])
+                    df["HOMO"].loc[i] = float(j.split(":")[1])
+                    df["HOMO-1"].loc[i] = float(j.split(":")[2])
+                    df["diff"].loc[i] = temp2 - temp1
+                    print(temp2 - temp1)
 
             if (df["name"].iloc[i][:-4] in j.split(";")[0]):
-                df["HOMO"][i] = j.split(":")[1]
-                df["HOMO-1"][i] = j.split(":")[2]
-                df["diff"] = df["HOMO"][i] - df["HOMO-1"][i]
-        # print(df)
+                temp1 = float(j.split(":")[1])
+                temp2 = float(j.split(":")[2])
+
+                print(j)
+
+                df["HOMO"].loc[i] = float(j.split(":")[1])
+                df["HOMO-1"].loc[i] = float(j.split(":")[2])
+                df["diff"].loc[i] = temp2 - temp1
     if (pkl == 0):
         df.to_hdf(str, key="df", mode='a')
-
     else:
         df.to_pickle(str)
+
+
+def process_input_ZZ(dir="ZZ", desc="vae"):
+    # todo: process ZZ's
+    return 0
 
 
 def calc(dir="DB2", desc="rdkit"):
