@@ -2,7 +2,7 @@ import argparse
 
 import pandas as pd
 from sklearn_utils import gradient_boost_reg, \
-    random_forest, sk_nn
+    random_forest, sk_nn, grid
 from xgboost_util import xgboost
 
 
@@ -60,6 +60,12 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
 
 
 # TODO : this
+
+def process_input_ZZ(dir="ZZ", desc="vae"):
+    # todo: process ZZ's
+    return 0
+
+
 def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".pkl"
@@ -72,9 +78,6 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         df = pd.read_hdf(str)
         pkl = 0
 
-    df["HOMO"] = ""
-    df["HOMO-1"] = ""
-    df["diff"] = ""
 
     print(df.head())
 
@@ -115,26 +118,16 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         df.to_pickle(str)
 
 
-def process_input_ZZ(dir="ZZ", desc="vae"):
-    # todo: process ZZ's
-    return 0
-
-
 def calc(x, y):
-    print("in calc")
     random_forest(x, y)
-    # sgd(mat, HOMO)
     gradient_boost_reg(x, y)
     xgboost(x, y)
-    # random_forest(mat,HOMO)
-    # svr(mat, diff)
     sk_nn(x, y)
-    # bayesian(mat,diff)
-    # kernel(mat,diff)
-    # gaussian(mat,diff)
-    # process_input_DB2(dir = "DB2",  desc="persist")
+    grid(x, y, method="rf")
+
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
     parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
     parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
@@ -143,61 +136,57 @@ if __name__ == "__main__":
     des = results.desc
     print("parser parsed")
     dir_temp = results.dir
-    print("pulled directory: " + dir_temp)
+    print("pulling directory: " + dir_temp + " with descriptor: " + des)
 
-    if (dir_temp == "DB2"):
+    # if (dir_temp == "DB2"):
+    # try:
+    # process_input_DB2()
+    # print("done processing dataframe")
+    # str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".pkl"
+    # df = pd.read_pickle(str)
+    # pkl = 1
+    # except:
+    # process_input_DB2()
+    # print("done processing dataframe")
+    # str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".h5"
+    # df = pd.read_hdf(str)
+    # pkl = 0
+
+    if (dir_temp == "DB3" or dir_temp == "DB2"):
         try:
-            # process_input_DB2()
             print("done processing dataframe")
-            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".pkl"
+            str = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_" + des + ".pkl"
             df = pd.read_pickle(str)
             pkl = 1
         except:
-            # process_input_DB2()
             print("done processing dataframe")
-            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".h5"
+            str = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_" + des + ".h5"
             df = pd.read_hdf(str)
             pkl = 0
-
-            print(df.head())
-            print(str)
-    if (dir_temp == "DB3"):
-        try:
-            process_input_DB3()
-            print("done processing dataframe")
-            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".pkl"
-            df = pd.read_pickle(str)
-            pkl = 1
-        except:
-            process_input_DB3()
-            print("done processing dataframe")
-            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".h5"
-            df = pd.read_hdf(str)
-            pkl = 0
-
-            print(df.head())
-            print(str)
+            # print(df["HOMO"])
+            # print(df.head())
+            # print(str)
 
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
     diff = df["diff"].to_numpy()
 
-    if (desc == "vae"):
+    if (des == "vae"):
         temp = df["mat"].tolist()
         mat = list([i.flatten() for i in temp])
 
-    elif (desc == "auto"):
+    elif (des == "auto"):
         temp = df["mat"].tolist()
         mat = list([i.flatten() for i in temp])
     else:
         mat = df["mat"].to_numpy()
-    print("Using " + desc + " as the descriptor")
+    print("Using " + des + " as the descriptor")
 
-    calc(mat, desc="persist")
-    calc(mat)
-    calc(mat)
-    calc(mat)
-    calc(mat)
+    calc(mat, HOMO)
+    # calc(mat)
+    # calc(mat)
+    # calc(mat)
+    # calc(mat)
 # morgan and layer were the best
 # potentially try wider morgan or layer
 '''

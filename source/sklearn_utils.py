@@ -27,7 +27,7 @@ def grid(x, y, method="sgd"):
         reg = MLPRegressor(hidden_layer_sizes=(1000, 1000,))
     elif (method == "rf"):
         params = {"max_depth": [10, 20, 30, 40],
-                  "min_samples_split": [1, 2, 4],
+                  "min_samples_split": [2, 4, 6],
                   "n_jobs": [4],
                   "n_estimators": [500, 1000, 2000, 5000]
                   }
