@@ -1,3 +1,4 @@
+import argparse
 
 import pandas as pd
 from sklearn_utils import gradient_boost_reg, \
@@ -61,22 +62,24 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
 # TODO : this
 def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
+        str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".pkl"
         print(str)
         df = pd.read_pickle(str)
         pkl = 1
 
     except:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
+        str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
 
     df["HOMO"] = ""
     df["HOMO-1"] = ""
     df["diff"] = ""
+
     print(df.head())
+
     list_to_sort = []
-    with open("../data/benzoquinone_DB/DATA_copy") as fp:
+    with open("../data/DATA_DB3") as fp:
         line = fp.readline()
         while line:
             list_to_sort.append(line[0:-2])
@@ -117,22 +120,63 @@ def process_input_ZZ(dir="ZZ", desc="vae"):
     return 0
 
 
-def calc(dir="DB2", desc="rdkit"):
-    try:
-        # process_input_DB2()
-        print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
-    except:
-        # process_input_DB2()
-        print("done processing dataframe")
-        str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
+def calc(x, y):
+    print("in calc")
+    random_forest(x, y)
+    # sgd(mat, HOMO)
+    gradient_boost_reg(x, y)
+    xgboost(x, y)
+    # random_forest(mat,HOMO)
+    # svr(mat, diff)
+    sk_nn(x, y)
+    # bayesian(mat,diff)
+    # kernel(mat,diff)
+    # gaussian(mat,diff)
+    # process_input_DB2(dir = "DB2",  desc="persist")
 
-    # print(df.head())
-    # print(str)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
+    parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
+    parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
+
+    results = parser.parse_args()
+    des = results.desc
+    print("parser parsed")
+    dir_temp = results.dir
+    print("pulled directory: " + dir_temp)
+
+    if (dir_temp == "DB2"):
+        try:
+            # process_input_DB2()
+            print("done processing dataframe")
+            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".pkl"
+            df = pd.read_pickle(str)
+            pkl = 1
+        except:
+            # process_input_DB2()
+            print("done processing dataframe")
+            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".h5"
+            df = pd.read_hdf(str)
+            pkl = 0
+
+            print(df.head())
+            print(str)
+    if (dir_temp == "DB3"):
+        try:
+            process_input_DB3()
+            print("done processing dataframe")
+            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".pkl"
+            df = pd.read_pickle(str)
+            pkl = 1
+        except:
+            process_input_DB3()
+            print("done processing dataframe")
+            str = "../data/desc/" + dir + "/desc_calc_" + dir + "_" + des + ".h5"
+            df = pd.read_hdf(str)
+            pkl = 0
+
+            print(df.head())
+            print(str)
 
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
@@ -147,43 +191,13 @@ def calc(dir="DB2", desc="rdkit"):
         mat = list([i.flatten() for i in temp])
     else:
         mat = df["mat"].to_numpy()
-
     print("Using " + desc + " as the descriptor")
 
-    random_forest(mat, HOMO)
-
-    # sgd(mat, HOMO)
-    gradient_boost_reg(mat, HOMO)
-    xgboost(mat, diff)
-    # random_forest(mat,HOMO)
-    # svr(mat, diff)
-    sk_nn(mat, HOMO)
-    # bayesian(mat,diff)
-    # kernel(mat,diff)
-    # gaussian(mat,diff)
-
-
-# process_input_DB2(desc = "auto")
-# process_input_DB2(dir = "DB2",  desc="persist")
-# calc(desc="vae")
-# calc(desc="auto")
-calc(desc="persist")
-calc(desc="aval")
-calc(desc="layer")
-calc(desc="morg")
-calc(desc="rdkit")
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
-    parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
-    parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
-
-    results = parser.parse_args()
-    des = results.desc
-    print("parser parsed")
-    dir_temp = results.dir
-    print("pulled director: " + dir_temp)
-
+    calc(mat, desc="persist")
+    calc(mat)
+    calc(mat)
+    calc(mat)
+    calc(mat)
 # morgan and layer were the best
 # potentially try wider morgan or layer
 '''
