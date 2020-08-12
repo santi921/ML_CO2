@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
+from xgboost_util import xgboost_grid
 
 
 def grid(x, y, method="sgd"):
@@ -19,12 +20,13 @@ def grid(x, y, method="sgd"):
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1],
                   "activation": ["relu"],
                   "solver": ["adam"],
-                  "max_iter": [1e3, 1e5, 1e7, 1e9],
+                  "learning_rate": ["adaptive"],
+                  "max_iter": [100, 10000, 1000000],
                   "tol": [1e-11, 1e-7, 1e-5, 1e-3, 1e-1, 1],
                   "learning_rate_init": [0.00001, 0.0001, 0.001, 0.01],
                   "shuffle": [True]
                   }
-        reg = MLPRegressor(hidden_layer_sizes=(1000, 1000,))
+        reg = MLPRegressor(hidden_layer_sizes=(100, 1000, 100,))
     elif (method == "rf"):
         params = {"max_depth": [10, 20, 30, 40],
                   "min_samples_split": [2, 4, 6],
@@ -35,12 +37,12 @@ def grid(x, y, method="sgd"):
 
     elif (method == "grad"):
         params = {"loss": ["ls"],
-                  "n_estimators": [2000],
-                  "learning_rate": [0.1],
-                  "subsample": [0.8],
+                  "n_estimators": [500, 1000, 2000, 4000],
+                  "learning_rate": [i * 0.03 for i in range(10)],
+                  "subsample": [(i * 0.06) for i in range(1, 10)],
                   "criterion": ["mse"],
-                  "max_depth": [10],
-                  "tol": [0.0001]
+                  "max_depth": [i * 10 for i in range(1, 3)],
+                  "tol": [0.0001, 0.000001]
                   }
         grad = GradientBoostingRegressor()
 
@@ -96,8 +98,7 @@ def grid(x, y, method="sgd"):
 
         reg = KernelRidge()
 
-    elif (method == "gaussian"
-                    ""):
+    elif (method == "gaussian"):
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1]
                   }
 
@@ -105,34 +106,38 @@ def grid(x, y, method="sgd"):
         reg = GaussianProcessRegressor(kernel=kernel)
 
 
-
     else:
-        params = {"loss": ['squared_loss'],
-                  "tol": [0.1, 0.0001, 0.00001],
+        params = {"loss": ['squared_loss', "huber"],
+                  "tol": [0.01, 0.001, 0.0001, 0.00001],
                   "shuffle": [True],
-                  "penalty": ["l2"],
+                  "penalty": ["l2", "l1", "elasticnet"],
                   "l1_ratio": [0.15, 0.20, 0.25],
                   "epsilon": [0.01, 0.1, 1],
-                  "eta0": [0.1, 0.01, 0.001],
-                  "validation_fraction": [0.1]
+                  "eta0": [10 ** (-2 * i) for i in range(1, 5)],
                   }
-        sgd = SGDRegressor()
+        reg = SGDRegressor()
 
-    try:
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
-    except:
-        x = list(x)
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
+    if (method == "xgboost"):
+        xgboost_grid(x, y)
 
-    reg = GridSearchCV(reg, params, verbose=6, cv=3)
-    x = scaler.transform(x)
-    reg.fit(list(x), y)
+    else:
+        try:
+            x = preprocessing.scale(np.array(x))
+            scaler = preprocessing.StandardScaler().fit(x)
+        except:
+            x = list(x)
+            x = preprocessing.scale(np.array(x))
+            scaler = preprocessing.StandardScaler().fit(x)
 
-    print(reg.best_params_)
-    print(reg.best_score_)
+        if (method == "xg"):
+            xgboost_grid(x, y)
 
+        reg = GridSearchCV(reg, params, verbose=3, cv=3)
+        x = scaler.transform(x)
+        reg.fit(list(x), y)
+        print(reg.best_params_)
+        print(reg.best_score_)
+        return reg
 
 def sgd (x,y):
 
@@ -276,10 +281,10 @@ def sk_nn(x, y):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.00001, learning_rate="adaptive",
-                       early_stopping=True, tol=1e-11, shuffle=True, solver="adam", activation="relu",
-                       hidden_layer_sizes=(1000, 1000,), verbose=False, alpha=0.00001)
+                       early_stopping=True, tol=1e-7, shuffle=True, solver="adam", activation="relu",
+                       hidden_layer_sizes=(1000,), verbose=False, alpha=0.00001)
 
-    est = make_pipeline(StandardScaler(), reg)
+    est = make_pipeline(StandardScaler(), reg, verbose=True)
     t1 = time.time()
     est.fit(list(x_train), y_train)
     t2 = time.time()
