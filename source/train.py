@@ -6,7 +6,6 @@ import pandas as pd
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
     bayesian, svr
-from xgboost_util import xgboost
 
 
 # TODO: it seems that rdkit is saved as a string for DB3, fix
@@ -155,6 +154,8 @@ def calc(x, y, des, grid_tf=True, algo="sgd"):
             print("gaussian algo selected")
             gaussian(x, y)
         elif (algo == "xgboost"):
+            from xgboost_util import xgboost
+
             print("xgboost algo selected")
             xgboost(x, y)
         else:

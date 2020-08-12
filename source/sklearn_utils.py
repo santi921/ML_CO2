@@ -12,7 +12,6 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from xgboost_util import xgboost_grid
 
 
 def grid(x, y, method="sgd"):
@@ -118,6 +117,8 @@ def grid(x, y, method="sgd"):
         reg = SGDRegressor()
 
     if (method == "xgboost"):
+        from xgboost_util import xgboost_grid
+
         xgboost_grid(x, y)
 
     else:
