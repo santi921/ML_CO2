@@ -8,7 +8,8 @@ from sklearn_utils import gradient_boost_reg, \
     bayesian, svr
 
 
-# TODO: it seems that rdkit is saved as a string for DB3, fix
+# TODO: implement with and without standardization
+
 def process_input_DB2(dir="DB2", desc="rdkit"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
