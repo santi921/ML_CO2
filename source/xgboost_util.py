@@ -59,15 +59,15 @@ def xgboost_grid(x, y):
     params = {"objective": ['reg:squarederror'],
               "colsample_bytree": [0.25, 0.5, 0.75],
               "learning_rate": [i * 0.06 for i in range(1, 5)],
-              "max_depth": [10, 20, 50], "gamma": [i * 0.02 for i in range(5)],
-              "lambda": [i * 0.04 for i in range(5)],
-              "alpha": [i * 0.04 for i in range(5)],
-              "eta": [i * 0.02 for i in range(5)],
+              "max_depth": [10, 20, 50], "gamma": [i * 0.02 for i in range(0, 5)],
+              "lambda": [i * 0.04 for i in range(0, 5)],
+              "alpha": [i * 0.04 for i in range(0, 5)],
+              "eta": [i * 0.02 for i in range(0, 5)],
               "n_estimators": [400, 1000, 4000],
               "tree_method": ["gpu_hist"]}
 
     xgb_temp = xgb.XGBRegressor()
-    reg = GridSearchCV(xgb_temp, params, verbose=1, cv=3)
+    reg = GridSearchCV(xgb_temp, params, verbose=3, cv=3)
     x_train = scaler.transform(x_train)
     reg.fit(x_train, y_train)
     print(reg.best_params_)

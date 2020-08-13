@@ -15,6 +15,7 @@ from sklearn.svm import SVR
 
 
 def grid(x, y, method="sgd"):
+
     if (method == "nn"):
         print(".........neural network grid optimization selected.........")
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1],
@@ -42,13 +43,13 @@ def grid(x, y, method="sgd"):
 
         params = {"loss": ["ls"],
                   "n_estimators": [500, 1000, 2000, 4000],
-                  "learning_rate": [i * 0.03 for i in range(10)],
+                  "learning_rate": [i * 0.03 for i in range(1, 10)],
                   "subsample": [(i * 0.06) for i in range(1, 10)],
                   "criterion": ["mse"],
                   "max_depth": [i * 10 for i in range(1, 3)],
                   "tol": [0.0001, 0.000001]
                   }
-        grad = GradientBoostingRegressor()
+        reg = GradientBoostingRegressor()
 
     elif (method == "svr_rbf"):
         print(".........svr grid optimization selected.........")
@@ -124,7 +125,7 @@ def grid(x, y, method="sgd"):
     else:
 
         params = {"loss": ['squared_loss', "huber"],
-                  "tol": [0.01, 0.001, 0.0001s],
+                  "tol": [0.01, 0.001, 0.0001],
                   "shuffle": [True],
                   "penalty": ["l1"],
                   "l1_ratio": [0.15, 0.20, 0.25],
@@ -134,14 +135,12 @@ def grid(x, y, method="sgd"):
         reg = SGDRegressor()
 
     if (method == "xgboost"):
-        print(".........xgboost grid optimization selected.........")
-
         from xgboost_util import xgboost_grid
 
+        print(".........xgboost grid optimization selected.........")
         xgboost_grid(x, y)
 
     else:
-        print(".........sgd grid optimization selected.........")
 
         try:
             x = preprocessing.scale(np.array(x))
@@ -150,9 +149,6 @@ def grid(x, y, method="sgd"):
             x = list(x)
             x = preprocessing.scale(np.array(x))
             scaler = preprocessing.StandardScaler().fit(x)
-
-        if (method == "xg"):
-            xgboost_grid(x, y)
 
         reg = GridSearchCV(reg, params, verbose=3, cv=3)
         x = scaler.transform(x)
