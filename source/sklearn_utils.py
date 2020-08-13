@@ -122,12 +122,11 @@ def grid(x, y, method="sgd"):
 
 
     else:
-        print(".........sgd grid optimization selected.........")
 
         params = {"loss": ['squared_loss', "huber"],
-                  "tol": [0.01, 0.001, 0.0001, 0.00001],
+                  "tol": [0.01, 0.001, 0.0001s],
                   "shuffle": [True],
-                  "penalty": ["l2", "l1", "elasticnet"],
+                  "penalty": ["l1"],
                   "l1_ratio": [0.15, 0.20, 0.25],
                   "epsilon": [0.01, 0.1, 1],
                   "eta0": [10 ** (-2 * i) for i in range(1, 5)],
@@ -135,11 +134,15 @@ def grid(x, y, method="sgd"):
         reg = SGDRegressor()
 
     if (method == "xgboost"):
+        print(".........xgboost grid optimization selected.........")
+
         from xgboost_util import xgboost_grid
 
         xgboost_grid(x, y)
 
     else:
+        print(".........sgd grid optimization selected.........")
+
         try:
             x = preprocessing.scale(np.array(x))
             scaler = preprocessing.StandardScaler().fit(x)
