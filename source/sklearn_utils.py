@@ -16,6 +16,7 @@ from sklearn.svm import SVR
 
 def grid(x, y, method="sgd"):
     if (method == "nn"):
+        print(".........neural network grid optimization selected.........")
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1],
                   "activation": ["relu"],
                   "solver": ["adam"],
@@ -27,6 +28,8 @@ def grid(x, y, method="sgd"):
                   }
         reg = MLPRegressor(hidden_layer_sizes=(100, 1000, 100,))
     elif (method == "rf"):
+        print(".........random forest grid optimization selected.........")
+
         params = {"max_depth": [10, 20, 30, 40],
                   "min_samples_split": [2, 4, 6],
                   "n_jobs": [1],
@@ -35,6 +38,8 @@ def grid(x, y, method="sgd"):
         reg = RandomForestRegressor()
 
     elif (method == "grad"):
+        print(".........gradient boost grid optimization selected.........")
+
         params = {"loss": ["ls"],
                   "n_estimators": [500, 1000, 2000, 4000],
                   "learning_rate": [i * 0.03 for i in range(10)],
@@ -46,6 +51,8 @@ def grid(x, y, method="sgd"):
         grad = GradientBoostingRegressor()
 
     elif (method == "svr_rbf"):
+        print(".........svr grid optimization selected.........")
+
         params = {"kernel": ["rbf"],
                   "C": [10, 1, 0.1, 0.01, 0.001, 0.0001],
                   "gamma": [0.1, 0.0001, 0.00001],
@@ -56,6 +63,8 @@ def grid(x, y, method="sgd"):
         reg = SVR()
 
     elif (method == "svr_poly"):
+        print(".........svr grid optimization selected.........")
+
         params = {"kernel": ["poly"],
                   "C": [1, 0.1, 0.01, 0.001, 0.0001],
                   "gamma": [0.1, 0.0001, 0.00001],
@@ -67,6 +76,7 @@ def grid(x, y, method="sgd"):
 
         reg = SVR()
     elif (method == "svr_lin"):
+        print(".........svr grid optimization selected.........")
 
         params = {"kernel": ["linear"],
                   "C": [10, 1, 0.1, 0.01, 0.001, 0.0001],
@@ -77,6 +87,8 @@ def grid(x, y, method="sgd"):
         reg = SVR()
 
     elif (method == "bayes"):
+        print(".........bayes grid optimization selected.........")
+
         params = {
             "n_iter": [1000, 2000, 5000, 10000],
             "tol": [1e-3, 1e-5, 1e-7, 1e-9],
@@ -90,6 +102,8 @@ def grid(x, y, method="sgd"):
 
 
     elif (method == "kernel"):
+        print(".........kernel grid optimization selected.........")
+
         params = {"kernel": ["rbf"],
                   "alpha": [1e-6, 1e-4, 1e-2, 1, 2],
                   "gamma": [1e-8, 1e-6, 1e-4, 1e-2, 1]
@@ -98,6 +112,8 @@ def grid(x, y, method="sgd"):
         reg = KernelRidge()
 
     elif (method == "gaussian"):
+        print(".........gaussian grid optimization selected.........")
+
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1]
                   }
 
@@ -106,6 +122,8 @@ def grid(x, y, method="sgd"):
 
 
     else:
+        print(".........sgd grid optimization selected.........")
+
         params = {"loss": ['squared_loss', "huber"],
                   "tol": [0.01, 0.001, 0.0001, 0.00001],
                   "shuffle": [True],
