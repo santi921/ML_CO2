@@ -150,7 +150,7 @@ def grid(x, y, method="sgd"):
             x = preprocessing.scale(np.array(x))
             scaler = preprocessing.StandardScaler().fit(x)
 
-        reg = GridSearchCV(reg, params, verbose=3, cv=3)
+        reg = GridSearchCV(reg, params, verbose=6, cv=3)
         x = scaler.transform(x)
         reg.fit(list(x), y)
         print(reg.best_params_)
