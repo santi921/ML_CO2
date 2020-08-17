@@ -9,6 +9,7 @@ __pycache__
 *.meta
 *model*
 *geo/*
+*pkl*
 *__tb/*
 *h5
 *pkl

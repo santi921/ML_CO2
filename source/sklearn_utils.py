@@ -12,10 +12,125 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
+from skopt import BayesSearchCV
+from skopt.space import Real, Integer
+
+
+def bayes(x, y, method="sgd"):
+    if (method == "nn"):
+        print(".........neural network optimization selected.........")
+        params = {"alpha": Real(1e-10, 1e-1, prior='log-uniform'),
+                  "max_iter": Integer(100, 10000),
+                  "tol": Real(1e-10, 1e-1, prior='log-uniform'),
+                  "learning_rate_init": Real(1e-3, 1e-1, prior='log-uniform')}
+
+        reg = MLPRegressor(hidden_layer_sizes=(100, 1000, 100,), activation="relu",
+                           solver="adam", learning_rate="adaptive")
+
+    elif (method == "rf"):
+        print(".........random forest optimization selected.........")
+        params = {"max_depth": Real(10, 40),
+                  "min_samples_split": Integer(2, 6),
+                  "n_estimators": Integer(500, 5000)}
+        reg = RandomForestRegressor(n_jobs=1)
+
+    elif (method == "grad"):
+        print(".........gradient boost optimization selected.........")
+
+        params = {"loss": ["ls"],
+                  "n_estimators": Integer(500, 5000),
+                  "learning_rate": Real(0, 0.3),
+                  "subsample": Real(0.2, 0.8),
+                  "max_depth": Integer(10, 30),
+                  "tol": Real(1e-6, 1e-3, prior='log-uniform')}
+        reg = GradientBoostingRegressor(criterion="mse", loss="ls")
+
+    elif (method == "svr_rbf"):
+        print(".........svr optimization selected.........")
+        params = {"C": Real(1e-5, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "epsilon": Real(1e-2, 1e+1, prior='log-uniform'),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="rbf")
+
+    elif (method == "svr_poly"):
+        print(".........svr optimization selected.........")
+
+        params = {"C": Real(1e-5, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "epsilon": Real(1e-2, 1e+1, prior='log-uniform'),
+                  "degree": Integer(5, 20),
+                  "coef0": Real(0.2, 0.8),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="poly")
+
+    elif (method == "svr_lin"):
+        print(".........svr optimization selected.........")
+
+        params = {"C": Real(1e-6, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="linear")
+
+    elif (method == "bayes"):
+        print(".........bayes optimization selected.........")
+
+        params = {
+            "n_iter": Integer(1000, 10000),
+            "tol": Real(1e-9, 1e-3, prior='log-uniform'),
+            "alpha_1": Real(1e-6, 1e+1, prior='log-uniform'),
+            "alpha_2": Real(1e-6, 1e+1, prior='log-uniform'),
+            "lambda_1": Real(1e-6, 1e+1, prior='log-uniform'),
+            "lambda_2": Real(1e-6, 1e+1, prior='log-uniform')}
+        reg = BayesianRidge()
+
+
+    elif (method == "kernel"):
+        print(".........kernel optimization selected.........")
+
+        params = {"alpha": Real(1e-6, 1e0, prior='log-uniform'),
+                  "gamma": Real(1e-8, 1e0, prior='log-uniform')}
+        reg = KernelRidge(kernel="rbf")
+
+    elif (method == "gaussian"):
+        print(".........gaussian optimization selected.........")
+        params = {"alpha": Real(1e-7, 1e+1, prior='log-uniform')}
+        kernel = DotProduct() + WhiteKernel()
+        reg = GaussianProcessRegressor(kernel=kernel)
+
+    else:
+        params = {'l1_ratio': Real(0.1, 0.3),
+                  'tol': Real(1e-3, 1e-1, prior="log-uniform"),
+                  "epsilon": Real(1e-3, 1e0, prior="log-uniform"),
+                  "eta0": Real(0, 0.2)}
+        reg = SGDRegressor(penalty="l1", loss='squared_loss')
+
+    if (method == "xgboost"):
+        from xgboost_util import xgboost_bayes_basic
+        print(".........xgboost optimization selected.........")
+
+        reg = xgboost_bayes_basic(x, y)
+    else:
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+        try:
+            x = preprocessing.scale(np.array(x))
+            # scaler = preprocessing.StandardScaler().fit(x)
+        except:
+            x = list(x)
+            x = preprocessing.scale(np.array(x))
+            # scaler = preprocessing.StandardScaler().fit(x)
+
+        reg = BayesSearchCV(reg, params, n_iter=20, verbose=3, cv=3, n_jobs=4)
+
+        reg.fit(list(x_train), y_train)
+        print(reg.best_params_)
+        print(reg.best_score_)
+        print("Score on test data: " + str(reg.score(list(x_test), y_test)))
+    return reg
 
 
 def grid(x, y, method="sgd"):
-
     if (method == "nn"):
         print(".........neural network grid optimization selected.........")
         params = {"alpha": [1e-10, 1e-7, 1e-4, 1e-1],
@@ -138,8 +253,8 @@ def grid(x, y, method="sgd"):
         from xgboost_util import xgboost_grid
 
         print(".........xgboost grid optimization selected.........")
-        xgboost_grid(x, y)
-
+        reg = xgboost_grid(x, y)
+        return reg
     else:
 
         try:
@@ -150,11 +265,15 @@ def grid(x, y, method="sgd"):
             x = preprocessing.scale(np.array(x))
             scaler = preprocessing.StandardScaler().fit(x)
 
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         reg = GridSearchCV(reg, params, verbose=6, cv=3)
-        x = scaler.transform(x)
-        reg.fit(list(x), y)
+        x_train = scaler.transform(x_train)
+        reg.fit(list(x_train), y_train)
+
         print(reg.best_params_)
         print(reg.best_score_)
+        print("Score on test data: " + str(reg.score(x_test, y_test)))
+
         return reg
 
 def sgd (x,y):
@@ -200,7 +319,6 @@ def gradient_boost_reg(x, y):
     time_el = t2 - t1
     score = est.score(list(x_test), y_test)
     print("gradient boost score:                " + str(score) + " time: " + str(time_el))
-
 
 def random_forest(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)

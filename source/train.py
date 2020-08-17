@@ -1,11 +1,10 @@
 import argparse
 import uuid
 
-import joblib
 import pandas as pd
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
-    bayesian, svr
+    bayesian, svr, bayes
 
 
 # TODO: implement with and without standardization
@@ -62,13 +61,10 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     else:
         df.to_pickle(str)
 
-
 # TODO : this
-
 def process_input_ZZ(dir="ZZ", desc="vae"):
     # todo: process ZZ's
     return 0
-
 
 def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
@@ -122,46 +118,49 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         df.to_pickle(str)
 
 
-def calc(x, y, des, grid_tf=True, algo="sgd"):
+def calc(x, y, des, grid_tf=True, bayes_tf=False, algo="sgd"):
     if (grid_tf == True):
         print("........starting grid search........")
         grid_obj = grid(x, y, method=algo)
-
         uuid_temp = uuid.uuid4()
         str = "../data/train/grid/" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
-        joblib.dump(grid_obj, str)
+        # joblib.dump(grid_obj, str)
+
+    elif (bayes_tf == True):
+        print("........starting bayes search........")
+        bayes_obj = bayes(x, y, method=algo)
+        uuid_temp = uuid.uuid4()
+        str = "../data/train/bayes/" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
+        # joblib.dump(bayes_obj, str)
+
     else:
         if (algo == "nn"):
             print("nn reg selected")
             sk_nn(x, y)
         elif (algo == "rf"):
+            print("random forest selected")
             random_forest(x, y)
         elif (algo == "grad"):
+            print("grid algo selected")
             gradient_boost_reg(x, y)
         elif (algo == "svr"):
-
             print("svr algo selected")
             svr(x, y)
         elif (algo == "bayes"):
-
             print("bayes regression selected")
             bayesian(x, y)
         elif (algo == "kernel"):
-
             print("kernel regression selected")
             kernel(x, y)
         elif (algo == "gaussian"):
-
             print("gaussian algo selected")
             gaussian(x, y)
         elif (algo == "xgboost"):
             from xgboost_util import xgboost
-
             print("xgboost algo selected")
             xgboost(x, y)
         else:
-
-            print("stochastic gradient descent algo selected")
+            print("stochastic gradient descent selected")
             sgd(x, y)
 
 
@@ -172,8 +171,8 @@ if __name__ == "__main__":
     parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
     parser.add_argument("--algo", action="store", dest="algo", default="DB",
                         help="options: [svr_rbf, svr_poly, svr_lin, grad, rf, sgd, bayes, kernel, gaussian, nn]")
-    # parser.add_argument("--grid", action="store", dest="grid", default="True", help="grid search")
     parser.add_argument('--grid', dest="grid_tf", action='store_true')
+    parser.add_argument('--bayes', dest="bayes_tf", action='store_true')
 
     results = parser.parse_args()
     des = results.desc
@@ -182,6 +181,7 @@ if __name__ == "__main__":
     print("pulling directory: " + dir_temp + " with descriptor: " + des)
     algo = results.algo
     grid_tf = results.grid_tf
+    bayes_tf = results.bayes_tf
 
     if (dir_temp == "DB3" or dir_temp == "DB2"):
         try:
@@ -208,6 +208,11 @@ if __name__ == "__main__":
         mat = list([i.flatten() for i in temp])
     else:
         mat = df["mat"].to_numpy()
-    print("Using " + des + " as the descriptor")
 
-    calc(mat, HOMO, des, grid_tf, algo)
+    # print("Using " + des + " as the descriptor")
+    # print(".........................HOMO..................")
+    # calc(mat, HOMO, des, grid_tf, bayes_tf, algo)
+    print(".........................HOMO1..................")
+    calc(mat, HOMO_1, des, grid_tf, bayes_tf, algo)
+    print(".........................diff..................")
+    calc(mat, diff, des, grid_tf, bayes_tf, algo)
