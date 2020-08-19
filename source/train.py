@@ -209,9 +209,9 @@ if __name__ == "__main__":
     else:
         mat = df["mat"].to_numpy()
 
-    # print("Using " + des + " as the descriptor")
-    # print(".........................HOMO..................")
-    # calc(mat, HOMO, des, grid_tf, bayes_tf, algo)
+    print("Using " + des + " as the descriptor")
+    print(".........................HOMO..................")
+    calc(mat, HOMO, des, grid_tf, bayes_tf, algo)
     print(".........................HOMO1..................")
     calc(mat, HOMO_1, des, grid_tf, bayes_tf, algo)
     print(".........................diff..................")

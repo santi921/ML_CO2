@@ -29,7 +29,7 @@ def bayes(x, y, method="sgd"):
 
     elif (method == "rf"):
         print(".........random forest optimization selected.........")
-        params = {"max_depth": Real(10, 40),
+        params = {"max_depth": Integer(10, 40),
                   "min_samples_split": Integer(2, 6),
                   "n_estimators": Integer(500, 5000)}
         reg = RandomForestRegressor(n_jobs=1)
@@ -39,7 +39,7 @@ def bayes(x, y, method="sgd"):
 
         params = {"loss": ["ls"],
                   "n_estimators": Integer(500, 5000),
-                  "learning_rate": Real(0, 0.3),
+                  "learning_rate": Real(0.001, 0.3),
                   "subsample": Real(0.2, 0.8),
                   "max_depth": Integer(10, 30),
                   "tol": Real(1e-6, 1e-3, prior='log-uniform')}
@@ -121,7 +121,7 @@ def bayes(x, y, method="sgd"):
             x = preprocessing.scale(np.array(x))
             # scaler = preprocessing.StandardScaler().fit(x)
 
-        reg = BayesSearchCV(reg, params, n_iter=20, verbose=3, cv=3, n_jobs=4)
+        reg = BayesSearchCV(reg, params, n_iter=50, verbose=3, cv=3, n_jobs=4)
 
         reg.fit(list(x_train), y_train)
         print(reg.best_params_)
