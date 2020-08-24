@@ -1,8 +1,7 @@
 import time
 
-import numpy as np
 import scipy.stats as stats
-from sklearn import preprocessing
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -14,13 +13,9 @@ import xgboost as xgb
 
 def xgboost(x, y):
     try:
-        x = preprocessing.scale(np.array(x))
-        # scaler = preprocessing.StandardScaler().fit_transform(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
         x = list(x)
-        # x = preprocessing.scale(np.array(x))
-        # scaler = preprocessing.StandardScaler().fit_transform(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {"objective": "reg:squarederror",
@@ -39,26 +34,23 @@ def xgboost(x, y):
 
     t1 = time.time()
     # non grid
-    est.fit(list(x_train), y_train)
+    est.fit(x_train, y_train)
     t2 = time.time()
 
     time_el = t2 - t1
-    score = est.score(list(x_train), y_train)
+    score = est.score(x_train, y_train)
     print("xgboost score:               " + str(score) + " time: " + str(time_el))
 
     score = est.score(list(x_test), y_test)
     print("xgboost score:               " + str(score) + " time: " + str(time_el))
-
+    score_mse = mean_squared_error(est.predict(x_test), y_test)
+    print("mean squared error on test: " + str(score_mse))
 def xgboost_grid(x, y):
 
     try:
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
         x = list(x)
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {"objective": ['reg:squarederror'],
@@ -73,7 +65,6 @@ def xgboost_grid(x, y):
 
     xgb_temp = xgb.XGBRegressor()
     reg = GridSearchCV(xgb_temp, params, verbose=3, cv=3)
-    x_train = scaler.transform(x_train)
     reg.fit(x_train, y_train)
     print(reg.best_params_)
     print(reg.best_score_)
@@ -82,13 +73,9 @@ def xgboost_grid(x, y):
 
 def xgboost_bayes_basic(x, y):
     try:
-        x = preprocessing.scale(np.array(x))
-        # scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
         x = list(x)
-        x = preprocessing.scale(np.array(x))
-        # scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     xgb_temp = xgb.XGBRegressor(objective="reg:squarederror", tree_method="gpu_hist")
@@ -105,7 +92,7 @@ def xgboost_bayes_basic(x, y):
             "n_estimators": Integer(100, 6000)
         }, n_iter=2000, verbose=2, cv=3, n_jobs=4)
 
-    reg.fit(list(x_train), y_train)
+    reg.fit(x_train, y_train)
     print(reg.best_params_)
     print(reg.best_score_)
     print("Score on test data: " + str(reg.score(list(x_test), y_test)))
@@ -113,13 +100,9 @@ def xgboost_bayes_basic(x, y):
 
 def xgboost_rand(x, y):
     try:
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
         x = list(x)
-        x = preprocessing.scale(np.array(x))
-        scaler = preprocessing.StandardScaler().fit(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {"objective": ['reg:squarederror'],
@@ -134,7 +117,6 @@ def xgboost_rand(x, y):
 
     xgb_temp = xgb.XGBRegressor()
     reg = RandomizedSearchCV(xgb_temp, **params, verbose=0, cv=3)
-    x_train = scaler.transform(x_train)
     reg.fit(x_train, y_train)
 
     print(reg.best_params_)

@@ -1,7 +1,5 @@
 import time
 
-import numpy as np
-from sklearn import preprocessing
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
@@ -9,8 +7,6 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.linear_model import SGDRegressor, BayesianRidge
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPRegressor
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
@@ -113,13 +109,7 @@ def bayes(x, y, method="sgd"):
     else:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-        try:
-            x = preprocessing.scale(np.array(x))
-            # scaler = preprocessing.StandardScaler().fit(x)
-        except:
-            x = list(x)
-            x = preprocessing.scale(np.array(x))
-            # scaler = preprocessing.StandardScaler().fit(x)
+
 
         reg = BayesSearchCV(reg, params, n_iter=50, verbose=3, cv=3, n_jobs=4)
 
@@ -257,17 +247,9 @@ def grid(x, y, method="sgd"):
         return reg
     else:
 
-        try:
-            x = preprocessing.scale(np.array(x))
-            scaler = preprocessing.StandardScaler().fit(x)
-        except:
-            x = list(x)
-            x = preprocessing.scale(np.array(x))
-            scaler = preprocessing.StandardScaler().fit(x)
 
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         reg = GridSearchCV(reg, params, verbose=6, cv=3)
-        x_train = scaler.transform(x_train)
         reg.fit(list(x_train), y_train)
 
         print(reg.best_params_)
@@ -289,13 +271,12 @@ def sgd (x,y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     reg = SGDRegressor(**params)
 
-    est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
 
-    score = str(est.score(list(x_test), y_test))
+    score = str(reg.score(list(x_test), y_test))
     print("stochastic gradient descent score:   " + str(score) + " time: " + str(time_el))
 
 def gradient_boost_reg(x, y):
@@ -312,12 +293,11 @@ def gradient_boost_reg(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     reg = GradientBoostingRegressor(**params)
 
-    est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("gradient boost score:                " + str(score) + " time: " + str(time_el))
 
 def random_forest(x, y):
@@ -331,24 +311,23 @@ def random_forest(x, y):
 
     reg = RandomForestRegressor(**params)
 
-    est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("random forest score:                 " + str(score) + " time: " + str(time_el))
 
 def gaussian(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     kernel = DotProduct() + WhiteKernel()
     reg = GaussianProcessRegressor(kernel=kernel, alpha=1e-10, random_state=0)
-    est = make_pipeline(StandardScaler(), reg)
+
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("gaussian process score:              " + str(score) + " time: " + str(time_el))
 
 def kernel(x, y):
@@ -356,12 +335,11 @@ def kernel(x, y):
     # reg = KernelRidge(alpha=0.0001, degree = 10,kernel = "polynomial")
     reg = KernelRidge(kernel='rbf', alpha=0.00005, gamma=0.0001)
 
-    est = make_pipeline(StandardScaler(), reg)
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("kernel regression score:             " + str(score) + " time: " + str(time_el))
 
 def bayesian(x, y):
@@ -369,12 +347,12 @@ def bayesian(x, y):
 
     reg = BayesianRidge(n_iter=10000, tol=1e-7, copy_X=True, alpha_1=1e-03, alpha_2=1e-03,
                         lambda_1=1e-03, lambda_2=1e-03)
-    est = make_pipeline(StandardScaler(), reg)
+
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("bayesian score:                      " + str(score) + " time: " + str(time_el))
 
 def svr(x, y):
@@ -385,11 +363,11 @@ def svr(x, y):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     svr_rbf = SVR(kernel='rbf', C=0.001, gamma=0.1, epsilon=.1, cache_size=4000)
-    est_rbf = make_pipeline(StandardScaler(), svr_rbf)
+    est_rbf = svr_rbf
     svr_lin = SVR(kernel='linear', C=0.1, gamma='auto', cache_size=4000)
-    est_lin = make_pipeline(StandardScaler(), svr_lin)
+    est_lin = svr_lin
     svr_poly = SVR(kernel='poly', C=100, gamma='auto', degree=6, epsilon=.1, coef0=0.5, cache_size=4000)
-    est_poly = make_pipeline(StandardScaler(), svr_poly)
+    est_poly = svr_pol
 
     t1 = time.time()
     est_rbf.fit(list(x_train), y_train)
@@ -420,10 +398,9 @@ def sk_nn(x, y):
                        early_stopping=True, tol=1e-7, shuffle=True, solver="adam", activation="relu",
                        hidden_layer_sizes=(1000,), verbose=False, alpha=0.00001)
 
-    est = make_pipeline(StandardScaler(), reg, verbose=True)
     t1 = time.time()
-    est.fit(list(x_train), y_train)
+    reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
-    score = est.score(list(x_test), y_test)
+    score = reg.score(list(x_test), y_test)
     print("Neural Network score:                " + str(score) + " time: " + str(time_el))

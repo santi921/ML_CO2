@@ -1,7 +1,9 @@
 import argparse
 import uuid
 
+import numpy as np
 import pandas as pd
+from sklearn import preprocessing
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
     bayesian, svr, bayes
@@ -163,7 +165,6 @@ def calc(x, y, des, grid_tf=True, bayes_tf=False, algo="sgd"):
             print("stochastic gradient descent selected")
             sgd(x, y)
 
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
@@ -209,10 +210,29 @@ if __name__ == "__main__":
     else:
         mat = df["mat"].to_numpy()
 
+    scale_x_tf = True
+    if (scale_x_tf == True):
+        try:
+            # mat = preprocessing.scale(np.array(mat))
+            # scaler = preprocessing.StandardScaler().fit(mat)
+            preprocessing.scale(np.array(mat))
+            preprocessing.StandardScaler().fit(mat)
+
+        except:
+            mat = list(mat)
+            # mat = preprocessing.scale(np.array(mat))
+            # scaler = preprocessing.StandardScaler().fit(mat)
+
     print("Using " + des + " as the descriptor")
     print(".........................HOMO..................")
+    # try:
+    #    nn_basic(mat, diff)
+    # except:
+    #    mat = list(mat)
+    #    nn_basic(mat,diff)
+    HOMO = (HOMO - np.mean(HOMO)) / np.std(HOMO)
     calc(mat, HOMO, des, grid_tf, bayes_tf, algo)
-    print(".........................HOMO1..................")
-    calc(mat, HOMO_1, des, grid_tf, bayes_tf, algo)
-    print(".........................diff..................")
-    calc(mat, diff, des, grid_tf, bayes_tf, algo)
+    # print(".........................HOMO1..................")
+    # calc(mat, HOMO_1, des, grid_tf, bayes_tf, algo)
+    # print(".........................diff..................")
+    # calc(mat, diff, des, grid_tf, bayes_tf, algo)
