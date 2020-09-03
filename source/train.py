@@ -9,8 +9,6 @@ from sklearn_utils import gradient_boost_reg, \
     bayesian, svr, bayes
 
 
-# TODO: implement with and without standardization
-
 def process_input_DB2(dir="DB2", desc="rdkit"):
     try:
         str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
@@ -63,7 +61,7 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     else:
         df.to_pickle(str)
 
-# TODO : this
+# TODO : this, once ZZ finishes getting his data
 def process_input_ZZ(dir="ZZ", desc="vae"):
     # todo: process ZZ's
     return 0
@@ -120,7 +118,7 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         df.to_pickle(str)
 
 
-def calc(x, y, des, grid_tf=True, bayes_tf=False, algo="sgd"):
+def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
     if (grid_tf == True):
         print("........starting grid search........")
         grid_obj = grid(x, y, method=algo)
@@ -138,32 +136,45 @@ def calc(x, y, des, grid_tf=True, bayes_tf=False, algo="sgd"):
     else:
         if (algo == "nn"):
             print("nn reg selected")
-            sk_nn(x, y)
+            reg = sk_nn(x, y, scale)
         elif (algo == "rf"):
             print("random forest selected")
-            random_forest(x, y)
+            reg = random_forest(x, y, scale)
         elif (algo == "grad"):
             print("grid algo selected")
-            gradient_boost_reg(x, y)
+            reg = gradient_boost_reg(x, y, scale)
         elif (algo == "svr"):
             print("svr algo selected")
-            svr(x, y)
+            reg = svr(x, y, scale)
         elif (algo == "bayes"):
             print("bayes regression selected")
-            bayesian(x, y)
+            reg = bayesian(x, y, scale)
         elif (algo == "kernel"):
             print("kernel regression selected")
-            kernel(x, y)
+            reg = kernel(x, y, scale)
         elif (algo == "gaussian"):
             print("gaussian algo selected")
-            gaussian(x, y)
+            reg = gaussian(x, y, scale)
         elif (algo == "xgboost"):
             from xgboost_util import xgboost
             print("xgboost algo selected")
-            xgboost(x, y)
+            reg = xgboost(x, y, scale)
+        elif (algo == "tf_nn"):
+            from tensorflow_util import nn_basic
+            reg = nn_basic(x, y, scale)
+        elif (algo == "tf_cnn"):
+            from tensorflow_util import cnn_basic
+            reg = cnn_basic(x, y, scale)
+        elif (algo == "tf_cnn_norm"):
+            from tensorflow_util import cnn_norm_basic
+            reg = cnn_norm_basic(x, y, scale)
+        elif (algo == "resnet"):
+            from tensorflow_util import resnet34
+            reg = resnet34(x, y, scale)
         else:
             print("stochastic gradient descent selected")
-            sgd(x, y)
+            reg = sgd(x, y, scale)
+        return reg
 
 if __name__ == "__main__":
 
@@ -174,6 +185,7 @@ if __name__ == "__main__":
                         help="options: [svr_rbf, svr_poly, svr_lin, grad, rf, sgd, bayes, kernel, gaussian, nn]")
     parser.add_argument('--grid', dest="grid_tf", action='store_true')
     parser.add_argument('--bayes', dest="bayes_tf", action='store_true')
+    parser.add_argument('--scale', dest="scale_x_tf", action='store_true')
 
     results = parser.parse_args()
     des = results.desc
@@ -183,6 +195,7 @@ if __name__ == "__main__":
     algo = results.algo
     grid_tf = results.grid_tf
     bayes_tf = results.bayes_tf
+    scale_x_tf = results.scale_x_tf
 
     if (dir_temp == "DB3" or dir_temp == "DB2"):
         try:
@@ -213,26 +226,28 @@ if __name__ == "__main__":
     scale_x_tf = True
     if (scale_x_tf == True):
         try:
-            # mat = preprocessing.scale(np.array(mat))
-            # scaler = preprocessing.StandardScaler().fit(mat)
-            preprocessing.scale(np.array(mat))
-            preprocessing.StandardScaler().fit(mat)
+            mat = preprocessing.scale(np.array(mat))
 
         except:
             mat = list(mat)
-            # mat = preprocessing.scale(np.array(mat))
-            # scaler = preprocessing.StandardScaler().fit(mat)
-
+            mat = preprocessing.scale(np.array(mat))
+    '''
+    scale_HOMO = (np.max(HOMO) - np.min(HOMO))
+    HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
     print("Using " + des + " as the descriptor")
     print(".........................HOMO..................")
-    # try:
-    #    nn_basic(mat, diff)
-    # except:
-    #    mat = list(mat)
-    #    nn_basic(mat,diff)
-    HOMO = (HOMO - np.mean(HOMO)) / np.std(HOMO)
-    calc(mat, HOMO, des, grid_tf, bayes_tf, algo)
-    # print(".........................HOMO1..................")
-    # calc(mat, HOMO_1, des, grid_tf, bayes_tf, algo)
-    # print(".........................diff..................")
-    # calc(mat, diff, des, grid_tf, bayes_tf, algo)
+    reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, algo)
+
+
+    print(".........................HOMO1..................")
+    scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
+    HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
+    reg_HOMO_1 = calc(mat, HOMO_1, des, scale_HOMO_1, grid_tf, bayes_tf, algo)
+    '''
+
+    scale_diff = (np.max(diff) - np.min(diff))
+    diff = (diff - np.min(diff)) / scale_diff
+    print(".........................diff..................")
+    reg_diff = calc(mat, diff, des, scale_diff, grid_tf, bayes_tf, algo)
+
+    # todo: make the data split in this script not the others

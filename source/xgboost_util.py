@@ -1,52 +1,65 @@
-import time
+import sklearn.utils.fixes
+from numpy.ma import MaskedArray
 
+sklearn.utils.fixes.MaskedArray = MaskedArray
+
+import time
+import numpy as np
+import xgboost as xgb
 import scipy.stats as stats
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 
-import xgboost as xgb
 
-
-def xgboost(x, y):
+def xgboost(x, y, scale):
+    x = np.array(x)
+    y = np.array(y)
     try:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    params = {"objective": "reg:squarederror",
-              "colsample_bytree": 0.3,
-              "learning_rate": 0.01,
-              "max_depth": 40, "gamma": 0.0,
-              "lambda": 0.0,
-              "alpha": 0.1,
-              "eta": 0.0,
-              "n_estimators": 5000,
-              "tree_method": "gpu_hist"}
+    params = {
+        "colsample_bytree": 0.3,
+        "learning_rate": 0.01,
+        "max_depth": 25, "gamma": 0.0,
+        "lambda": 0.0,
+        "alpha": 0.1,
+        "eta": 0.0,
+        "n_estimators": 5000}
 
-    reg = xgb.XGBRegressor(**params)
-    est = make_pipeline(StandardScaler(), reg)
-    # x_train = scaler.transform(x_train)
+    reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
 
     t1 = time.time()
     # non grid
-    est.fit(x_train, y_train)
+    print(y_train)
+    reg.fit(x_train, y_train)
     t2 = time.time()
 
     time_el = t2 - t1
-    score = est.score(x_train, y_train)
+    score = reg.score(x_train, y_train)
     print("xgboost score:               " + str(score) + " time: " + str(time_el))
 
-    score = est.score(list(x_test), y_test)
-    print("xgboost score:               " + str(score) + " time: " + str(time_el))
-    score_mse = mean_squared_error(est.predict(x_test), y_test)
-    print("mean squared error on test: " + str(score_mse))
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+
 def xgboost_grid(x, y):
-
     try:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     except:
@@ -64,12 +77,11 @@ def xgboost_grid(x, y):
               "tree_method": ["gpu_hist"]}
 
     xgb_temp = xgb.XGBRegressor()
-    reg = GridSearchCV(xgb_temp, params, verbose=3, cv=3)
+    reg = GridSearchCV(xgb_temp, params, verbose=5, cv=3)
     reg.fit(x_train, y_train)
     print(reg.best_params_)
     print(reg.best_score_)
     return reg
-
 
 def xgboost_bayes_basic(x, y):
     try:
@@ -78,24 +90,36 @@ def xgboost_bayes_basic(x, y):
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    xgb_temp = xgb.XGBRegressor(objective="reg:squarederror", tree_method="gpu_hist")
+    xgb_temp = xgb.XGBRegressor()
 
     reg = BayesSearchCV(
         xgb_temp, {
             "colsample_bytree": Real(0.2, 0.8),
-            "max_depth": Integer(25, 60),
+            "max_depth": Integer(30, 45),
             "lambda": Real(0, 0.4),
-            "learning_rate": Real(0.01, 0.15),
+            "learning_rate": Real(0, 0.15),
             "alpha": Real(0, 0.4),
             "eta": Real(0, 0.4),
             "gamma": Real(0, 0.4),
-            "n_estimators": Integer(100, 6000)
-        }, n_iter=2000, verbose=2, cv=3, n_jobs=4)
+            "n_estimators": Integer(100, 200),
+            "objective": ["reg:squarederror"],
+            "tree_method": ["gpu_hist"]
+        },
+        n_iter=50,
+        verbose=3, cv=3,
+        random_state=0)
 
     reg.fit(x_train, y_train)
-    print(reg.best_params_)
-    print(reg.best_score_)
-    print("Score on test data: " + str(reg.score(list(x_test), y_test)))
+
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score))
+
     return reg
 
 def xgboost_rand(x, y):
@@ -121,4 +145,5 @@ def xgboost_rand(x, y):
 
     print(reg.best_params_)
     print(reg.best_score_)
+
     return reg

@@ -1,15 +1,22 @@
-import time
+import sklearn.utils.fixes
+from numpy.ma import MaskedArray
 
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.linear_model import SGDRegressor, BayesianRidge
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.neural_network import MLPRegressor
-from sklearn.svm import SVR
-from skopt import BayesSearchCV
+sklearn.utils.fixes.MaskedArray = MaskedArray
+
+import time
+import numpy as np
+from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
+
+from sklearn.svm import SVR
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import SGDRegressor, BayesianRidge
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 
 def bayes(x, y, method="sgd"):
@@ -108,15 +115,22 @@ def bayes(x, y, method="sgd"):
         reg = xgboost_bayes_basic(x, y)
     else:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-
-
-
-        reg = BayesSearchCV(reg, params, n_iter=50, verbose=3, cv=3, n_jobs=4)
+        reg = BayesSearchCV(reg, params, n_iter=500, verbose=2, cv=3)
 
         reg.fit(list(x_train), y_train)
         print(reg.best_params_)
         print(reg.best_score_)
         print("Score on test data: " + str(reg.score(list(x_test), y_test)))
+
+        score = str(mean_squared_error(reg.predict(x_test), y_test))
+        print("MSE score:   " + str(score))
+
+        score = str(mean_absolute_error(reg.predict(x_test), y_test))
+        print("MAE score:   " + str(score))
+
+        score = str(r2_score(reg.predict(x_test), y_test))
+        print("r2 score:   " + str(score))
+
     return reg
 
 
@@ -258,7 +272,10 @@ def grid(x, y, method="sgd"):
 
         return reg
 
-def sgd (x,y):
+
+def sgd(x, y, scale):
+    x = np.array(x)
+    y = np.array(y)
 
     params = {"loss": 'squared_loss',
               "max_iter": 10 ** 7,
@@ -279,15 +296,30 @@ def sgd (x,y):
     score = str(reg.score(list(x_test), y_test))
     print("stochastic gradient descent score:   " + str(score) + " time: " + str(time_el))
 
-def gradient_boost_reg(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
 
-    params = {"loss":"ls",
-                "n_estimators": 2000,
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+
+def gradient_boost_reg(x, y, scale):
+    params = {"loss": "ls",
+              "n_estimators": 2000,
               "learning_rate": 0.1,
-              "subsample":0.8,
-              "criterion":"mse",
+              "subsample": 0.8,
+              "criterion": "mse",
               "max_depth": 10,
-              "tol":0.0001
+              "tol": 0.0001
               }
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
@@ -300,7 +332,23 @@ def gradient_boost_reg(x, y):
     score = reg.score(list(x_test), y_test)
     print("gradient boost score:                " + str(score) + " time: " + str(time_el))
 
-def random_forest(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+
+def random_forest(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {"max_depth": 30,
@@ -318,7 +366,23 @@ def random_forest(x, y):
     score = reg.score(list(x_test), y_test)
     print("random forest score:                 " + str(score) + " time: " + str(time_el))
 
-def gaussian(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+
+def gaussian(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     kernel = DotProduct() + WhiteKernel()
     reg = GaussianProcessRegressor(kernel=kernel, alpha=1e-10, random_state=0)
@@ -330,7 +394,22 @@ def gaussian(x, y):
     score = reg.score(list(x_test), y_test)
     print("gaussian process score:              " + str(score) + " time: " + str(time_el))
 
-def kernel(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+    return reg
+
+
+def kernel(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     # reg = KernelRidge(alpha=0.0001, degree = 10,kernel = "polynomial")
     reg = KernelRidge(kernel='rbf', alpha=0.00005, gamma=0.0001)
@@ -342,7 +421,22 @@ def kernel(x, y):
     score = reg.score(list(x_test), y_test)
     print("kernel regression score:             " + str(score) + " time: " + str(time_el))
 
-def bayesian(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+    return reg
+
+
+def bayesian(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     reg = BayesianRidge(n_iter=10000, tol=1e-7, copy_X=True, alpha_1=1e-03, alpha_2=1e-03,
@@ -355,7 +449,23 @@ def bayesian(x, y):
     score = reg.score(list(x_test), y_test)
     print("bayesian score:                      " + str(score) + " time: " + str(time_el))
 
-def svr(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+
+def svr(x, y, scale):
     # change C
     # scale data
     # L1/L2 normalization
@@ -367,7 +477,7 @@ def svr(x, y):
     svr_lin = SVR(kernel='linear', C=0.1, gamma='auto', cache_size=4000)
     est_lin = svr_lin
     svr_poly = SVR(kernel='poly', C=100, gamma='auto', degree=6, epsilon=.1, coef0=0.5, cache_size=4000)
-    est_poly = svr_pol
+    est_poly = svr_poly
 
     t1 = time.time()
     est_rbf.fit(list(x_train), y_train)
@@ -391,8 +501,23 @@ def svr(x, y):
     print("radial basis svr score:              " + str(s1) + " time: " + str(time_svr))
     print("polynomial svr score:                " + str(score) + " time: " + str(time_poly))
 
-def sk_nn(x, y):
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
 
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return svr_poly
+
+
+def sk_nn(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     reg = MLPRegressor(random_state=1, max_iter=100000, learning_rate_init=0.00001, learning_rate="adaptive",
                        early_stopping=True, tol=1e-7, shuffle=True, solver="adam", activation="relu",
@@ -402,5 +527,21 @@ def sk_nn(x, y):
     reg.fit(list(x_train), y_train)
     t2 = time.time()
     time_el = t2 - t1
+
     score = reg.score(list(x_test), y_test)
     print("Neural Network score:                " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
