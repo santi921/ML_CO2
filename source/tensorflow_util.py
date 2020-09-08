@@ -87,8 +87,9 @@ def resnet34(x, y, scale):
         prev_filters = filters
     model.add(GlobalAvgPool2D())
     model.add(Flatten())
-    model.add(Dense(1000))
-    model.add(Dropout(0.5))
+    model.add(Dense(512, activation="relu"))
+    model.add(Dropout(0.3))
+
     model.add(Dense(1))
 
     model.summary()

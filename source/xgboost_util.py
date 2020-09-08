@@ -23,13 +23,13 @@ def xgboost(x, y, scale):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {
-        "colsample_bytree": 0.3,
-        "learning_rate": 0.01,
-        "max_depth": 25, "gamma": 0.0,
+        "colsample_bytree": 0.4,
+        "learning_rate": 0.05,
+        "max_depth": 10, "gamma": 0.0,
         "lambda": 0.0,
         "alpha": 0.1,
         "eta": 0.0,
-        "n_estimators": 5000}
+        "n_estimators": 10000}
 
     reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
 
@@ -40,7 +40,7 @@ def xgboost(x, y, scale):
     t2 = time.time()
 
     time_el = t2 - t1
-    score = reg.score(x_train, y_train)
+    score = reg.score(x_test, y_test)
     print("xgboost score:               " + str(score) + " time: " + str(time_el))
 
     score = str(mean_squared_error(reg.predict(x_test), y_test))
