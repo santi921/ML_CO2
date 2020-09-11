@@ -246,6 +246,7 @@ if __name__ == "__main__":
     '''
 
     scale_diff = (np.max(diff) - np.min(diff))
+    # diff = diff - np.min(diff)
     diff = (diff - np.min(diff)) / scale_diff
     print(".........................diff..................")
     reg_diff = calc(mat, diff, des, scale_diff, grid_tf, bayes_tf, algo)

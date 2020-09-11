@@ -115,7 +115,7 @@ def bayes(x, y, method="sgd"):
         reg = xgboost_bayes_basic(x, y)
     else:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-        reg = BayesSearchCV(reg, params, n_iter=1000, verbose=3, cv=3)
+        reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3)
 
         reg.fit(list(x_train), y_train)
         print(reg.best_params_)

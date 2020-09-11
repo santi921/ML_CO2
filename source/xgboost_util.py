@@ -106,7 +106,7 @@ def xgboost_bayes_basic(x, y):
             "tree_method": ["gpu_hist"]
         },
         n_iter=50,
-        verbose=3, cv=3,
+        verbose=4, cv=3,
         random_state=0)
 
     reg.fit(x_train, y_train)

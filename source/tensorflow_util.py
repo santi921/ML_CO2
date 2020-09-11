@@ -3,7 +3,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard, EarlyStopping
 from tensorflow.keras.layers import Dense, MaxPooling2D, Conv2D, Dropout, \
     Flatten, BatchNormalization, Activation, GlobalAvgPool2D
 from tensorflow.keras.models import Sequential
@@ -87,15 +87,15 @@ def resnet34(x, y, scale):
         prev_filters = filters
     model.add(GlobalAvgPool2D())
     model.add(Flatten())
-    model.add(Dense(512, activation="relu"))
-    model.add(Dropout(0.3))
+    model.add(Dropout(0.5))
+    model.add(Dense(1024, activation="relu"))
 
     model.add(Dense(1))
-
     model.summary()
-    model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
-
-    history = model.fit(x_train, y_train, epochs=500)
+    opt = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1E-7, amsgrad=False)
+    model.compile(optimizer=opt, loss="MSE", metrics=["MeanSquaredError", "MAE"])
+    early_stop = EarlyStopping(monitor="loss", verbose=1, patience=200)
+    history = model.fit(x_train, y_train, epochs=1000, callbacks=[early_stop])
     ret = model.evaluate(x_test, y_test, verbose=2)
 
     score = str(mean_squared_error(model.predict(x_test), y_test))
@@ -138,10 +138,8 @@ def nn_basic(x, y, scale):
     model = tf.keras.models.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
     model.add(tf.keras.layers.Dense(2048, activation="relu"))
-    model.add(tf.keras.Input(tf.keras.layers.Dropout(0.2)))
-    model.add(tf.keras.layers.Dense(1024, activation="relu"))
-    model.add(tf.keras.Input(tf.keras.layers.Dropout(0.2)))
-    model.add(tf.keras.layers.Dense(512, activation="relu"))
+    model.add(tf.keras.layers.Dense(2048, activation="relu"))
+
     model.add(tf.keras.layers.Dense(1))
 
     # tf.keras.layers.Dropout(0.2),
@@ -155,20 +153,16 @@ def nn_basic(x, y, scale):
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     # model.compile(optimizer='adam', loss=mse, metrics=[keras.metrics.mae])
     model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
-
     tensorboard_cbk = TensorBoard(log_dir=log_dir)
-    history = model.fit(x_train, y_train, epochs=10, callbacks=[tensorboard_callback])
+    history = model.fit(x_train, y_train, epochs=100, callbacks=[tensorboard_callback])
     ret = model.evaluate(x_test, y_test, verbose=2)
 
     score = str(mean_squared_error(model.predict(x_test), y_test))
     print("MSE score:   " + str(score))
-
     score = str(mean_absolute_error(model.predict(x_test), y_test))
     print("MAE score:   " + str(score))
-
     score = str(r2_score(model.predict(x_test), y_test))
     print("r2 score:   " + str(score))
-
     score_mae = mean_absolute_error(model.predict(x_test), y_test)
     print("scaled MAE")
     print(scale * score_mae)
