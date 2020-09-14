@@ -4,11 +4,15 @@ from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
 import time
+import joblib
 import numpy as np
 import xgboost as xgb
 import scipy.stats as stats
+
 from skopt import BayesSearchCV
+from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
+
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 
@@ -58,7 +62,6 @@ def xgboost(x, y, scale):
 
     return reg
 
-
 def xgboost_grid(x, y):
     try:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
@@ -78,7 +81,11 @@ def xgboost_grid(x, y):
 
     xgb_temp = xgb.XGBRegressor()
     reg = GridSearchCV(xgb_temp, params, verbose=5, cv=3)
-    reg.fit(x_train, y_train)
+
+    time_to_stop = 60 * 60
+    ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost.pkl"
+    checkpoint_callback = CheckpointSaver(ckpt_loc)
+    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
     print(reg.best_params_)
     print(reg.best_score_)
     return reg
@@ -91,11 +98,10 @@ def xgboost_bayes_basic(x, y):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     xgb_temp = xgb.XGBRegressor()
-
     reg = BayesSearchCV(
         xgb_temp, {
             "colsample_bytree": Real(0.2, 0.8),
-            "max_depth": Integer(30, 45),
+            "max_depth": Integer(4, 10),
             "lambda": Real(0, 0.4),
             "learning_rate": Real(0, 0.15),
             "alpha": Real(0, 0.4),
@@ -109,18 +115,19 @@ def xgboost_bayes_basic(x, y):
         verbose=4, cv=3,
         random_state=0)
 
-    reg.fit(x_train, y_train)
+    time_to_stop = 60 * 60 * 47
+    ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost.pkl"
+    checkpoint_callback = CheckpointSaver(ckpt_loc)
+    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
 
     score = str(mean_squared_error(reg.predict(x_test), y_test))
     print("MSE score:   " + str(score))
-
     score = str(mean_absolute_error(reg.predict(x_test), y_test))
     print("MAE score:   " + str(score))
-
     score = str(r2_score(reg.predict(x_test), y_test))
     print("r2 score:   " + str(score))
-
     return reg
+
 
 def xgboost_rand(x, y):
     try:
