@@ -119,7 +119,7 @@ def bayes(x, y, method="sgd"):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3)
 
-        time_to_stop = 60 * 120
+        time_to_stop = 60 * 60 * 47
         ckpt_loc = "../data/train/bayes/ckpt_bayes_" + method + ".pkl"
         checkpoint_callback = CheckpointSaver(ckpt_loc)
         reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
