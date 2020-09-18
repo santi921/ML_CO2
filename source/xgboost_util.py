@@ -94,14 +94,14 @@ def xgboost_bayes_basic(x, y):
 
     reg = BayesSearchCV(
         xgb_temp, {
-            "colsample_bytree": Real(0.2, 0.8),
-            "max_depth": Integer(30, 45),
-            "lambda": Real(0, 0.4),
-            "learning_rate": Real(0, 0.15),
-            "alpha": Real(0, 0.4),
-            "eta": Real(0, 0.4),
-            "gamma": Real(0, 0.4),
-            "n_estimators": Integer(100, 200),
+            "colsample_bytree": Real(0.5, 0.99),
+            "max_depth": Integer(40, 55),
+            "lambda": Real(0, 0.25),
+            "learning_rate": Real(0.1, 0.25),
+            "alpha": Real(0, 0.2),
+            "eta": Real(0.01, 0.2),
+            "gamma": Real(0, 0.1),
+            "n_estimators": Integer(500, 5000),
             "objective": ["reg:squarederror"],
             "tree_method": ["gpu_hist"]
         },
