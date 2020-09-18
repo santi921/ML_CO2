@@ -1,17 +1,18 @@
-import sklearn.utils.fixes
-from numpy.ma import MaskedArray
-
-sklearn.utils.fixes.MaskedArray = MaskedArray
-
-import time
+import joblib
 import numpy as np
+import sklearn.utils.fixes
+import time
+from numpy.ma import MaskedArray
+from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
 
+sklearn.utils.fixes.MaskedArray = MaskedArray
 from sklearn.svm import SVR
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import SGDRegressor, BayesianRidge
+from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
@@ -87,7 +88,6 @@ def bayes(x, y, method="sgd"):
             "lambda_2": Real(1e-6, 1e+1, prior='log-uniform')}
         reg = BayesianRidge()
 
-
     elif (method == "kernel"):
         print(".........kernel optimization selected.........")
 
@@ -105,31 +105,37 @@ def bayes(x, y, method="sgd"):
         params = {'l1_ratio': Real(0.1, 0.3),
                   'tol': Real(1e-3, 1e-1, prior="log-uniform"),
                   "epsilon": Real(1e-3, 1e0, prior="log-uniform"),
-                  "eta0": Real(0, 0.2)}
+                  "eta0": Real(0.01, 0.2)}
         reg = SGDRegressor(penalty="l1", loss='squared_loss')
 
     if (method == "xgboost"):
         from xgboost_util import xgboost_bayes_basic
         print(".........xgboost optimization selected.........")
-
         reg = xgboost_bayes_basic(x, y)
+
     else:
+        print("........." + method + " optimization selected.........")
+
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3)
 
-        reg.fit(list(x_train), y_train)
+        time_to_stop = 60 * 60 * 47
+        ckpt_loc = "../data/train/bayes/ckpt_bayes_" + method + ".pkl"
+        checkpoint_callback = CheckpointSaver(ckpt_loc)
+        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+
         print(reg.best_params_)
         print(reg.best_score_)
-        print("Score on test data: " + str(reg.score(list(x_test), y_test)))
-
+        score = str(reg.score(x_test, y_test))
+        print("Score on test data: " + score)
+        score = str(reg.score(list(x_test), y_test))
+        print("Score on test data: " + score)
         score = str(mean_squared_error(reg.predict(x_test), y_test))
-        print("MSE score:   " + str(score))
-
+        print("MSE score:   " + score)
         score = str(mean_absolute_error(reg.predict(x_test), y_test))
-        print("MAE score:   " + str(score))
-
+        print("MAE score:   " + score)
         score = str(r2_score(reg.predict(x_test), y_test))
-        print("r2 score:   " + str(score))
+        print("r2 score:   " + score)
 
     return reg
 
@@ -156,7 +162,6 @@ def grid(x, y, method="sgd"):
                   "n_estimators": [500, 1000, 2000, 5000]
                   }
         reg = RandomForestRegressor()
-
     elif (method == "grad"):
         print(".........gradient boost grid optimization selected.........")
 
@@ -169,7 +174,6 @@ def grid(x, y, method="sgd"):
                   "tol": [0.0001, 0.000001]
                   }
         reg = GradientBoostingRegressor()
-
     elif (method == "svr_rbf"):
         print(".........svr grid optimization selected.........")
 
@@ -181,7 +185,6 @@ def grid(x, y, method="sgd"):
                   }
 
         reg = SVR()
-
     elif (method == "svr_poly"):
         print(".........svr grid optimization selected.........")
 
@@ -205,7 +208,6 @@ def grid(x, y, method="sgd"):
                   }
 
         reg = SVR()
-
     elif (method == "bayes"):
         print(".........bayes grid optimization selected.........")
 
@@ -219,8 +221,6 @@ def grid(x, y, method="sgd"):
         }
 
         reg = BayesianRidge()
-
-
     elif (method == "kernel"):
         print(".........kernel grid optimization selected.........")
 
@@ -230,7 +230,6 @@ def grid(x, y, method="sgd"):
                   }
 
         reg = KernelRidge()
-
     elif (method == "gaussian"):
         print(".........gaussian grid optimization selected.........")
 
@@ -239,8 +238,6 @@ def grid(x, y, method="sgd"):
 
         kernel = DotProduct() + WhiteKernel()
         reg = GaussianProcessRegressor(kernel=kernel)
-
-
     else:
 
         params = {"loss": ['squared_loss', "huber"],
@@ -261,10 +258,13 @@ def grid(x, y, method="sgd"):
         return reg
     else:
 
-
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
         reg = GridSearchCV(reg, params, verbose=6, cv=3)
-        reg.fit(list(x_train), y_train)
+        time_to_stop = 60 * 60 * 23
+        ckpt_loc = "../data/train/bayes/ckpt_grid_" + method + ".pkl"
+        checkpoint_callback = CheckpointSaver(ckpt_loc)
+        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
 
         print(reg.best_params_)
         print(reg.best_score_)
@@ -488,7 +488,7 @@ def svr(x, y, scale):
     t1 = time.time()
     est_lin.fit(list(x_train), y_train)
     t2 = time.time()
-    time_svr= t2 - t1
+    time_svr = t2 - t1
     s2 = svr_lin.score(list(x_test), y_test)
 
     t1 = time.time()

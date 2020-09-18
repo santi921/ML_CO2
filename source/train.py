@@ -1,12 +1,20 @@
 import argparse
-import uuid
-
+import joblib
 import numpy as np
 import pandas as pd
+import uuid
 from sklearn import preprocessing
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
     bayesian, svr, bayes
+
+
+# todo: compile and xgboost on xsede/test gpu
+# todo: upload descs to xsede
+# todo: work on interpretability algo/aspects
+# todo: plots of parameter space
+# todo: process zz's stuff
+# todo: make a standard method of storing results
 
 
 def process_input_DB2(dir="DB2", desc="rdkit"):
@@ -61,10 +69,12 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     else:
         df.to_pickle(str)
 
+
 # TODO : this, once ZZ finishes getting his data
 def process_input_ZZ(dir="ZZ", desc="vae"):
     # todo: process ZZ's
     return 0
+
 
 def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
@@ -77,7 +87,6 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
-
 
     print(df.head())
 
@@ -123,15 +132,15 @@ def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
         print("........starting grid search........")
         grid_obj = grid(x, y, method=algo)
         uuid_temp = uuid.uuid4()
-        str = "../data/train/grid/" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
-        # joblib.dump(grid_obj, str)
+        str = "../data/train/grid/complete_grid_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
+        joblib.dump(grid_obj, str)
 
     elif (bayes_tf == True):
         print("........starting bayes search........")
         bayes_obj = bayes(x, y, method=algo)
         uuid_temp = uuid.uuid4()
-        str = "../data/train/bayes/" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
-        # joblib.dump(bayes_obj, str)
+        str = "../data/train/bayes/complete_bayes_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
+        joblib.dump(bayes_obj, str)
 
     else:
         if (algo == "nn"):
@@ -176,10 +185,12 @@ def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
             reg = sgd(x, y, scale)
         return reg
 
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
-    parser.add_argument("--des", action='store', dest="desc", default="rdkit", help="select descriptor to convert to")
+    parser.add_argument("--des", action='store', dest="desc", default="rdkit",
+                        help="select descriptor to convert to")
     parser.add_argument("--dir", action="store", dest="dir", default="DB", help="select directory")
     parser.add_argument("--algo", action="store", dest="algo", default="DB",
                         help="options: [svr_rbf, svr_poly, svr_lin, grad, rf, sgd, bayes, kernel, gaussian, nn]")
@@ -250,5 +261,3 @@ if __name__ == "__main__":
     diff = (diff - np.min(diff)) / scale_diff
     print(".........................diff..................")
     reg_diff = calc(mat, diff, des, scale_diff, grid_tf, bayes_tf, algo)
-
-    # todo: make the data split in this script not the others
