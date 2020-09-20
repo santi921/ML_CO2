@@ -6,15 +6,12 @@ import uuid
 from sklearn import preprocessing
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
-    bayesian, svr, bayes
+    bayesian, svr, bayes, boruta
 
 
-# todo: compile and xgboost on xsede/test gpu
-# todo: upload descs to xsede
 # todo: work on interpretability algo/aspects
 # todo: plots of parameter space
 # todo: process zz's stuff
-# todo: make a standard method of storing results
 
 
 def process_input_DB2(dir="DB2", desc="rdkit"):
@@ -186,6 +183,9 @@ def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
         return reg
 
 
+
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
@@ -242,7 +242,7 @@ if __name__ == "__main__":
         except:
             mat = list(mat)
             mat = preprocessing.scale(np.array(mat))
-    '''
+
     scale_HOMO = (np.max(HOMO) - np.min(HOMO))
     HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
     print("Using " + des + " as the descriptor")
@@ -250,14 +250,18 @@ if __name__ == "__main__":
     reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, algo)
 
 
+    """
     print(".........................HOMO1..................")
     scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
     HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
     reg_HOMO_1 = calc(mat, HOMO_1, des, scale_HOMO_1, grid_tf, bayes_tf, algo)
-    '''
-
+    """
+    """
     scale_diff = (np.max(diff) - np.min(diff))
     # diff = diff - np.min(diff)
     diff = (diff - np.min(diff)) / scale_diff
     print(".........................diff..................")
     reg_diff = calc(mat, diff, des, scale_diff, grid_tf, bayes_tf, algo)
+    """
+
+    #boruta(mat, diff)

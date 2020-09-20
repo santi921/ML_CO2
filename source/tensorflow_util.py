@@ -140,6 +140,10 @@ def nn_basic(x, y, scale):
     model.add(tf.keras.layers.Dense(2048, activation="relu"))
     model.add(tf.keras.layers.Dense(2048, activation="relu"))
 
+    #model.add(tf.keras.layers.Dense(2048, activation="relu"))
+    #model.add(tf.keras.layers.Dense(1024, activation="relu"))
+    #model.add(tf.keras.layers.Dense(512, activation="relu"))
+
     model.add(tf.keras.layers.Dense(1))
 
     # tf.keras.layers.Dropout(0.2),
@@ -154,7 +158,7 @@ def nn_basic(x, y, scale):
     # model.compile(optimizer='adam', loss=mse, metrics=[keras.metrics.mae])
     model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
     tensorboard_cbk = TensorBoard(log_dir=log_dir)
-    history = model.fit(x_train, y_train, epochs=100, callbacks=[tensorboard_callback])
+    history = model.fit(x_train, y_train, epochs=1000, callbacks=[tensorboard_callback])
     ret = model.evaluate(x_test, y_test, verbose=2)
 
     score = str(mean_squared_error(model.predict(x_test), y_test))

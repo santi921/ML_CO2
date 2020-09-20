@@ -6,6 +6,8 @@ from numpy.ma import MaskedArray
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
+from boruta import BorutaPy
+from sklearn.preprocessing import scale
 
 sklearn.utils.fixes.MaskedArray = MaskedArray
 from sklearn.svm import SVR
@@ -351,10 +353,12 @@ def gradient_boost_reg(x, y, scale):
 def random_forest(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    params = {"max_depth": 30,
-              "min_samples_split": 3,
-              "n_estimators": 5000,
-              "n_jobs": 16, "verbose": False
+    params = {"max_depth": 20,
+              "n_estimators": 500,
+              "bootstrap": True,
+              "min_samples_leaf": 2,
+              "n_jobs": 16,
+              "verbose": False
               }
 
     reg = RandomForestRegressor(**params)
@@ -501,16 +505,16 @@ def svr(x, y, scale):
     print("radial basis svr score:              " + str(s1) + " time: " + str(time_svr))
     print("polynomial svr score:                " + str(score) + " time: " + str(time_poly))
 
-    score = str(mean_squared_error(reg.predict(x_test), y_test))
-    print("MSE score:   " + str(score) + " time: " + str(time_el))
+    score = str(mean_squared_error(svr_poly.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_poly))
 
-    score = str(mean_absolute_error(reg.predict(x_test), y_test))
-    print("MAE score:   " + str(score) + " time: " + str(time_el))
+    score = str(mean_absolute_error(svr_poly.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_poly))
 
-    score = str(r2_score(reg.predict(x_test), y_test))
-    print("r2 score:   " + str(score) + " time: " + str(time_el))
+    score = str(r2_score(svr_poly.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_poly))
 
-    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    score_mae = mean_absolute_error(svr_poly.predict(x_test), y_test)
     print("scaled MAE")
     print(scale * score_mae)
 
@@ -545,3 +549,27 @@ def sk_nn(x, y, scale):
     print(scale * score_mae)
 
     return reg
+
+
+def boruta(x, y):
+
+    params = {"max_depth": 12,
+              "n_estimators": 500,
+              "bootstrap": True,
+              "min_samples_leaf": 2,
+              "n_jobs": 16,
+              "verbose": False
+              }
+
+    rf = RandomForestRegressor(**params)
+
+    feat_selector = BorutaPy(rf, n_estimators='auto', verbose=2, random_state=1,
+                             max_iter=200)
+    x_scale = scale(x)
+    feat_selector.fit(np.array(x_scale), y)
+    # print(    feat_selector.support_)
+    # print(feat_selector.ranking_)
+    for i, j in enumerate(feat_selector.support_):
+        if j == True:
+            print(i)
+

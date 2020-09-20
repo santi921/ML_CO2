@@ -4,6 +4,7 @@ from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
 import time
+from datetime import datetime
 import joblib
 import numpy as np
 import xgboost as xgb
@@ -27,13 +28,14 @@ def xgboost(x, y, scale):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     params = {
-        "colsample_bytree": 0.4,
-        "learning_rate": 0.05,
-        "max_depth": 10, "gamma": 0.0,
-        "lambda": 0.0,
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.1,
+        "max_depth": 30, "gamma": 0.0,
+        "lambda": 0.1,
         "alpha": 0.1,
-        "eta": 0.0,
+        "eta": 0.1,
         "n_estimators": 10000}
+
 
     reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
 
@@ -111,12 +113,23 @@ def xgboost_bayes_basic(x, y):
             "objective": ["reg:squarederror"],
             "tree_method": ["gpu_hist"]
         },
-        n_iter=50,
+        n_iter=5000,
         verbose=4, cv=3,
         random_state=0)
 
     time_to_stop = 60 * 60 * 47
-    ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost.pkl"
+
+    now = datetime.now()
+    year = now.strftime("%Y")
+    month = now.strftime("%m")
+    day = now.strftime("%d")
+    hour = now.strftime("%H")
+    minute = now.strftime("%M")
+    sec = now.strftime("%S")
+
+    ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost" + str(year) + "_"+ str(month) + "_" + str(day) + "_" + \
+               str(hour) + "_" + str(minute) + "_" + str(sec) + ".pkl"
+
     checkpoint_callback = CheckpointSaver(ckpt_loc)
     reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
 
