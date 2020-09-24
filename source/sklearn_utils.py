@@ -7,10 +7,10 @@ from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
 from boruta import BorutaPy
-from sklearn.preprocessing import scale
 
 sklearn.utils.fixes.MaskedArray = MaskedArray
 from sklearn.svm import SVR
+from sklearn.preprocessing import scale
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import SGDRegressor, BayesianRidge
@@ -20,6 +20,132 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn.model_selection import train_test_split, GridSearchCV
+
+
+def bayes_sigopt(x, y, method="sgd"):
+    from xgboost_util import xgboost_bayes_sigopt
+    print("sigopt path")
+
+    xgboost_bayes_sigopt(x,y)
+
+def bayes(x, y, method="sgd"):
+    if (method == "nn"):
+        print(".........neural network optimization selected.........")
+        params = {"alpha": Real(1e-10, 1e-1, prior='log-uniform'),
+                  "max_iter": Integer(100, 10000),
+                  "tol": Real(1e-10, 1e-1, prior='log-uniform'),
+                  "learning_rate_init": Real(1e-3, 1e-1, prior='log-uniform')}
+
+        reg = MLPRegressor(hidden_layer_sizes=(100, 1000, 100,), activation="relu",
+                           solver="adam", learning_rate="adaptive")
+
+    elif (method == "rf"):
+        print(".........random forest optimization selected.........")
+        params = {"max_depth": Integer(10, 40),
+                  "min_samples_split": Integer(2, 6),
+                  "n_estimators": Integer(500, 5000)}
+        reg = RandomForestRegressor(n_jobs=1)
+
+    elif (method == "grad"):
+        print(".........gradient boost optimization selected.........")
+
+        params = {"loss": ["ls"],
+                  "n_estimators": Integer(500, 5000),
+                  "learning_rate": Real(0.001, 0.3),
+                  "subsample": Real(0.2, 0.8),
+                  "max_depth": Integer(10, 30),
+                  "tol": Real(1e-6, 1e-3, prior='log-uniform')}
+        reg = GradientBoostingRegressor(criterion="mse", loss="ls")
+
+    elif (method == "svr_rbf"):
+        print(".........svr optimization selected.........")
+        params = {"C": Real(1e-5, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "epsilon": Real(1e-2, 1e+1, prior='log-uniform'),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="rbf")
+
+    elif (method == "svr_poly"):
+        print(".........svr optimization selected.........")
+
+        params = {"C": Real(1e-5, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "epsilon": Real(1e-2, 1e+1, prior='log-uniform'),
+                  "degree": Integer(5, 20),
+                  "coef0": Real(0.2, 0.8),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="poly")
+
+    elif (method == "svr_lin"):
+        print(".........svr optimization selected.........")
+
+        params = {"C": Real(1e-6, 1e+1, prior='log-uniform'),
+                  "gamma": Real(1e-5, 1e-1, prior='log-uniform'),
+                  "cache_size": Integer(500, 8000)}
+        reg = SVR(kernel="linear")
+
+    elif (method == "bayes"):
+        print(".........bayes optimization selected.........")
+
+        params = {
+            "n_iter": Integer(1000, 10000),
+            "tol": Real(1e-9, 1e-3, prior='log-uniform'),
+            "alpha_1": Real(1e-6, 1e+1, prior='log-uniform'),
+            "alpha_2": Real(1e-6, 1e+1, prior='log-uniform'),
+            "lambda_1": Real(1e-6, 1e+1, prior='log-uniform'),
+            "lambda_2": Real(1e-6, 1e+1, prior='log-uniform')}
+        reg = BayesianRidge()
+
+    elif (method == "kernel"):
+        print(".........kernel optimization selected.........")
+
+        params = {"alpha": Real(1e-6, 1e0, prior='log-uniform'),
+                  "gamma": Real(1e-8, 1e0, prior='log-uniform')}
+        reg = KernelRidge(kernel="rbf")
+
+    elif (method == "gaussian"):
+        print(".........gaussian optimization selected.........")
+        params = {"alpha": Real(1e-7, 1e+1, prior='log-uniform')}
+        kernel = DotProduct() + WhiteKernel()
+        reg = GaussianProcessRegressor(kernel=kernel)
+
+    else:
+        params = {'l1_ratio': Real(0.1, 0.3),
+                  'tol': Real(1e-3, 1e-1, prior="log-uniform"),
+                  "epsilon": Real(1e-3, 1e0, prior="log-uniform"),
+                  "eta0": Real(0.01, 0.2)}
+        reg = SGDRegressor(penalty="l1", loss='squared_loss')
+
+    if (method == "xgboost"):
+        from xgboost_util import xgboost_bayes_basic
+        print(".........xgboost optimization selected.........")
+        reg = xgboost_bayes_basic(x, y)
+
+    else:
+        print("........." + method + " optimization selected.........")
+
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3, n_jobs=4)
+
+        time_to_stop = 60 * 60 * 47
+        ckpt_loc = "../data/train/bayes/ckpt_bayes_" + method + ".pkl"
+        checkpoint_callback = CheckpointSaver(ckpt_loc)
+        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+
+        print(reg.best_params_)
+        print(reg.best_score_)
+        score = str(reg.score(x_test, y_test))
+        print("Score on test data: " + score)
+        score = str(reg.score(list(x_test), y_test))
+        print("Score on test data: " + score)
+        score = str(mean_squared_error(reg.predict(x_test), y_test))
+        print("MSE score:   " + score)
+        score = str(mean_absolute_error(reg.predict(x_test), y_test))
+        print("MAE score:   " + score)
+        score = str(r2_score(reg.predict(x_test), y_test))
+        print("r2 score:   " + score)
+
+    return reg
 
 
 def bayes(x, y, method="sgd"):
@@ -119,7 +245,7 @@ def bayes(x, y, method="sgd"):
         print("........." + method + " optimization selected.........")
 
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-        reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3)
+        reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3, n_jobs=4)
 
         time_to_stop = 60 * 60 * 47
         ckpt_loc = "../data/train/bayes/ckpt_bayes_" + method + ".pkl"
@@ -358,7 +484,8 @@ def random_forest(x, y, scale):
               "bootstrap": True,
               "min_samples_leaf": 2,
               "n_jobs": 16,
-              "verbose": False
+              "verbose": False,
+              "n_jobs": 4
               }
 
     reg = RandomForestRegressor(**params)

@@ -6,9 +6,11 @@ import uuid
 from sklearn import preprocessing
 from sklearn_utils import gradient_boost_reg, \
     random_forest, sk_nn, grid, sgd, gaussian, kernel, \
-    bayesian, svr, bayes, boruta
+    bayesian, svr, bayes, boruta, bayes_sigopt
 
-
+import sigopt
+import os
+os.environ['SIGOPT_PROJECT'] = 'ml_co2'
 # todo: work on interpretability algo/aspects
 # todo: plots of parameter space
 # todo: process zz's stuff
@@ -124,13 +126,14 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         df.to_pickle(str)
 
 
-def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
+def calc(x, y, des, scale, grid_tf=False, bayes_tf=False, sigopt_tf = False, algo="sgd"):
     if (grid_tf == True):
         print("........starting grid search........")
         grid_obj = grid(x, y, method=algo)
         uuid_temp = uuid.uuid4()
         str = "../data/train/grid/complete_grid_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
         joblib.dump(grid_obj, str)
+        return grid_obj
 
     elif (bayes_tf == True):
         print("........starting bayes search........")
@@ -138,8 +141,19 @@ def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
         uuid_temp = uuid.uuid4()
         str = "../data/train/bayes/complete_bayes_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
         joblib.dump(bayes_obj, str)
+        return bayes_obj
+
+    elif (sigopt_tf == True):
+
+        print("........starting sigopt bayes search........")
+        bayes_obj = bayes_sigopt(x, y, method=algo)
+        uuid_temp = uuid.uuid4()
+        str = "../data/train/bayes/complete_bayes_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
+        joblib.dump(bayes_obj, str)
+        return bayes_obj
 
     else:
+        print("........starting single algo evaluation........")
         if (algo == "nn"):
             print("nn reg selected")
             reg = sk_nn(x, y, scale)
@@ -182,10 +196,6 @@ def calc(x, y, des, scale, grid_tf=True, bayes_tf=False, algo="sgd"):
             reg = sgd(x, y, scale)
         return reg
 
-
-
-
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='select descriptor, and directory of files')
@@ -196,7 +206,7 @@ if __name__ == "__main__":
                         help="options: [svr_rbf, svr_poly, svr_lin, grad, rf, sgd, bayes, kernel, gaussian, nn]")
     parser.add_argument('--grid', dest="grid_tf", action='store_true')
     parser.add_argument('--bayes', dest="bayes_tf", action='store_true')
-    parser.add_argument('--scale', dest="scale_x_tf", action='store_true')
+    parser.add_argument('--sigopt', dest="sigopt", action='store_true')
 
     results = parser.parse_args()
     des = results.desc
@@ -206,7 +216,7 @@ if __name__ == "__main__":
     algo = results.algo
     grid_tf = results.grid_tf
     bayes_tf = results.bayes_tf
-    scale_x_tf = results.scale_x_tf
+    sigopt_tf = results.sigopt
 
     if (dir_temp == "DB3" or dir_temp == "DB2"):
         try:
@@ -234,34 +244,38 @@ if __name__ == "__main__":
     else:
         mat = df["mat"].to_numpy()
 
-    scale_x_tf = True
-    if (scale_x_tf == True):
-        try:
-            mat = preprocessing.scale(np.array(mat))
+    if (sigopt_tf == True):
 
-        except:
-            mat = list(mat)
-            mat = preprocessing.scale(np.array(mat))
+        sigopt.log_dataset(name = dir_temp + " " +des )
+        sigopt.log_model(type=algo)
+        sigopt.log_metadata('input_features', np.shape(mat[0]))
+
+    try:
+        mat = preprocessing.scale(np.array(mat))
+
+    except:
+        mat = list(mat)
+        mat = preprocessing.scale(np.array(mat))
 
     scale_HOMO = (np.max(HOMO) - np.min(HOMO))
     HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
     print("Using " + des + " as the descriptor")
     print(".........................HOMO..................")
-    reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, algo)
+    reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
 
 
     """
     print(".........................HOMO1..................")
     scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
     HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
-    reg_HOMO_1 = calc(mat, HOMO_1, des, scale_HOMO_1, grid_tf, bayes_tf, algo)
+    reg_HOMO = calc(mat, HOMO_1, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
     """
     """
     scale_diff = (np.max(diff) - np.min(diff))
     # diff = diff - np.min(diff)
     diff = (diff - np.min(diff)) / scale_diff
     print(".........................diff..................")
-    reg_diff = calc(mat, diff, des, scale_diff, grid_tf, bayes_tf, algo)
+    reg_diff = calc(mat, diff, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
     """
 
     #boruta(mat, diff)
