@@ -1,10 +1,6 @@
 import sklearn.utils.fixes
 from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
-import os
-os.environ['SIGOPT_PROJECT'] = 'ml_co2'
-
-os.system("export SIGOPT_PROJECT=source")
 import time
 from datetime import datetime
 import joblib
@@ -15,7 +11,6 @@ import scipy.stats as stats
 import sigopt
 
 from sigopt import Connection
-from sigopt_sklearn.search import SigOptSearchCV
 from skopt import BayesSearchCV
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
@@ -184,18 +179,7 @@ def xgboost_rand(x, y):
 
 def xgboost_bayes_sigopt(x, y):
 
-    try:
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    except:
-        x = list(x)
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-
-    # 328985 - morg, db3, xgboost
-    os.environ['SIGOPT_PROJECT'] = 'ml_co2'
-
-    conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
-
-    temp_dict = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
+    params = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
          "colsample_bytree": sigopt.get_parameter("colsample_bytree", default = 0.5),
          "max_depth": sigopt.get_parameter("max_depth", default = 10),
          "lambda": sigopt.get_parameter("lambda", default = 0.0),
@@ -204,10 +188,12 @@ def xgboost_bayes_sigopt(x, y):
          "eta": sigopt.get_parameter("eta", default =0.01),
          "gamma": sigopt.get_parameter("gamma", default = 0),
          "n_estimators": sigopt.get_parameter("n_estimators", default= 500)}
-    print(temp_dict)
-    xgb_reg = xgb.XGBRegressor(**temp_dict  )
 
-    (mse, mae, r2) = evaluate_model(xgb_reg, x, y)
+    xgb_reg = xgb.XGBRegressor(**params)
+    try:
+        (mse, mae, r2) = evaluate_model(xgb_reg, x, y)
+    except:
+        (mse, mae, r2) = evaluate_model(xgb_reg, list(x), y)
 
     print("Current MSE: " + str(mse))
     print("Current MAE: " + str(mae))
@@ -231,9 +217,5 @@ def xgboost_bayes_sigopt(x, y):
                                     "gamma" : best_assignments["gamma"],
                                     "n_estimators" : best_assignments["n_estimators"]})
 
-    #(mse, mae, r2) = evaluate_model(xgb_reg_best)
-    #print("Best MSE: " + str(mse))
-    #print("Best MAE: " + str(mae))
-    #print("Best R_2: " + str(r2))
+
     '''
-    #return xgb_reg_best

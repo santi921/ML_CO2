@@ -1,9 +1,9 @@
 experiment:
   name: xgboost
-  observation_budget: 200
+  observation_budget: 100
   metrics: 
      - name: mse
-       objective: maximize
+       objective: minimize
   parameters:
     - name: colsample_bytree
       bounds: 

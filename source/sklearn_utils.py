@@ -23,10 +23,9 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, ShuffleSplit
 
 def evaluate_model(reg, x, y):
-
     cv = ShuffleSplit(n_splits=3)
     cv_mse = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_squared_error")
     cv_mae = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_absolute_error")
@@ -35,57 +34,105 @@ def evaluate_model(reg, x, y):
 
 def bayes_sigopt(x, y, method="sgd"):
 
-    if (method == "sgd"):
-        params = {'l1_ratio': Real(0.1, 0.3),
-                  'tol': Real(1e-3, 1e-1, prior="log-uniform"),
-                  "epsilon": Real(1e-3, 1e0, prior="log-uniform"),
-                  "eta0": Real(0.01, 0.2)}
+    conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
 
-        temp_dict = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
-                     "colsample_bytree": sigopt.get_parameter("colsample_bytree", default=0.5),
-                     "max_depth": sigopt.get_parameter("max_depth", default=10),
-                     "lambda": sigopt.get_parameter("lambda", default=0.0),
-                     "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
-                     "alpha": sigopt.get_parameter("alpha", default=0.0),
-                     "eta": sigopt.get_parameter("eta", default=0.01),
-                     "gamma": sigopt.get_parameter("gamma", default=0),
-                     "n_estimators": sigopt.get_parameter("n_estimators", default=500)}
-        reg = SGDRegressor(penalty="l1", loss='squared_loss')
+
+    if (method == "grad"):
+        print(".........gradient boost optimization selected.........")
+
+        params = {"loss": "ls", "criterion":"mse",
+                  "n_estimators": sigopt.get_parameter("n_estimators", default=500),
+                  "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
+                  "subsample": sigopt.get_parameter("subsample", default=0.5),
+                  "max_depth": sigopt.get_parameter("max_depth", default=10),
+                  "tol": sigopt.get_parameter("tol", default=0.001)}
+        reg = GradientBoostingRegressor(**params)
+
+    elif (method == "svr"):
+        print(".........svr optimization selected.........")
+        params = {"C": sigopt.get_parameter("C", default=0.1),
+                  "gamma": sigopt.get_parameter("gamma", default=0.001),
+                  "epsilon": sigopt.get_parameter("epsilon", default=0.1),
+                  "degree": sigopt.get_parameter("degree", default=8),
+                  "coef0": sigopt.get_parameter("coef0", default=0.4),
+                  "cache_size": sigopt.get_parameter("cache_size", default=1000),
+                  "kernel":"poly"
+                  }
+        reg = SVR(**params)
+
+    elif (method == "bayes"):
+
+        print(".........bayes optimization selected.........")
+        params = {"n_iter": sigopt.get_parameter("n_iter", default=1000),
+                  "tol": sigopt.get_parameter("tol", default=0.0001),
+                  "alpha_1": sigopt.get_parameter("alpha_1", default=0.01),
+                  "alpha_2": sigopt.get_parameter("alpha_2", default=0.01),
+                  "lambda_1": sigopt.get_parameter("lambda_1", default=0.01),
+                  "lambda_2": sigopt.get_parameter("lambda_2", default=0.01)
+                  }
+        reg = BayesianRidge(**params)
+
+    elif (method == "kernel"):
+
+        print(".........kernel optimization selected.........")
+        params = {"kernel":"rbf",
+                  "alpha": sigopt.get_parameter("alpha", default=0.001),
+                  "gamma": sigopt.get_parameter("gamma", default=0.001)
+                  }
+        reg = KernelRidge(**params)
+
+    elif (method == "sgd"):
+
+        print(".........sgd optimization selected.........")
+        params = {"penalty":"l1", "loss":'squared_loss',
+                     "l1_ratio": sigopt.get_parameter("l1_ratio", default=0.2),
+                     "tol": sigopt.get_parameter("tol", default=0.01),
+                     "epsilon": sigopt.get_parameter("epsilon", default=0.01),
+                     "eta0": sigopt.get_parameter("eta0", default=0.02)
+                     }
+        reg = SGDRegressor(**params)
 
     elif (method == "rf"):
-        # change the operating projec
-        conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
 
+        print(".........random forest optimization selected.........")
+        temp_dict = {"n_jobs": 4,
+                     "max_depth": sigopt.get_parameter("max_depth", default=5),
+                     "min_samples_split": sigopt.get_parameter("min_samples_split", default=3),
+                     "n_estimators": sigopt.get_parameter("n_estimators", default=800)
+                     }
 
-        temp_dict = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
-                     "colsample_bytree": sigopt.get_parameter("colsample_bytree", default=0.5),
-                     "max_depth": sigopt.get_parameter("max_depth", default=10),
-                     "lambda": sigopt.get_parameter("lambda", default=0.0),
-                     "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
-                     "alpha": sigopt.get_parameter("alpha", default=0.0),
-                     "eta": sigopt.get_parameter("eta", default=0.01),
-                     "gamma": sigopt.get_parameter("gamma", default=0),
-                     "n_estimators": sigopt.get_parameter("n_estimators", default=500)}
+        reg = RandomForestRegressor(**temp_dict)
 
+    elif (method == "gaussian"):
+
+        print(".........gaussian optimization selected.........")
+        kernel = DotProduct() + WhiteKernel()
+        params = {"kernel": kernel,
+                     "alpha": sigopt.get_parameter("alpha", default=0.01)
+                     }
+        reg = GaussianProcessRegressor(**params)
 
     else:
-        print("something")
 
+        print(".........sgd optimization selected.........")
+        params = {"penalty":"l1", "loss":'squared_loss',
+                     "l1_ratio": sigopt.get_parameter("l1_ratio", default=0.2),
+                     "tol": sigopt.get_parameter("tol", default=0.01),
+                     "epsilon": sigopt.get_parameter("epsilon", default=0.01),
+                     "eta0": sigopt.get_parameter("eta0", default=0.02)
+                     }
+        reg = SGDRegressor(**params)
 
     if (method == "xgboost"):
         from xgboost_util import xgboost_bayes_sigopt
         xgboost_bayes_sigopt(x, y)
 
     else:
-        try:
-            x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-        except:
-            x = list(x)
-            x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-        #insert
-        #insert
-        (mse, mae, r2) = evaluate_model(reg, x, y)
+        try:
+            (mse, mae, r2) = evaluate_model(reg, x, y)
+        except:
+            (mse, mae, r2) = evaluate_model(reg, list(x), y)
 
         print("Current MSE: " + str(mse))
         print("Current MAE: " + str(mae))

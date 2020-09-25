@@ -6,8 +6,6 @@ experiment:
        objective: maximize
   parameters:
 
-
-
       
     - name: lambda
       bounds: 
