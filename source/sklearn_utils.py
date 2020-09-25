@@ -141,6 +141,7 @@ def bayes_sigopt(x, y, method="sgd"):
         sigopt.log_metric("mse", mse)
         sigopt.log_metric("mae", mae)
         sigopt.log_metric("r2", r2)
+        sigopt.log_metric("nmse", mse)
 
 def bayes(x, y, method="sgd"):
     if (method == "nn"):
