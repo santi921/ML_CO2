@@ -1,0 +1,50 @@
+experiment:
+  name: bayes
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+      
+    - name: lambda_1
+      bounds: 
+        min: 1.0e-6
+        max: 10
+        transformation: log
+      type: double      
+  
+    - name: lambda_2
+      bounds: 
+        min: 1.0e-6
+        max: 10
+        transformation: log
+      type: double
+          
+    - name: alpha_1
+      bounds: 
+        min: 1.0e-6
+        max: 10
+        transformation: log
+      type: double      
+  
+    - name: alpha_2
+      bounds: 
+        min: 1.0e-6
+        max: 10
+        transformation: log
+      type: double
+      
+    - name: tol
+      bounds: 
+        min: 1.0e-9
+        max: 1.0e-3
+        transformation: log
+      type: double 
+      
+    - name: n_iter
+      bounds: 
+        min: 1000
+        max: 10000
+      type: int 
+
+

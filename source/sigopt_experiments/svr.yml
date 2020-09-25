@@ -1,0 +1,38 @@
+experiment:
+  name: svr
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+
+    - name: cache_size
+      bounds: 
+        min: 500
+        max: 800
+      type: int
+  
+    - name: epsilon
+      bounds: 
+        min: 0.01
+        max: 10
+        transformation: log
+      type: double
+      
+    - name: gamma
+      bounds: 
+        min: 1.0e-5
+        max: 0.1
+        transformation: log
+      type: double 
+      
+    - name: C
+      bounds: 
+        min: 1e-5
+        max: 10
+        transformation: log
+      type: double 
+
+      
+      
+      

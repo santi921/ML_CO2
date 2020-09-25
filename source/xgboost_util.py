@@ -2,6 +2,9 @@ import sklearn.utils.fixes
 from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
 import os
+os.environ['SIGOPT_PROJECT'] = 'ml_co2'
+
+os.system("export SIGOPT_PROJECT=source")
 import time
 from datetime import datetime
 import joblib
@@ -10,8 +13,9 @@ import xgboost as xgb
 import scipy.stats as stats
 
 import sigopt
-from sigopt_sklearn.search import SigOptSearchCV
+
 from sigopt import Connection
+from sigopt_sklearn.search import SigOptSearchCV
 from skopt import BayesSearchCV
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
@@ -27,7 +31,6 @@ def evaluate_model(reg, x, y):
     cv_mae = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_absolute_error")
     cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring = "r2")
     return (np.mean(cv_mse), np.mean(cv_mae), np.mean(cv_r2))
-
 
 def xgboost(x, y, scale):
     x = np.array(x)
@@ -112,6 +115,7 @@ def xgboost_bayes_basic(x, y):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     xgb_temp = xgb.XGBRegressor()
+    # noinspection PyInterpreter
     reg = BayesSearchCV(
         xgb_temp, {
             "colsample_bytree": Real(0.5, 0.99),
@@ -186,27 +190,10 @@ def xgboost_bayes_sigopt(x, y):
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
     # 328985 - morg, db3, xgboost
+    os.environ['SIGOPT_PROJECT'] = 'ml_co2'
 
-    '''
-    experiment = conn.experiments().create(
-        name="xgboost",
-        project="ml_co2_xgboost_morg",
-        metrics=[dict(name='nmse', objective='maximize')],
-        parameters=[
-            dict(name="colsample_bytree", type="double", bounds=dict(min=0.5, max=0.99)),
-            dict(name="max_depth", type="int", bounds=dict(min=5, max=28)),
-            dict(name="lambda", type="double", bounds=dict(min=0, max=0.25)),
-            dict(name="learning_rate", type="double", bounds=dict(min=0.1, max=0.25)),
-            dict(name="alpha", type="double", bounds=dict(min=0, max=0.2)),
-            dict(name="eta", type="double", bounds=dict(min=0.01, max=0.2)),
-            dict(name="gamma", type="double", bounds=dict(min=0, max=0.1)),
-            dict(name="n_estimators", type="int", bounds=dict(min=300, max=5000))
-        ],
-        observation_budget = 5
-    )
-    '''
+    conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
 
     temp_dict = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
          "colsample_bytree": sigopt.get_parameter("colsample_bytree", default = 0.5),

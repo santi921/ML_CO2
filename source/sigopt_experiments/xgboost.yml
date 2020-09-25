@@ -1,0 +1,56 @@
+experiment:
+  name: xgboost
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+    - name: colsample_bytree
+      bounds: 
+        min: 0.5
+        max: 0.99
+      type: double 
+    
+    - name: learning_rate
+      bounds: 
+        min: 1.0e-5
+        max: 0.5
+        transformation: log
+      type: double
+
+    - name: max_depth
+      bounds: 
+        min: 5
+        max: 28
+      type: int
+      
+    - name: lambda
+      bounds: 
+        min: 0
+        max: 0.25
+      type: double    
+      
+    - name: alpha
+      bounds: 
+        min: 0.0
+        max: 0.2
+      type: double      
+  
+    - name: eta
+      bounds: 
+        min: 0.01
+        max: 0.2
+      type: double
+      
+    - name: gamma
+      bounds: 
+        min: 0.0
+        max: 0.1
+      type: double 
+      
+    - name: n_estimators
+      bounds: 
+        min: 300
+        max: 5000
+      type: int 
+

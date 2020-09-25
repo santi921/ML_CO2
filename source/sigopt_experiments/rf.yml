@@ -1,0 +1,27 @@
+experiment:
+  name: rf
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+
+    - name: max_depth
+      bounds: 
+        min: 5
+        max: 40
+      type: int
+
+    - name: min_samples_split
+      bounds: 
+        min: 2
+        max: 6
+      type: int 
+      
+    - name: n_estimators
+      bounds: 
+        min: 300
+        max: 5000
+      type: int 
+
+

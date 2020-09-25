@@ -1,0 +1,20 @@
+experiment:
+  name: gaussian
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+
+
+
+      
+    - name: lambda
+      bounds: 
+        min: 1.0e-7
+        max: 10
+        transformation: log
+      type: double    
+      
+
+

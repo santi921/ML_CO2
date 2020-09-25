@@ -9,8 +9,7 @@ from sklearn_utils import gradient_boost_reg, \
     bayesian, svr, bayes, boruta, bayes_sigopt
 
 import sigopt
-import os
-os.environ['SIGOPT_PROJECT'] = 'ml_co2'
+
 # todo: work on interpretability algo/aspects
 # todo: plots of parameter space
 # todo: process zz's stuff
@@ -207,6 +206,9 @@ if __name__ == "__main__":
     parser.add_argument('--grid', dest="grid_tf", action='store_true')
     parser.add_argument('--bayes', dest="bayes_tf", action='store_true')
     parser.add_argument('--sigopt', dest="sigopt", action='store_true')
+    parser.add_argument('--diff', dest="diff", action='store_true', default = True)
+    parser.add_argument('--homo', dest="homo", action='store_true')
+    parser.add_argument('--homo1', dest="homo1", action='store_true')
 
     results = parser.parse_args()
     des = results.desc
@@ -217,6 +219,9 @@ if __name__ == "__main__":
     grid_tf = results.grid_tf
     bayes_tf = results.bayes_tf
     sigopt_tf = results.sigopt
+    diff = results.diff
+    homo = results.homo
+    homo1 = results.homo1
 
     if (dir_temp == "DB3" or dir_temp == "DB2"):
         try:
@@ -249,33 +254,30 @@ if __name__ == "__main__":
         sigopt.log_dataset(name = dir_temp + " " +des )
         sigopt.log_model(type=algo)
         sigopt.log_metadata('input_features', np.shape(mat[0]))
-
     try:
         mat = preprocessing.scale(np.array(mat))
-
     except:
         mat = list(mat)
         mat = preprocessing.scale(np.array(mat))
 
-    scale_HOMO = (np.max(HOMO) - np.min(HOMO))
-    HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
     print("Using " + des + " as the descriptor")
-    print(".........................HOMO..................")
-    reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
+    # finish optimization
+    if (homo == True):
+        print(".........................HOMO..................")
+        scale_HOMO = (np.max(HOMO) - np.min(HOMO))
+        HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
+        reg_HOMO = calc(mat, HOMO, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
+
+    if(homo1 == True):
+        print(".........................HOMO1..................")
+        scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
+        HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
+        reg_HOMO = calc(mat, HOMO_1, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
+
+    if(diff == True):
+        print(".........................diff..................")
+        scale_diff = (np.max(diff) - np.min(diff))
+        diff = (diff - np.min(diff)) / scale_diff
+        reg_diff = calc(mat, diff, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
 
 
-    """
-    print(".........................HOMO1..................")
-    scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
-    HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
-    reg_HOMO = calc(mat, HOMO_1, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
-    """
-    """
-    scale_diff = (np.max(diff) - np.min(diff))
-    # diff = diff - np.min(diff)
-    diff = (diff - np.min(diff)) / scale_diff
-    print(".........................diff..................")
-    reg_diff = calc(mat, diff, des, scale_HOMO, grid_tf, bayes_tf, sigopt_tf, algo)
-    """
-
-    #boruta(mat, diff)

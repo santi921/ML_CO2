@@ -1,0 +1,44 @@
+experiment:
+  name: grad_boos
+  observation_budget: 5
+  metrics: 
+     - name: nmse
+       objective: maximize
+  parameters:
+
+    - name: subsample
+      bounds: 
+        min: 0.2
+        max: 0.8
+      type: double 
+      
+            
+    - name: learning_rate
+      bounds: 
+        min: 0.001
+        max: 0.3
+        transformation: log
+      type: double 
+      
+    - name: tol
+      bounds: 
+        min: 1.0e-6
+        max: 1.0e-3
+        transformation: log
+      type: double 
+
+    - name: max_depth
+      bounds: 
+        min: 10
+        max: 30
+      type: int      
+
+    - name: n_estimators
+      bounds: 
+        min: 300
+        max: 5000
+      type: int 
+      
+
+
+
