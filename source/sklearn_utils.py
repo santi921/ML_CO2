@@ -8,7 +8,6 @@ from numpy.ma import MaskedArray
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
-
 import sigopt
 from sigopt import Connection
 
@@ -394,6 +393,12 @@ def grid(x, y, method="sgd"):
 
         return reg
 
+def rand(x, y, method="sgd"):
+    #todo, make for all sklearn algorithms
+    from xgboost_util import xgboost_rand
+    xgboost_rand(x,y)
+    return True
+
 def sgd(x, y, scale):
     x = np.array(x)
     y = np.array(y)
@@ -665,7 +670,7 @@ def sk_nn(x, y, scale):
 
 def boruta(x, y):
 
-    params = {"max_depth": 12,
+    params = {"max_depth": 30,
               "n_estimators": 500,
               "bootstrap": True,
               "min_samples_leaf": 2,

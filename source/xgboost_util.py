@@ -12,22 +12,19 @@ import sigopt
 
 from sigopt import Connection
 from skopt import BayesSearchCV
+# noinspection PyInterpreter
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
 
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score,\
+    make_scorer
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV,\
     ShuffleSplit, cross_val_score
 
-def evaluate_model(reg, x, y):
 
-    cv = ShuffleSplit(n_splits=3)
-    cv_mse = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_squared_error")
-    cv_mae = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_absolute_error")
-    cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring = "r2")
-    return (np.mean(cv_mse), np.mean(cv_mae), np.mean(cv_r2))
-
-def xgboost(x, y, scale):
+def xgboost(x, y, scale, dict=None):
+    if dict is None:
+        dict = {}
     x = np.array(x)
     y = np.array(y)
     try:
@@ -35,16 +32,24 @@ def xgboost(x, y, scale):
     except:
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-
-    params = {
-        "colsample_bytree": 0.563133210670266,
-        "learning_rate": 0.20875083323873022,
-        "max_depth": 12, "gamma": 0.00,
-        "lambda": 0.16649470140308757,
-        "alpha": 0.023794165626311915,
-        "eta": 0.0,
-        "n_estimators": 3350}
-
+    if(dict == None):
+        params = {
+            "colsample_bytree": 0.563133210670266,
+            "learning_rate": 0.20875083323873022,
+            "max_depth": 12, "gamma": 0.00,
+            "lambda": 0.16649470140308757,
+            "alpha": 0.023794165626311915,
+            "eta": 0.0,
+            "n_estimators": 3350}
+    else:
+        params = {}
+        params["colsample_bytree"] = dict["colsample_bytree"]
+        params["learning_rate"] = dict["learning_rate"]
+        params["max_depth"] = dict["max_depth"]
+        params["lambda"] = dict["lambda"]
+        params["alpha"] = dict["alpha"]
+        params["eta"] = dict["eta"]
+        params["n_estimators"] = dict["n_estimators"]
 
     reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
 
@@ -114,7 +119,7 @@ def xgboost_bayes_basic(x, y):
     reg = BayesSearchCV(
         xgb_temp, {
             "colsample_bytree": Real(0.5, 0.99),
-            "max_depth": Integer(40, 55),
+            "max_depth": Integer(5, 25),
             "lambda": Real(0, 0.25),
             "learning_rate": Real(0.1, 0.25),
             "alpha": Real(0, 0.2),
@@ -137,11 +142,13 @@ def xgboost_bayes_basic(x, y):
     minute = now.strftime("%M")
     sec = now.strftime("%S")
 
-    ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost" + str(year) + "_"+ str(month) + "_" + str(day) + "_" + \
-               str(hour) + "_" + str(minute) + "_" + str(sec) + ".pkl"
+    #ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost" + str(year) + "_"+ str(month) + "_" + str(day) + "_" + \
+    #           str(hour) + "_" + str(minute) + "_" + str(sec) + ".pkl"
+    #checkpoint_callback = CheckpointSaver(ckpt_loc)
+    #reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
 
-    checkpoint_callback = CheckpointSaver(ckpt_loc)
-    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+    custom_scorer = custom_skopt_scorer(x,y)
+    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), custom_scorer])
 
     score = str(mean_squared_error(reg.predict(x_test), y_test))
     print("MSE score:   " + str(score))
@@ -158,18 +165,18 @@ def xgboost_rand(x, y):
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-    params = {"objective": ['reg:squarederror'],
-              "colsample_bytree": stats.uniform(0.2, 0.8),
+    params = {"colsample_bytree": stats.uniform(0.2, 0.8),
               "learning_rate": stats.uniform(0, 0.5),
-              "max_depth": stats.uniform(10, 5), "gamma": stats.uniform(0, 0.1),
+              "max_depth": stats.randint(5, 20),
+              "gamma": stats.uniform(0, 0.1),
               "lambda": stats.uniform(0.1, 0.2),
               "alpha": [0.1],
               "eta": [0.0, 0.1],
-              "n_estimators": [400, 4000],
-              "tree_method": ["gpu_hist"]}
+              "n_estimators": stats.randint(300,2000)}
 
-    xgb_temp = xgb.XGBRegressor()
-    reg = RandomizedSearchCV(xgb_temp, **params, verbose=0, cv=3)
+    xgb_temp = xgb.XGBRegressor(objective = 'reg:squarederror', tree_method= "gpu_hist")
+    reg = RandomizedSearchCV(xgb_temp, scoring = custom_sklearn_scorer , param_distributions = params, verbose=3, cv=3)
+
     reg.fit(x_train, y_train)
 
     print(reg.best_params_)
@@ -204,18 +211,56 @@ def xgboost_bayes_sigopt(x, y):
     sigopt.log_metric("r2", r2)
 
 
-    '''
-    best_assignments = conn.experiments(experiment.id).best_assignments().fetch().data[0].assignments
+def evaluate_model(reg, x, y):
 
-    xgb_reg_best = xgb.XGBRegressor({"objective" : "reg:squarederror", "tree_method" : "gpu_hist",
-                                    "colsample_bytree" : best_assignments["colsample_bytree"],
-                                    "max_depth" : best_assignments["max_depth"],
-                                    "lambda" : best_assignments["lambda"],
-                                    "learning_rate" : best_assignments["learning_rate"],
-                                    "alpha" : best_assignments["alpha"],
-                                    "eta": best_assignments["eta"],
-                                    "gamma" : best_assignments["gamma"],
-                                    "n_estimators" : best_assignments["n_estimators"]})
+    cv = ShuffleSplit(n_splits=3)
+    cv_mse = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_squared_error")
+    cv_mae = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_absolute_error")
+    cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring = "r2")
+    return (np.mean(cv_mse), np.mean(cv_mae), np.mean(cv_r2))
+
+class custom_skopt_scorer(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __call__(self, res):
+        print(res["x"])
+        dict = {
+            "objective":"reg:squarederror", "tree_method":"gpu_hist",
+             "alpha":res["x"][0], "colsample_bytree":res["x"][1],"eta":res["x"][2],
+            "gamma":res["x"][3], "lambda": res["x"][4], "learning_rate":res["x"][5],
+            "max_depth":res["x"][6],"n_estimators":res["x"][7]
+        }
+        reg = xgb.XGBRegressor(**dict)
+
+        from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+        x_train, x_test, y_train, y_test = train_test_split(self.x, self.y, test_size=0.2)
+        reg.fit(x_train, y_train)
+        y_pred = np.array(reg.predict(x_test))
+        mean_squared_error = mean_squared_error(y_test, y_pred)
+        mean_absolute_error = mean_absolute_error(y_test, y_pred)
+        r2_score = r2_score(y_test, y_pred)
+
+        print(mean_squared_error)
+        print(mean_absolute_error)
+        print(r2_score)
+
+        return 0
 
 
-    '''
+
+def custom_sklearn_scorer(reg,x,y):
+
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+    reg.fit(x_train, y_train)
+
+    y_pred = np.array(reg.predict(x_test))
+    mean_squared_error = mean_squared_error(y_test, y_pred)
+    mean_absolute_error = mean_absolute_error(y_test, y_pred)
+    r2_score = r2_score(y_test, y_pred)
+    print(mean_squared_error)
+    print(mean_absolute_error)
+    print(r2_score)
+    return np.mean(mean_squared_error)
