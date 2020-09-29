@@ -130,7 +130,7 @@ def xgboost_bayes_basic(x, y, csv_loc= "../data/train/bayes.csv"):
             "objective": ["reg:squarederror"],
             "tree_method": ["gpu_hist"]
         },
-        n_iter=5000,
+        n_iter=10000,
         verbose=4, cv=3)
 
     time_to_stop = 60 * 60 * 47
@@ -181,7 +181,7 @@ def xgboost_rand(x, y, csv_loc = "../data/train/rand.csv"):
               "n_estimators": stats.randint(300,2000)}
 
     xgb_temp = xgb.XGBRegressor(objective = 'reg:squarederror', tree_method= "gpu_hist")
-    reg = RandomizedSearchCV(xgb_temp, scoring = custom_sklearn_scorer , param_distributions = params, verbose=3, cv=3)
+    reg = RandomizedSearchCV(xgb_temp, scoring = custom_sklearn_scorer , param_distributions = params, verbose=3, cv=3, n_iter = 5000)
     #reg = RandomizedSearchCV(xgb_temp , param_distributions = params, verbose=3, cv=3)
 
     reg.fit(x_train, y_train)

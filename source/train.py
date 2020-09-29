@@ -207,6 +207,7 @@ if __name__ == "__main__":
     parser.add_argument('--bayes', dest="bayes_tf", action='store_true')
     parser.add_argument('--sigopt', dest="sigopt", action='store_true')
     parser.add_argument('--rand', dest="rand_tf", action='store_true')
+
     parser.add_argument('--diff', dest="diff", action='store_true')
     parser.add_argument('--homo', dest="homo", action='store_true')
     parser.add_argument('--homo1', dest="homo1", action='store_true')
