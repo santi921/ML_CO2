@@ -123,7 +123,7 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
 
     if (rand_tf == True):
         #todo incorp all sklearn algos here
-        rand(x,y, )
+        rand(x,y, algo,  des)
 
     if (grid_tf == True):
         print("........starting grid search........")
@@ -270,8 +270,10 @@ if __name__ == "__main__":
         mat = preprocessing.scale(np.array(mat))
 
     print("Using " + des + " as the descriptor")
+
     # finish optimization
     if (homo_tf == True):
+        des = des + "_homo"
         print(".........................HOMO..................")
         scale_HOMO = (np.max(HOMO) - np.min(HOMO))
         HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
@@ -279,6 +281,8 @@ if __name__ == "__main__":
                         grid_tf, bayes_tf, sigopt_tf, algo)
 
     if(homo1_tf == True):
+        des = des + "_homo_1"
+
         print(".........................HOMO1..................")
         scale_HOMO_1 = (np.max(HOMO_1) - np.min(HOMO_1))
         HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
@@ -286,6 +290,8 @@ if __name__ == "__main__":
                         grid_tf, bayes_tf, sigopt_tf, algo)
 
     if(diff_tf == True):
+        des = des + "_diff"
+
         print(".........................diff..................")
         scale_diff = (np.max(diff) - np.min(diff))
         diff = (diff - np.min(diff)) / scale_diff

@@ -10,7 +10,6 @@ from sigopt import Connection
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
-from custom_scorers import *
 
 from sklearn.svm import SVR
 from sklearn.preprocessing import scale
