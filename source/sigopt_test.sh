@@ -1,6 +1,6 @@
 eval "$(conda shell.bash hook)"
 conda activate tf_gpu
-
+conda list
 
 # set this for the experiment to be used
 #export SIGOPT_PROJECT=.sigopt_yaml
@@ -12,8 +12,9 @@ conda activate tf_gpu
 
 
 export SIGOPT_PROJECT=ml-co2-db3-diff-morg-sgd
+#export SIGOPT_PROJECT=ml_co2
 sigopt optimize train.py --dir DB3 --des morg --algo sgd --sigopt --diff --sigopt-file ./sigopt_experiments/sgd.yml
-
+#sigopt run train.py --dir DB3 --des morg --algo sgd --sigopt
 #export SIGOPT_PROJECT=ml-co2-db3-diff-rf
 #sigopt optimize train.py --dir DB3 --des morg --algo rf --sigopt --diff --sigopt-file ./sigopt_experiments/rf.yml
 

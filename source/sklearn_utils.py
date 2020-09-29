@@ -1,17 +1,17 @@
-import joblib
-import numpy as np
 import sklearn.utils.fixes
-import time
-from boruta import BorutaPy
-
 from numpy.ma import MaskedArray
+sklearn.utils.fixes.MaskedArray = MaskedArray
+
+import time, joblib, sigopt
+from boruta import BorutaPy
+import numpy as np
+
+from sigopt import Connection
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
-import sigopt
-from sigopt import Connection
+from custom_scorers import *
 
-sklearn.utils.fixes.MaskedArray = MaskedArray
 from sklearn.svm import SVR
 from sklearn.preprocessing import scale
 from sklearn.kernel_ridge import KernelRidge
@@ -124,7 +124,7 @@ def bayes_sigopt(x, y, method="sgd"):
 
     if (method == "xgboost"):
         from xgboost_util import xgboost_bayes_sigopt
-        xgboost_bayes_sigopt(x, y)
+        xgboost_bayes_sigopt(x, y, csv_loc)
 
     else:
 
@@ -142,7 +142,8 @@ def bayes_sigopt(x, y, method="sgd"):
         sigopt.log_metric("r2", r2)
         sigopt.log_metric("nmse", mse)
 
-def bayes(x, y, method="sgd"):
+def bayes(x, y, method="sgd", des = "rdkit"):
+
     if (method == "nn"):
         print(".........neural network optimization selected.........")
         params = {"alpha": Real(1e-10, 1e-1, prior='log-uniform'),
@@ -230,10 +231,11 @@ def bayes(x, y, method="sgd"):
                   "eta0": Real(0.01, 0.2)}
         reg = SGDRegressor(penalty="l1", loss='squared_loss')
 
+    xgb_csv = "../data/train/bayes_"+ des +".csv"
     if (method == "xgboost"):
         from xgboost_util import xgboost_bayes_basic
         print(".........xgboost optimization selected.........")
-        reg = xgboost_bayes_basic(x, y)
+        reg = xgboost_bayes_basic(x, y, xgb_csv)
 
     else:
         print("........." + method + " optimization selected.........")
@@ -242,9 +244,10 @@ def bayes(x, y, method="sgd"):
         reg = BayesSearchCV(reg, params, n_iter=100, verbose=3, cv=3, n_jobs=4)
 
         time_to_stop = 60 * 60 * 47
-        ckpt_loc = "../data/train/bayes/ckpt_bayes_" + method + ".pkl"
-        checkpoint_callback = CheckpointSaver(ckpt_loc)
-        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+        #ckpt_loc = "../data/train/bayes/ckpt_bayes_" + des + ".pkl"
+        #checkpoint_callback = CheckpointSaver(ckpt_loc)
+        #reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop)])
 
         print(reg.best_params_)
         print(reg.best_score_)
@@ -385,7 +388,8 @@ def grid(x, y, method="sgd"):
         time_to_stop = 60 * 60 * 23
         ckpt_loc = "../data/train/bayes/ckpt_grid_" + method + ".pkl"
         checkpoint_callback = CheckpointSaver(ckpt_loc)
-        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+        #reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+        reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop)])
 
         print(reg.best_params_)
         print(reg.best_score_)
@@ -393,10 +397,11 @@ def grid(x, y, method="sgd"):
 
         return reg
 
-def rand(x, y, method="sgd"):
+def rand(x, y, method="sgd", desc = "morg"):
     #todo, make for all sklearn algorithms
     from xgboost_util import xgboost_rand
-    xgboost_rand(x,y)
+    csv_loc = "../data/train/rand_"+ desc + ".csv"
+    xgboost_rand(x,y, csv_loc)
     return True
 
 def sgd(x, y, scale):

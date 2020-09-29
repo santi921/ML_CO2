@@ -1,6 +1,6 @@
 experiment:
   name: sgd
-  observation_budget: 200
+  observation_budget: 50
   metrics: 
      - name: nmse
        objective: maximize

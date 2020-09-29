@@ -1,11 +1,8 @@
-import argparse
-import joblib
+import joblib, argparse, uuid, sigopt
 import numpy as np
 import pandas as pd
-import uuid
 from sklearn import preprocessing
 from sklearn_utils import *
-import sigopt
 
 # todo: work on interpretability algo/aspects
 # todo: plots of parameter space
@@ -126,11 +123,11 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
 
     if (rand_tf == True):
         #todo incorp all sklearn algos here
-        rand(x,y)
+        rand(x,y, )
 
     if (grid_tf == True):
         print("........starting grid search........")
-        grid_obj = grid(x, y, method=algo)
+        grid_obj = grid(x, y, method=algo, des = des)
         uuid_temp = uuid.uuid4()
         str = "../data/train/grid/complete_grid_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
         joblib.dump(grid_obj, str)
@@ -138,7 +135,8 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
 
     elif (bayes_tf == True):
         print("........starting bayes search........")
-        bayes_obj = bayes(x, y, method=algo)
+
+        bayes_obj = bayes(x, y, method=algo, des = des)
         uuid_temp = uuid.uuid4()
         str = "../data/train/bayes/complete_bayes_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
         joblib.dump(bayes_obj, str)
