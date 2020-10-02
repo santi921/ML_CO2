@@ -8,7 +8,10 @@ import numpy as np
 import xgboost as xgb
 import scipy.stats as stats
 
-from sigopt import Connection
+from rdkit.Chem import AllChem
+from rdkit.Chem import DataStructs
+from rdkit.Chem import Draw
+
 from skopt.searchcv import BayesSearchCV
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
@@ -33,13 +36,13 @@ def xgboost(x, y, scale, dict=None):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     if(dict == None):
         params = {
-            "colsample_bytree": 0.563133210670266,
-            "learning_rate": 0.20875083323873022,
-            "max_depth": 12, "gamma": 0.00,
-            "lambda": 0.16649470140308757,
-            "alpha": 0.023794165626311915,
-            "eta": 0.0,
-            "n_estimators": 3350}
+            "colsample_bytree": 0.58,
+            "learning_rate": 0.1,
+            "max_depth": 5, "gamma": 0.00,
+            "lambda": 0.0,
+            "alpha": 0.2,
+            "eta": 0.1,
+            "n_estimators": 5000}
     else:
         params = {}
         params["colsample_bytree"] = dict["colsample_bytree"]
@@ -74,6 +77,30 @@ def xgboost(x, y, scale, dict=None):
     score_mae = mean_absolute_error(reg.predict(x_test), y_test)
     print("scaled MAE")
     print(scale * score_mae)
+
+    fimportance = reg.feature_importances_
+    #print(fimportance)
+    #print(zip(range(np.shape(x_test)[1])))
+
+    fimportance_dict  = {}
+
+    for i in range(np.shape(x_test)[1]):
+        fimportance_dict[i] = fimportance[i]
+    sorteddata = sorted(fimportance_dict.items(), key=lambda x: -x[1])
+    top10feat = [x[0] for x in sorteddata][:10]
+
+    print(top10feat)
+
+    worst = np.argsort(y_test)[0:20]
+    best = np.argsort(y_test)[-20:-1]
+    testidx = worst[0]
+    testmols = x_test
+
+    fp, bitinfo = mol2fp(testmols[testidx])
+    onbit = [bit for bit in bitinfo.keys()]
+    importantonbits = list(set(onbit) & set(top10feat))
+    tpls = [(testmols[testidx], x, bitinfo) for x in importantonbits]
+    Draw.DrawMorganBits(tpls, legends=[str(x) for x in importantonbits])
 
     return reg
 
@@ -224,8 +251,6 @@ def evaluate_model(reg, x, y):
     cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring = "r2")
     return np.mean(cv_mse), np.mean(cv_mae), np.mean(cv_r2)
 
-
-
 def custom_sklearn_scorer(reg,x,y):
 
     from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -258,6 +283,13 @@ def custom_sklearn_scorer(reg,x,y):
         fd.write(str_csv)
 
     return np.mean(mean_squared_error)
+
+def mol2fp(mol,nBits=256):
+    bitInfo={}
+    fp = AllChem.GetMorganFingerprintAsBitVect(mol, 2, bitInfo=bitInfo)
+    arr = np.zeros((1,))
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return arr, bitInfo
 
 class custom_skopt_scorer(object):
     def __init__(self, x, y):

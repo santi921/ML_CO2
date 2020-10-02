@@ -272,6 +272,7 @@ if __name__ == "__main__":
 
     print("Using " + des + " as the descriptor")
 
+
     # finish optimization
     if (homo_tf == True):
         des = des + "_homo"
@@ -294,6 +295,8 @@ if __name__ == "__main__":
         des = des + "_diff"
 
         print(".........................diff..................")
+
+
         scale_diff = (np.max(diff) - np.min(diff))
         diff = (diff - np.min(diff)) / scale_diff
         reg_diff = calc(mat, diff, des, scale_diff, rand_tf,
