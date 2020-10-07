@@ -81,7 +81,9 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
         pkl = 0
 
     print(df.head())
-
+    df["HOMO"] = 0
+    df["HOMO-1"] = 0
+    df["diff"] = 0
     list_to_sort = []
     with open("../data/DATA_DB3") as fp:
         line = fp.readline()
@@ -104,12 +106,10 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
                     df["diff"].loc[i] = temp2 - temp1
                     print(temp2 - temp1)
 
-            if (df["name"].iloc[i][:-4] in j.split(";")[0]):
+            if (df["name"].iloc[i][:-4] in j.split(";")[0] and j[0:2] != "--"):
+                print(j)
                 temp1 = float(j.split(":")[1])
                 temp2 = float(j.split(":")[2])
-
-                print(j)
-
                 df["HOMO"].loc[i] = float(j.split(":")[1])
                 df["HOMO-1"].loc[i] = float(j.split(":")[2])
                 df["diff"].loc[i] = temp2 - temp1
@@ -237,11 +237,15 @@ if __name__ == "__main__":
         try:
             print("done processing dataframe")
             str = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_" + des + ".pkl"
+            print(str)
+
             df = pd.read_pickle(str)
+
             pkl = 1
         except:
             print("done processing dataframe")
             str = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_" + des + ".h5"
+            print(str)
             df = pd.read_hdf(str)
             pkl = 0
 

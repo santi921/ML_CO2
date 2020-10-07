@@ -636,7 +636,7 @@ def svr(x, y, scale):
 
     score = str(r2_score(svr_poly.predict(x_test), y_test))
     print("r2 score:   " + str(score) + " time: " + str(time_poly))
-
+    
     score_mae = mean_absolute_error(svr_poly.predict(x_test), y_test)
     print("scaled MAE")
     print(scale * score_mae)

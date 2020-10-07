@@ -7,24 +7,32 @@ import pybel
 from rdkit.Avalon import pyAvalonTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import SDMolSupplier
+from rdkit.Chem import DataStructs
 
 
 def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
     ls_dir = "ls " + str(dir) + " | sort"
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
+
     morgan = []
     names = []
-
+    ret_arr = []
+    bitInfo_arr = []
     for tmp, item in enumerate(temp):
         suppl = SDMolSupplier(dir + item)
 
         if (bit == True):
             try:
+                bitInfo = {}
+                fp = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 2, bitInfo=bitInfo,nBits=int(bit_length))
+                arr = np.zeros((1,))
+                DataStructs.ConvertToNumpyArray(fp, arr)
 
-                fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], int(2), nBits=int(bit_length))
-                morgan.append(fp_bit)
+                morgan.append(fp)
                 names.append(item)
+                ret_arr.append(arr)
+                bitInfo_arr.append(bitInfo)
 
                 sys.stdout.write("\r %s / " % tmp + str(len(temp)))
                 sys.stdout.flush()
@@ -32,9 +40,15 @@ def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
                 pass
         else:
             try:
-                fp = AllChem.GetMorganFingerprint(suppl[0], int(2))
+                bitInfo = {}
+                fp = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 2)
+                arr = np.zeros((1,))
+                DataStructs.ConvertToNumpyArray(fp, arr)
+
                 morgan.append(fp)
                 names.append(item)
+                ret_arr.append(arr)
+                bitInfo_arr.append(bitInfo)
 
                 sys.stdout.write("\r %s / " % tmp + str(len(temp)))
                 sys.stdout.flush()
@@ -45,7 +59,7 @@ def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
 
     print(len(morgan))
     morgan = np.array(morgan)
-    return names, morgan
+    return names, morgan, ret_arr, bitInfo
 
 
 def rdk(dir="../data/sdf/DB/"):
