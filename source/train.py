@@ -61,7 +61,6 @@ def process_input_DB2(dir="DB2", desc="rdkit"):
     else:
         df.to_pickle(str)
 
-
 # TODO : this, once ZZ finishes getting his data
 def process_input_ZZ(dir="ZZ", desc="vae"):
     # todo: process ZZ's

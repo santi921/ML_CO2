@@ -10,8 +10,9 @@ from rdkit.Chem import SDMolSupplier
 from rdkit.Chem import DataStructs
 
 
-def morgan(bit_length=256, dir="../data/sdf/DB/", bit=True):
-    ls_dir = "ls " + str(dir) + " | sort"
+def morgan(bit_length=256, dir="../data/sdf/DB3/", bit=True):
+
+    ls_dir = "ls " + str(dir)
     temp = os.popen(ls_dir).read()
     temp = str(temp).split()
 

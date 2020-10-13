@@ -15,28 +15,27 @@ def rd_kit(dir_sdf = "../data/sdf/"):
     temp_str = "ls " + dir_sdf
     temp = os.popen(temp_str).read()
     temp = str(temp).split()
-
-    bit_length = 256
+    bit_length = 1024
 
     sim_matrix_morgan = []
     sim_matrix_rdk = []
     sim_matrix_aval = []
     sim_matrix_layer = []
 
-    baseline = SDMolSupplier("../data/sdf/" + temp[0])
+    baseline = SDMolSupplier(dir_sdf + temp[0])
 
     baseline_morgan = AllChem.GetMorganFingerprintAsBitVect(baseline[0], 2, nBits=bit_length)
     baseline_rdk = AllChem.RDKFingerprint(baseline[0], maxPath=2)
     baseline_aval = pyAvalonTools.GetAvalonFP(baseline[0], 128)
     baseline_layer = AllChem.LayeredFingerprint(baseline[0])
-
+    count = 0
     for item in temp:
-        suppl = SDMolSupplier("../data/sdf/" + item)
-
+        suppl = SDMolSupplier(dir_sdf + item)
+        count += 1
         fp = AllChem.GetMorganFingerprint(suppl[0], 2)
 
-        fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 2, nBits=bit_length)
-        fp_rdk = AllChem.RDKFingerprint(suppl[0], maxPath=2)
+        fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], 3, nBits=bit_length)
+        fp_rdk = AllChem.RDKFingerprint(suppl[0], maxPath=3)
         fp_aval = pyAvalonTools.GetAvalonFP(suppl[0], 128)
         fp_layer = AllChem.LayeredFingerprint(suppl[0])
 
@@ -57,9 +56,10 @@ def rd_kit(dir_sdf = "../data/sdf/"):
     label_morgan = "morgan" + str(bit_length)
     plt.hist(sim_matrix_morgan, label = label_morgan)
     plt.hist(sim_matrix_rdk, label = "rdk2")
-    plt.hist(sim_matrix_aval, label = "avalon128")
-    plt.hist(sim_matrix_layer, label = "layer")
+    #plt.hist(sim_matrix_aval, label = "avalon128")
+    #plt.hist(sim_matrix_layer, label = "layer")
     print(np.mean(sim_matrix_rdk))
+    print(count)
     plt.xlabel("Similarity to Baseline")
     plt.ylabel("Counts")
     plt.title("Different Fingerprinting Methods, Similarity to Baseline")
