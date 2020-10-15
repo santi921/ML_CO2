@@ -249,7 +249,6 @@ def evaluate_model(reg, x, y):
 
 def custom_sklearn_scorer(reg,x,y):
 
-    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
     reg.fit(x_train, y_train)
 
@@ -280,12 +279,7 @@ def custom_sklearn_scorer(reg,x,y):
 
     return np.mean(mean_squared_error)
 
-def mol2fp(mol,nBits=256):
-    bitInfo={}
-    fp = AllChem.GetMorganFingerprintAsBitVect(mol, 2, bitInfo=bitInfo)
-    arr = np.zeros((1,))
-    DataStructs.ConvertToNumpyArray(fp, arr)
-    return arr, bitInfo
+
 
 class custom_skopt_scorer(object):
     def __init__(self, x, y):

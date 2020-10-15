@@ -1,6 +1,6 @@
 experiment:
   name: xgboost
-  observation_budget: 5
+  observation_budget: 500
   metrics: 
      - name: nmse
        objective: maximize
