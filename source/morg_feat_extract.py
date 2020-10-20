@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 import pybel
 from rdkit.Chem import AllChem, DataStructs, SDMolSupplier, Draw
+from rdkit.Chem.Draw import IPythonConsole
 
 def morgan(dir, bit_length=256):
     morgan = []
@@ -23,7 +24,7 @@ def morgan(dir, bit_length=256):
     temp_str = "ls " + dir
     temp = os.popen(temp_str).read()
     temp = str(temp).split()
-    mols = [i for i in SDMolSupplier(dir)]
+    mols = [ i for i in SDMolSupplier(dir)]
 
 
     for i, suppl in enumerate(mols):
@@ -45,6 +46,7 @@ def morgan(dir, bit_length=256):
     morgan = np.array(morgan)
     print("successfully processed " + str(i) + " out of " + str(len(temp)) + " molecules")
     return names, morgan, ret_arr, bitInfo_arr, mols
+
 
 def process_input_DB3(name, mat):
 
@@ -82,7 +84,6 @@ def process_input_DB3(name, mat):
 
     print("done parsing energies")
     return df
-
 def xgboost(x_train, x_test, y_train, y_test, scale, dict=None):
 
     params = {
@@ -128,11 +129,12 @@ def xgboost(x_train, x_test, y_train, y_test, scale, dict=None):
     return reg
 
 names, morganArr, retArr, bitInfoArr, molArr = morgan(dir = dir,bit_length = 1024)
+
 print("input begun with processing dataframe")
+
 #print(names)
 df = process_input_DB3(names, morganArr)
 #print(df["diff"])
-#print(df["mat"])
 
 mat = list(df["mat"])
 mat = preprocessing.scale(np.array(mat))
@@ -152,10 +154,11 @@ reg = xgboost(x_train, x_test, y_train, y_test, scale)
 fimportance = reg.feature_importances_
 fimportance_dict = dict(zip(range(1024), fimportance))
 sorteddata = sorted(fimportance_dict.items(), key=lambda x: -x[1])
-top50feat = [x[0] for x in sorteddata][:50]
+top10feat = [x[0] for x in sorteddata][:10]
 
 plt.hist(sorteddata)
-#plt.show()
+plt.show()
+print(top10feat)
 
 
 testidx = np.argsort(y_test)
@@ -163,23 +166,31 @@ print(testidx)
 print(testidx.tolist())
 slice_conv = tuple(slice(x) for x in testidx)
 
+#print(x_test[testidx][0:4])
+#print(reg.predict(x_test[testidx][0].reshape(1,-1)))
+#print(reg.predict(x_test[testidx][0:4]))
+#print(y_test[0:4])
+#print(onbit)
+#print(set(onbit))
+#print(set(top50feat))
+#print(set(onbit) & set(top50feat))
+
+testmols = [molArr[i] for i in testidx]
+
+testmols[3]
 
 slice_conv = tuple(slice(x) for x in testidx)
 testmols = molArr[slice(testidx[0])]
 
+test_probe = 10
 
-#testmols = molArr[slice(testidx[0])]
+#print([i for i in testidx])
 bitInfo={}
-fp = AllChem.GetMorganFingerprintAsBitVect(testmols[-1], 2, bitInfo=bitInfo)
+fp = AllChem.GetMorganFingerprintAsBitVect(testmols[test_probe], 2, bitInfo=bitInfo)
 arr = np.zeros((1,))
 DataStructs.ConvertToNumpyArray(fp, arr)
-print(reg.predict(x_test[testidx]))
-print(y_test[testidx])
 onbit = [bit for bit in bitInfo.keys()]
-importantonbits = list(set(onbit) & set(top50feat))
-print(set(onbit))
-print(set(top50feat))
 
-#we are here in latest run
-tpls = [(testmols[testidx], x, bitInfo) for x in importantonbits]
-
+importantonbits = list(set(onbit) & set(top10feat))
+tpls = [(testmols[test_probe], x, bitInfo) for x in importantonbits]
+Draw.DrawMorganBits(tpls)
