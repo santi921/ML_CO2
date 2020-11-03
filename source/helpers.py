@@ -144,7 +144,7 @@ def layer(dir="../data/sdf/DB/"):
 # Input: directory of xyz files
 # Output: None, saves SDF type files to and sdf folder for later
 def xyz_to_sdf(dir="../data/xyz/DB/"):
-    # todo: multithread this
+
     dir_str = "ls " + str(dir) + " | sort "
     temp = os.popen(dir_str).read()
     temp = str(temp).split()

@@ -4,7 +4,6 @@ for fil in files:
 	with open(fil, "r+") as f:
 		d = f.readlines()
 		f.seek(0)
-
 		try: 
 			int(d[3].split()[0])
 		except:
