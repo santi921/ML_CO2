@@ -66,18 +66,16 @@ def process_input_ZZ(dir="ZZ", desc="vae"):
     # todo: process ZZ's
     return 0
 
-
 def process_input_DB3(dir="DB3", desc="rdkit"):
     try:
-        str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".pkl"
-        print(str)
-        df = pd.read_pickle(str)
-        pkl = 1
-
-    except:
-        str = "../data/desc/" + dir + "/desc_calc_DB3_" + desc + ".h5"
+        str = "../data/desc/" + dir + "/desc_calc_"+ dir +"_" + desc + ".h5"
         df = pd.read_hdf(str)
         pkl = 0
+
+    except:
+        str = "../data/desc/" + dir + "/desc_calc_"+ dir +"_" + desc + ".pkl"
+        df = pd.read_pickle(str)
+        pkl = 1
 
     print(df.head())
     df["HOMO"] = 0
@@ -90,12 +88,10 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
             list_to_sort.append(line[0:-2])
             line = fp.readline()
     list_to_sort.sort()
+    print("Dimensions of df {0}".format(np.shape(df)))
 
     for i in range(df.copy().shape[0]):
         for j in list_to_sort:
-
-            # print(df["name"].iloc[i][:-4])
-            # print(j.split(":")[0])
             if (desc == "auto"):
                 if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
                     temp1 = float(j.split(":")[1])
@@ -105,18 +101,42 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
                     df["diff"].loc[i] = temp2 - temp1
                     print(temp2 - temp1)
 
+
             if (df["name"].iloc[i][:-4] in j.split(";")[0] and j[0:2] != "--"):
+                temp1 = float(j.split(":")[1])
+                temp2 = float(j.split(":")[2])
+                df["HOMO"].loc[i] = float(j.split(":")[1])
+                df["HOMO-1"].loc[i] = float(j.split(":")[2])
+                df["diff"].loc[i] = temp2 - temp1
+
+            shift = 1
+            if (df["name"].iloc[i][0:4] == "tris"):
+                shift = 5
+            elif(df["name"].iloc[i][0:5] == "tetra"):
+                shift = 6
+            elif (df["name"].iloc[i][0:6] == "bis-23"):
+                shift = 7
+            elif (df["name"].iloc[i][0:6] == "bis-25"):
+                shift = 7
+            elif (df["name"].iloc[i][0:6] == "bis-26"):
+                shift = 7
+            else:
+                pass
+
+            if(df["name"].iloc[i][shift:-4] in j.split(";")[0] and j[0:2] != "--"):
                 print(j)
                 temp1 = float(j.split(":")[1])
                 temp2 = float(j.split(":")[2])
                 df["HOMO"].loc[i] = float(j.split(":")[1])
                 df["HOMO-1"].loc[i] = float(j.split(":")[2])
                 df["diff"].loc[i] = temp2 - temp1
+
+    print(df.head())
+
     if (pkl == 0):
         df.to_hdf(str, key="df", mode='a')
     else:
         df.to_pickle(str)
-
 
 def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigopt_tf = False, algo="sgd"):
 
@@ -211,7 +231,6 @@ if __name__ == "__main__":
     parser.add_argument('--homo', dest="homo", action='store_true')
     parser.add_argument('--homo1', dest="homo1", action='store_true')
 
-
     results = parser.parse_args()
     des = results.desc
     dir_temp = results.dir
@@ -237,9 +256,7 @@ if __name__ == "__main__":
             print("done processing dataframe")
             str = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_" + des + ".pkl"
             print(str)
-
             df = pd.read_pickle(str)
-
             pkl = 1
         except:
             print("done processing dataframe")
@@ -247,6 +264,7 @@ if __name__ == "__main__":
             print(str)
             df = pd.read_hdf(str)
             pkl = 0
+    print(len(df))
 
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
@@ -263,8 +281,7 @@ if __name__ == "__main__":
         mat = df["mat"].to_numpy()
 
     if (sigopt_tf == True):
-
-        sigopt.log_dataset(name = dir_temp + " " +des )
+        sigopt.log_dataset(name = dir_temp + " " +des)
         sigopt.log_model(type=algo)
         sigopt.log_metadata('input_features', np.shape(mat[0]))
     try:
@@ -274,7 +291,7 @@ if __name__ == "__main__":
         mat = preprocessing.scale(np.array(mat))
 
     print("Using " + des + " as the descriptor")
-
+    print("Matrix Dimensions: {0}".format(np.shape(mat)))
 
     # finish optimization
     if (homo_tf == True):
@@ -298,7 +315,6 @@ if __name__ == "__main__":
         des = des + "_diff"
 
         print(".........................diff..................")
-
 
         scale_diff = (np.max(diff) - np.min(diff))
         diff = (diff - np.min(diff)) / scale_diff

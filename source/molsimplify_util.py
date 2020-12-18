@@ -1,4 +1,6 @@
 import glob
+import sys
+import os
 import numpy as np
 from molSimplify.Classes.mol3D import *
 from molSimplify.Informatics.autocorrelation import *
@@ -12,14 +14,18 @@ def full_autocorr(dir="../data/xyz/"):
     target_paths = sorted(glob.glob(str_temp))
     auto_corr_mat = []
     names = []
+    length = len(target_paths)
 
-    for geos in target_paths:
+    for ind, geos in enumerate(target_paths):
         this_mol = mol3D()  # mol3D instance
         try:
             this_mol.readfromxyz(geos)  # read geo
             results_auto = generate_full_complex_autocorrelations(this_mol, depth=3, loud=True)
             auto_corr_mat.append(results_auto["results"])
-            names.append(geos)
+            #print(geos.split("/")[-1])
+            names.append(geos.split("/")[-1])
+            sys.stdout.write("\r %s / " % ind + str(length))
+            sys.stdout.flush()
         except:
             pass
     auto_corr_mat = np.array(auto_corr_mat)

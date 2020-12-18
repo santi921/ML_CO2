@@ -7,6 +7,7 @@ from selfies import encoder
 
 # worked in python 3
 def selfies(dir="../data/xyz/DB/"):
+    print(dir)
     ret = []
     names = []
 

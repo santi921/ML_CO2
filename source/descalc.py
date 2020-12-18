@@ -16,9 +16,6 @@ def write_des(des, dir_temp):
     else:
         dir = "../data/xyz/" + dir_temp + "/"
 
-    print(dir)
-    print(os.listdir(dir))
-
     if (des == "aval"):
         print("...........aval started..........")
         name, mat = aval(dir)

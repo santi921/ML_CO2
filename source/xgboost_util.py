@@ -92,6 +92,7 @@ def xgboost(x, y, scale, dict=None):
     best = np.argsort(y_test)[-20:-1]
     testidx = worst[0]
     testmols = x_test
+
     fp, bitinfo = mol2fp(testmols[testidx])
     onbit = [bit for bit in bitinfo.keys()]
     importantonbits = list(set(onbit) & set(top10feat))
