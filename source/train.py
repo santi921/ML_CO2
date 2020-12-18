@@ -93,6 +93,7 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
     for i in range(df.copy().shape[0]):
         for j in list_to_sort:
             if (desc == "auto"):
+                print()
                 if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
                     temp1 = float(j.split(":")[1])
                     temp2 = float(j.split(":")[2])
