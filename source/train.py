@@ -9,135 +9,6 @@ from sklearn_utils import *
 # todo: process zz's stuff
 
 
-def process_input_DB2(dir="DB2", desc="rdkit"):
-    try:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".pkl"
-        print(str)
-        df = pd.read_pickle(str)
-        pkl = 1
-
-    except:
-        str = "../data/desc/" + dir + "/desc_calc_DB2_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
-
-    df["HOMO"] = ""
-    df["HOMO-1"] = ""
-    df["diff"] = ""
-    print(df.head())
-    list_to_sort = []
-    with open("../data/benzoquinone_DB/DATA_copy") as fp:
-        line = fp.readline()
-        while line:
-            list_to_sort.append(line[0:-2])
-            line = fp.readline()
-    list_to_sort.sort()
-
-    for i in range(df.copy().shape[0]):
-        for j in list_to_sort:
-
-            # print(df["name"].iloc[i][:-4])
-            # print(j.split(":")[0])
-            if (desc == "auto"):
-                if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
-                    temp1 = float(j.split(":")[1])
-                    temp2 = float(j.split(":")[2])
-                    df["HOMO"].loc[i] = float(j.split(":")[1])
-                    df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                    df["diff"].loc[i] = temp2 - temp1
-                    print(temp2 - temp1)
-
-            if (df["name"].iloc[i][:-4] in j.split(";")[0]):
-                temp1 = float(j.split(":")[1])
-                temp2 = float(j.split(":")[2])
-
-                print(j)
-
-                df["HOMO"].loc[i] = float(j.split(":")[1])
-                df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                df["diff"].loc[i] = temp2 - temp1
-    if (pkl == 0):
-        df.to_hdf(str, key="df", mode='a')
-    else:
-        df.to_pickle(str)
-
-# TODO : this, once ZZ finishes getting his data
-def process_input_ZZ(dir="ZZ", desc="vae"):
-    # todo: process ZZ's
-    return 0
-
-def process_input_DB3(dir="DB3", desc="rdkit"):
-    try:
-        str = "../data/desc/" + dir + "/desc_calc_"+ dir +"_" + desc + ".h5"
-        df = pd.read_hdf(str)
-        pkl = 0
-
-    except:
-        str = "../data/desc/" + dir + "/desc_calc_"+ dir +"_" + desc + ".pkl"
-        df = pd.read_pickle(str)
-        pkl = 1
-
-    print(df.head())
-    df["HOMO"] = 0
-    df["HOMO-1"] = 0
-    df["diff"] = 0
-    list_to_sort = []
-    with open("../data/DATA_DB3") as fp:
-        line = fp.readline()
-        while line:
-            list_to_sort.append(line[0:-2])
-            line = fp.readline()
-    list_to_sort.sort()
-    print("Dimensions of df {0}".format(np.shape(df)))
-
-    for i in range(df.copy().shape[0]):
-        for j in list_to_sort:
-            if (desc == "auto"):
-                print()
-                if (df["name"].iloc[i].split("/")[-1][:-4] in j.split(";")[0]):
-                    temp1 = float(j.split(":")[1])
-                    temp2 = float(j.split(":")[2])
-                    df["HOMO"].loc[i] = float(j.split(":")[1])
-                    df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                    df["diff"].loc[i] = temp2 - temp1
-                    print(temp2 - temp1)
-
-
-            if (df["name"].iloc[i][:-4] in j.split(";")[0] and j[0:2] != "--"):
-                temp1 = float(j.split(":")[1])
-                temp2 = float(j.split(":")[2])
-                df["HOMO"].loc[i] = float(j.split(":")[1])
-                df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                df["diff"].loc[i] = temp2 - temp1
-
-            shift = 1
-            if (df["name"].iloc[i][0:4] == "tris"):
-                shift = 5
-            elif(df["name"].iloc[i][0:5] == "tetra"):
-                shift = 6
-            elif (df["name"].iloc[i][0:6] == "bis-23"):
-                shift = 7
-            elif (df["name"].iloc[i][0:6] == "bis-25"):
-                shift = 7
-            elif (df["name"].iloc[i][0:6] == "bis-26"):
-                shift = 7
-            else:
-                pass
-
-            if(df["name"].iloc[i][shift:-4] in j.split(";")[0] and j[0:2] != "--"):
-                print(j)
-                temp1 = float(j.split(":")[1])
-                temp2 = float(j.split(":")[2])
-                df["HOMO"].loc[i] = float(j.split(":")[1])
-                df["HOMO-1"].loc[i] = float(j.split(":")[2])
-                df["diff"].loc[i] = temp2 - temp1
-
-    print(df.head())
-
-    if (pkl == 0):
-        df.to_hdf(str, key="df", mode='a')
-    else:
-        df.to_pickle(str)
 
 def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigopt_tf = False, algo="sgd"):
 
@@ -295,7 +166,7 @@ if __name__ == "__main__":
     print("Matrix Dimensions: {0}".format(np.shape(mat)))
 
     # finish optimization
-    if (homo_tf == True):
+    if(homo_tf == True):
         des = des + "_homo"
         print(".........................HOMO..................")
         scale_HOMO = (np.max(HOMO) - np.min(HOMO))

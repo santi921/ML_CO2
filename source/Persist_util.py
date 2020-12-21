@@ -28,9 +28,6 @@ def persistent(dir="../data/xyz/", pixelsx=150, pixelsy=150, spread=0.28, Max=2.
             sys.stdout.flush()
 
         except:
-            # print("error")
-            # sys.stdout.write("\r error")
-            # sys.stdout.flush()
             pass
     print("\n Number of files processed: " + str(len(persist)))
     return names, persist
