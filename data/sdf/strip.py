@@ -10,7 +10,7 @@ for fil in files:
 			print(fil)
 
 
-		#for i in d:
-		#	if i[0:4] != "Warn":
-		#		f.write(i)
-		#f.truncate()
+		for i in d:
+			if i[0:4] != "Warn":
+				f.write(i)
+		f.truncate()

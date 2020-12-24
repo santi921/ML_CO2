@@ -19,7 +19,8 @@ from sklearn.linear_model import SGDRegressor, BayesianRidge
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor,\
+    ExtraTreesRegressor
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, ShuffleSplit
 
@@ -96,13 +97,25 @@ def bayes_sigopt(x, y, method="sgd"):
         temp_dict = {"n_jobs": 4,
                      "max_depth": sigopt.get_parameter("max_depth", default=5),
                      "min_samples_split": sigopt.get_parameter("min_samples_split", default=3),
-                     "n_estimators": sigopt.get_parameter("n_estimators", default=800)
+                     "n_estimators": sigopt.get_parameter("n_estimators", default=400)
                      }
 
         reg = RandomForestRegressor(**temp_dict)
 
-    elif (method == "gaussian"):
+    elif (method == "extra"):
 
+        print(".........extra tree optimization selected.........")
+        temp_dict = {"n_jobs": 4,
+                     "max_depth": sigopt.get_parameter("max_depth", default=5),
+                     "min_samples_split": sigopt.get_parameter("min_samples_split", default=3),
+                     "min_samples_leaf": sigopt.get_parameter("min_samples_leaf", default=2),
+                     "n_estimators": sigopt.get_parameter("n_estimators", default=400)
+                     }
+
+        reg = ExtraTreesRegressor(**temp_dict)
+
+    elif (method == "gaussian"):
+        # todo implement a tanimoto
         print(".........gaussian optimization selected.........")
         kernel = DotProduct() + WhiteKernel()
         params = {"kernel": kernel,
@@ -157,19 +170,33 @@ def bayes(x, y, method="sgd", des = "rdkit"):
         print(".........random forest optimization selected.........")
         params = {"max_depth": Integer(10, 40),
                   "min_samples_split": Integer(2, 6),
-                  "n_estimators": Integer(500, 5000)}
+                  "n_estimators": Integer(100, 2000)}
         reg = RandomForestRegressor(n_jobs=1)
 
     elif (method == "grad"):
         print(".........gradient boost optimization selected.........")
 
         params = {"loss": ["ls"],
-                  "n_estimators": Integer(500, 5000),
+                  "n_estimators": Integer(100, 2000),
                   "learning_rate": Real(0.001, 0.3),
                   "subsample": Real(0.2, 0.8),
                   "max_depth": Integer(10, 30),
                   "tol": Real(1e-6, 1e-3, prior='log-uniform')}
         reg = GradientBoostingRegressor(criterion="mse", loss="ls")
+
+
+    elif (method == "extra"):
+        print(".........extra optimization selected.........")
+
+        params = {"loss": ["ls"],
+                  "n_estimators": Integer(100, 2000),
+                  "learning_rate": Real(0.001, 0.3),
+                  "subsample": Real(0.2, 0.8),
+                  "max_depth": Integer(10, 30),
+                  "min_samples_split": Integer(2,4),
+                  "min_samples_leaf": Integer(2,4)
+                  }
+        reg = GradientBoostingRegressor(criterion="mse")
 
     elif (method == "svr_rbf"):
         print(".........svr optimization selected.........")
@@ -496,6 +523,40 @@ def random_forest(x, y, scale):
     time_el = t2 - t1
     score = reg.score(list(x_test), y_test)
     print("random forest score:                 " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_squared_error(reg.predict(x_test), y_test))
+    print("MSE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(mean_absolute_error(reg.predict(x_test), y_test))
+    print("MAE score:   " + str(score) + " time: " + str(time_el))
+
+    score = str(r2_score(reg.predict(x_test), y_test))
+    print("r2 score:   " + str(score) + " time: " + str(time_el))
+
+    score_mae = mean_absolute_error(reg.predict(x_test), y_test)
+    print("scaled MAE")
+    print(scale * score_mae)
+
+    return reg
+
+def extra_trees(x, y, scale):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+    params = {"n_estimators": 500,
+              "min_samples_split": 2,
+              "min_samples_leaf": 2,
+              "n_jobs": 16,
+              "verbose": False,
+              }
+
+    reg = ExtraTreesRegressor(**params)
+
+    t1 = time.time()
+    reg.fit(list(x_train), y_train)
+    t2 = time.time()
+    time_el = t2 - t1
+    score = reg.score(list(x_test), y_test)
+    print("Extra trees score:                 " + str(score) + " time: " + str(time_el))
 
     score = str(mean_squared_error(reg.predict(x_test), y_test))
     print("MSE score:   " + str(score) + " time: " + str(time_el))

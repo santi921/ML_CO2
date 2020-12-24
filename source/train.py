@@ -8,8 +8,6 @@ from sklearn_utils import *
 # todo: plots of parameter space
 # todo: process zz's stuff
 
-
-
 def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigopt_tf = False, algo="sgd"):
 
     if (rand_tf == True):
@@ -50,8 +48,12 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
         elif (algo == "rf"):
             print("random forest selected")
             reg = random_forest(x, y, scale)
+        elif (algo == "extra"):
+            print("extra trees selected")
+            reg = extra_trees(x, y, scale)
+
         elif (algo == "grad"):
-            print("grid algo selected")
+            print("grad algo selected")
             reg = gradient_boost_reg(x, y, scale)
         elif (algo == "svr"):
             print("svr algo selected")
@@ -137,7 +139,7 @@ if __name__ == "__main__":
             df = pd.read_hdf(str)
             pkl = 0
     print(len(df))
-
+    print(df.head())
     HOMO = df["HOMO"].to_numpy()
     HOMO_1 = df["HOMO-1"].to_numpy()
     diff = df["diff"].to_numpy()

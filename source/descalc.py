@@ -18,49 +18,48 @@ def write_des(des, dir_temp):
 
     if (des == "aval"):
         print("...........aval started..........")
-        name, mat = aval(dir)
+        name, mat, homo, homo1, diff = layer(dir)
 
     elif (des == "morg"):
         print("...........morgan started..........")
-        name, mat = morgan(256, dir)
+        name, mat, homo, homo1, diff = morgan(256, dir)
 
     elif (des == "layer"):
         print("...........layers started..........")
-        name, mat = layer(dir)
+        name, mat, homo, homo1, diff = layer(dir)
 
     elif (des == "vae"):
         from vae_util import vae
         print("...........vae started..........")
-        name, mat = vae(dir)
+        name, mat, homo, homo1, diff  = vae(dir)
 
     elif (des == "self"):
         from selfies_util import selfies
         print("...........selfies started..........")
-        name, mat = selfies(dir)
+        name, mat, homo, homo1, diff = selfies(dir)
 
     elif (des == "auto"):
         from molsimplify_util import full_autocorr
         print("...........autocorrelation started..........")
-        name, mat = full_autocorr(dir)
+        name, mat, homo, homo1, diff = full_autocorr(dir)
 
     #requires a metal in the compound for this desc
     elif (des == "delta"):
         from molsimplify_util import metal_deltametrics
         print("...........deltametrics started..........")
-        name, mat = metal_deltametrics(dir)
+        name, mat, homo, homo1, diff = metal_deltametrics(dir)
 
     elif (des == "persist"):
         from Persist_util import persistent
         print("...........persistent images started..........")
-        name, mat = persistent(dir)
+        name, mat, homo, homo1, diff= persistent(dir)
 
     else:
         from helpers import rdk
         print("...........rdk started..........")
-        name, mat = rdk(dir)
+        name, mat, homo, homo1, diff = rdk(dir)
 
     if (np.shape(mat)[0] > 70000 and (des == "persist")):
-
         size = 25000
         chunks = math.ceil(np.shape(mat)[0] / size)
 
@@ -101,7 +100,7 @@ def write_des(des, dir_temp):
         if (des != "self"):
             mat = np.array(mat).astype("float32")
         mat = list(mat)
-        temp_dict = {"name": name, "mat": mat}
+        temp_dict = {"name": name, "mat": mat, "HOMO": homo, "HOMO-1": homo1, "diff": diff}
         df = pd.DataFrame.from_dict(temp_dict, orient="index")
         df = df.transpose()
         print(df.head())
@@ -133,11 +132,10 @@ if __name__ == "__main__":
         write_des("morg", dir_temp)
         print("......layer started.....")
         write_des("layer", dir_temp)
-
         print("......persistent images started.....")
         write_des("persist", dir_temp)
-        # print("......autocorrelation started.....")
 
+        # print("......autocorrelation started.....")
         # write_des("auto", dir_temp)
         # print("......SELFIES started.....")
         # write_des("self", dir_temp)

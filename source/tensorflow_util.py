@@ -95,7 +95,7 @@ def resnet34(x, y, scale):
     opt = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1E-7, amsgrad=False)
     model.compile(optimizer=opt, loss="MSE", metrics=["MeanSquaredError", "MAE"])
     early_stop = EarlyStopping(monitor="loss", verbose=1, patience=200)
-    history = model.fit(x_train, y_train, epochs=1000, callbacks=[early_stop])
+    history = model.fit(x_train, y_train, epochs=100, callbacks=[early_stop])
     ret = model.evaluate(x_test, y_test, verbose=2)
 
     score = str(mean_squared_error(model.predict(x_test), y_test))

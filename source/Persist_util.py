@@ -1,35 +1,52 @@
-import os
 import sys
-
 from Element_PI import VariancePersistv1
+from helpers import merge_dir_and_data
 
 
 def persistent(dir="../data/xyz/", pixelsx=150, pixelsy=150, spread=0.28, Max=2.5):
-    ls_dir = "ls " + str(dir) + " | sort -d"
-    temp = os.popen(ls_dir).read()
-    temp = str(temp).split()
+
     persist = []
     names = []
+    homo = []
+    homo1 = []
+    diff = []
 
-    for j, item in enumerate(temp):
-        temp_file = dir + str(item)
+    dir_fl_names, list_to_sort = merge_dir_and_data(dir = dir)
+    print(len(dir_fl_names))
+    print(len(list_to_sort))
 
-        # print(temp_file)
+    #---------------------------------------------------------------------------
+    for tmp, item in enumerate(dir_fl_names):
+        temp = dir + str(item)
         try:
+
             temp_persist = VariancePersistv1(
-                temp_file.format(temp_file + str(1)),
+                temp.format(temp + str(1)),
                 pixelx=pixelsx, pixely=pixelsy,
                 myspread=spread, myspecs={"maxBD": Max, "minBD": -.10}, showplot=False)
-
-            # print(temp_persist)
-            persist.append(temp_persist)
-            names.append(item)
-            sys.stdout.write("\r %s / " % j + str(len(temp)))
+            if (item[0:-4] == list_to_sort[tmp].split(":")[0] ):
+                persist.append(temp_persist)
+                names.append(item)
+                homo_temp = float(list_to_sort[tmp].split(":")[1])
+                homo1_temp = float(list_to_sort[tmp].split(":")[2])
+                homo.append(homo_temp)
+                homo1.append(homo1_temp)
+                diff.append(homo_temp - homo1_temp)
+            else:
+                try:
+                    if (item[0:-4] == list_to_sort[tmp+1].split(":")[0]):
+                        persist.append(temp_persist)
+                        names.append(item)
+                        homo_temp = float(list_to_sort[tmp+1].split(":")[1])
+                        homo1_temp = float(list_to_sort[tmp+1].split(":")[2])
+                        homo.append(homo_temp)
+                        homo1.append(homo1_temp)
+                        diff.append(homo_temp - homo1_temp)
+                except:
+                    print(list_to_sort[tmp].split(":")[0], item[0:-4])
+                    pass
+            sys.stdout.write("\r %s /" % tmp + str(len(dir_fl_names)))
             sys.stdout.flush()
-
         except:
             pass
-    print("\n Number of files processed: " + str(len(persist)))
-    return names, persist
-
-
+    return names, persist, homo, homo1, diff
