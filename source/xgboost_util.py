@@ -24,7 +24,6 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 csv_loc_rand = "../data/train/rand.csv"
 csv_loc_bayes = "../data/train/bayes.csv"
 
-
 def xgboost(x, y, scale, dict=None):
     
     x = np.array(x)
@@ -228,17 +227,8 @@ def xgboost_bayes_sigopt(x, y):
          "n_estimators": sigopt.get_parameter("n_estimators", default= 500)}
 
     xgb_reg = xgb.XGBRegressor(**params)
-    try:
-        (mse, mae, r2) = evaluate_model(xgb_reg, x, y)
-    except:
-        (mse, mae, r2) = evaluate_model(xgb_reg, list(x), y)
 
-    print("Current MSE: " + str(mse))
-    print("Current MAE: " + str(mae))
-    print("Current R_2: " + str(r2))
-    sigopt.log_metric("mse", mse)
-    sigopt.log_metric("mae", mae)
-    sigopt.log_metric("r2", r2)
+    return xgb_reg
 
 def evaluate_model(reg, x, y):
 
@@ -279,8 +269,6 @@ def custom_sklearn_scorer(reg,x,y):
         fd.write(str_csv)
 
     return np.mean(mean_squared_error)
-
-
 
 class custom_skopt_scorer(object):
     def __init__(self, x, y):

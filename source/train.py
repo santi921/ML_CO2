@@ -24,7 +24,6 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
 
     elif (bayes_tf == True):
         print("........starting bayes search........")
-
         bayes_obj = bayes(x, y, method=algo, des = des)
         uuid_temp = uuid.uuid4()
         str = "../data/train/bayes/complete_bayes_" + algo + "_" + des + "_" + uuid_temp.urn[9:] + ".pkl"
@@ -51,7 +50,6 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
         elif (algo == "extra"):
             print("extra trees selected")
             reg = extra_trees(x, y, scale)
-
         elif (algo == "grad"):
             print("grad algo selected")
             reg = gradient_boost_reg(x, y, scale)
@@ -73,15 +71,27 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
             reg = xgboost(x, y, scale)
         elif (algo == "tf_nn"):
             from tensorflow_util import nn_basic
+            x = x.astype('float32')
+            y = y.astype('float32')
+
             reg = nn_basic(x, y, scale)
         elif (algo == "tf_cnn"):
             from tensorflow_util import cnn_basic
+            x = x.astype('float32')
+            y = y.astype('float32')
+
             reg = cnn_basic(x, y, scale)
         elif (algo == "tf_cnn_norm"):
             from tensorflow_util import cnn_norm_basic
+            x = x.astype('float32')
+            y = y.astype('float32')
+
             reg = cnn_norm_basic(x, y, scale)
         elif (algo == "resnet"):
             from tensorflow_util import resnet34
+            x = x.astype('float32')
+            y = y.astype('float32')
+
             reg = resnet34(x, y, scale)
         else:
             print("stochastic gradient descent selected")

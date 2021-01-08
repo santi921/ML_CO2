@@ -34,11 +34,8 @@ def evaluate_model(reg, x, y):
 def bayes_sigopt(x, y, method="sgd"):
 
     conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
-
-
     if (method == "grad"):
         print(".........gradient boost optimization selected.........")
-
         params = {"loss": "ls", "criterion":"mse",
                   "n_estimators": sigopt.get_parameter("n_estimators", default=500),
                   "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
@@ -123,9 +120,13 @@ def bayes_sigopt(x, y, method="sgd"):
                      }
         reg = GaussianProcessRegressor(**params)
 
-    else:
+    elif (method == "xgboost"):
+        print(".........xgboost optimization selected.........")
+        from xgboost_util import xgboost_bayes_sigopt
+        reg = xgboost_bayes_sigopt(x, y)
 
-        print(".........sgd optimization selected.........")
+    else:
+        print(".........alternative, sgd optimization selected.........")
         params = {"penalty":"l1", "loss":'squared_loss',
                      "l1_ratio": sigopt.get_parameter("l1_ratio", default=0.2),
                      "tol": sigopt.get_parameter("tol", default=0.01),
@@ -134,25 +135,18 @@ def bayes_sigopt(x, y, method="sgd"):
                      }
         reg = SGDRegressor(**params)
 
-    if (method == "xgboost"):
-        from xgboost_util import xgboost_bayes_sigopt
-        xgboost_bayes_sigopt(x, y, csv_loc)
+    try:
+        (mse, mae, r2) = evaluate_model(reg, x, y)
+    except:
+        (mse, mae, r2) = evaluate_model(reg, list(x), y)
 
-    else:
-
-        try:
-            (mse, mae, r2) = evaluate_model(reg, x, y)
-        except:
-            (mse, mae, r2) = evaluate_model(reg, list(x), y)
-
-        print("Current MSE: " + str(mse))
-        print("Current MAE: " + str(mae))
-        print("Current R_2: " + str(r2))
-
-        sigopt.log_metric("mse", mse)
-        sigopt.log_metric("mae", mae)
-        sigopt.log_metric("r2", r2)
-        sigopt.log_metric("nmse", mse)
+    print("Current MSE: " + str(mse))
+    print("Current MAE: " + str(mae))
+    print("Current R_2: " + str(r2))
+    sigopt.log_metric("mse", mse)
+    sigopt.log_metric("mae", mae)
+    sigopt.log_metric("r2", r2)
+    sigopt.log_metric("nmse", mse)
 
 def bayes(x, y, method="sgd", des = "rdkit"):
 

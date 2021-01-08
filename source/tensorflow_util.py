@@ -113,7 +113,6 @@ def resnet34(x, y, scale):
 
     return model
 
-
 def nn_basic(x, y, scale):
     try:
         x.shape
@@ -172,7 +171,6 @@ def nn_basic(x, y, scale):
     print(scale * score_mae)
 
     return model
-
 
 def cnn_basic(x, y, scale):
     from tensorflow.compat.v1 import ConfigProto
@@ -260,7 +258,6 @@ def cnn_basic(x, y, scale):
     print(scale * score_mae)
 
     return model
-
 
 def cnn_norm_basic(x, y, scale):
     from tensorflow.compat.v1 import ConfigProto

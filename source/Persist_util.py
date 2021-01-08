@@ -3,7 +3,7 @@ from Element_PI import VariancePersistv1
 from helpers import merge_dir_and_data
 
 
-def persistent(dir="../data/xyz/", pixelsx=150, pixelsy=150, spread=0.28, Max=2.5):
+def persistent(dir="../data/xyz/", pixelsx=100, pixelsy=100, spread=0.28, Max=2.5):
 
     persist = []
     names = []
