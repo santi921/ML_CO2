@@ -224,7 +224,7 @@ def xgboost_bayes_sigopt(x, y):
          "alpha": sigopt.get_parameter("alpha", default = 0.0),
          "eta": sigopt.get_parameter("eta", default =0.01),
          "gamma": sigopt.get_parameter("gamma", default = 0),
-         "n_estimators": sigopt.get_parameter("n_estimators", default= 500)}
+         "n_estimators": sigopt.get_parameter("n_estimators", default= 200)}
 
     xgb_reg = xgb.XGBRegressor(**params)
 
