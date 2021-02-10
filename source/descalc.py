@@ -22,7 +22,7 @@ def write_des(des, dir_temp):
 
     elif (des == "morg"):
         print("...........morgan started..........")
-        name, mat, homo, homo1, diff = morgan(256, dir)
+        name, mat, homo, homo1, diff = morgan(1024, dir)
 
     elif (des == "layer"):
         print("...........layers started..........")

@@ -37,7 +37,7 @@ def bayes_sigopt(x, y, method="sgd"):
     if (method == "grad"):
         print(".........gradient boost optimization selected.........")
         params = {"loss": "ls", "criterion":"mse",
-                  "n_estimators": sigopt.get_parameter("n_estimators", default=500),
+                  "n_estimators": sigopt.get_parameter("n_estimators", default=100),
                   "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
                   "subsample": sigopt.get_parameter("subsample", default=0.5),
                   "max_depth": sigopt.get_parameter("max_depth", default=10),
@@ -94,7 +94,7 @@ def bayes_sigopt(x, y, method="sgd"):
         temp_dict = {"n_jobs": 4,
                      "max_depth": sigopt.get_parameter("max_depth", default=5),
                      "min_samples_split": sigopt.get_parameter("min_samples_split", default=3),
-                     "n_estimators": sigopt.get_parameter("n_estimators", default=400)
+                     "n_estimators": sigopt.get_parameter("n_estimators", default=100)
                      }
 
         reg = RandomForestRegressor(**temp_dict)

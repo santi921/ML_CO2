@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import TensorBoard, EarlyStopping
 from tensorflow.keras.layers import Dense, MaxPooling2D, Conv2D, Dropout, \
     Flatten, BatchNormalization, Activation, GlobalAvgPool2D
 from tensorflow.keras.models import Sequential
-
+import matplotlib.pyplot as plt
 
 class ResidualUnit(keras.layers.Layer):
     def __init__(self, filters, strides=1, activation="relu", **kwargs):
@@ -41,7 +41,7 @@ class ResidualUnit(keras.layers.Layer):
         return self.activation(Z + skip_Z)
 
 
-def resnet34(x, y, scale):
+def resnet34(x, y, scale, iter = 150):
     from tensorflow.compat.v1 import ConfigProto
     from tensorflow.compat.v1 import InteractiveSession
 
@@ -75,8 +75,8 @@ def resnet34(x, y, scale):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=42)
     print("Input vector size: " + str(input_dim))
     model = Sequential()
-    model.add(Conv2D(filters=64, kernel_size=7, activation='relu', input_shape=(dim_persist, dim_persist, 1),
-                     strides=2, data_format="channels_last", use_bias=False))
+    model.add(Conv2D(filters=64, kernel_size=5, activation='relu', input_shape=(dim_persist, dim_persist, 1),
+                     strides=1, data_format="channels_last", use_bias=False))
     model.add(BatchNormalization())
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=3, strides=2, padding="same"))
@@ -87,17 +87,22 @@ def resnet34(x, y, scale):
         prev_filters = filters
     model.add(GlobalAvgPool2D())
     model.add(Flatten())
-    model.add(Dropout(0.5))
-    model.add(Dense(1024, activation="relu"))
+    model.add(Dropout(0.25))
 
-    model.add(Dense(1))
+    model.add(Dense(512))
+
+    model.add(Dense(1, activation = "linear"))
     model.summary()
-    opt = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1E-7, amsgrad=False)
-    model.compile(optimizer=opt, loss="MSE", metrics=["MeanSquaredError", "MAE"])
-    early_stop = EarlyStopping(monitor="loss", verbose=1, patience=200)
-    history = model.fit(x_train, y_train, epochs=100, callbacks=[early_stop])
-    ret = model.evaluate(x_test, y_test, verbose=2)
 
+
+    opt = tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1E-7, amsgrad=False)
+    model.compile(optimizer=opt, loss="MSE", metrics=["MeanSquaredError", "MAE"])
+    early_stop = EarlyStopping(monitor="loss", verbose=1, patience=10)
+    history = model.fit(x_train, y_train, epochs=iter, batch_size=32, callbacks=[early_stop], validation_split=0.15)
+    ret = model.evaluate(x_test, y_test, verbose=2)
+    plt.plot(history.history["loss"][2:-1], label = "Training Loss")
+    plt.plot(history.history["val_loss"][2:-1], label = "Validation Loss")
+    plt.legend()
     score = str(mean_squared_error(model.predict(x_test), y_test))
     print("MSE score:   " + str(score))
 
@@ -113,7 +118,7 @@ def resnet34(x, y, scale):
 
     return model
 
-def nn_basic(x, y, scale):
+def nn_basic(x, y, scale, iter = 50):
     try:
         x.shape
         x = x.tolist()
@@ -136,15 +141,18 @@ def nn_basic(x, y, scale):
 
     model = tf.keras.models.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
-    model.add(tf.keras.layers.Dense(2048, activation="relu"))
-    model.add(tf.keras.layers.Dense(2048, activation="relu"))
+
+    model.add(tf.keras.layers.Dense(1024, activation="relu"))
+    model.add(Dropout(0.25))
+    model.add(tf.keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.Dense(1024, activation="relu"))
 
     #model.add(tf.keras.layers.Dense(2048, activation="relu"))
     #model.add(tf.keras.layers.Dense(1024, activation="relu"))
     #model.add(tf.keras.layers.Dense(512, activation="relu"))
 
-    model.add(tf.keras.layers.Dense(1))
-
+    model.add(tf.keras.layers.Dense(1, activation="linear"))
+    model.summary()
     # tf.keras.layers.Dropout(0.2),
     # tf.keras.layers.Dense(256),
     # mse = tf.keras.losses.MeanSquaredError()
@@ -153,12 +161,20 @@ def nn_basic(x, y, scale):
     # mae = tf.keras.losses.MAE()
     # rmse = tf.keras.losses.RMSE()
     log_dir = "./logs/training/"
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    #tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     # model.compile(optimizer='adam', loss=mse, metrics=[keras.metrics.mae])
     model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
-    tensorboard_cbk = TensorBoard(log_dir=log_dir)
-    history = model.fit(x_train, y_train, epochs=1000, callbacks=[tensorboard_callback])
-    ret = model.evaluate(x_test, y_test, verbose=2)
+    early_stop = EarlyStopping(monitor="loss", verbose=1, patience=10)
+    #tensorboard_cbk = TensorBoard(log_dir=log_dir)
+    #history = model.fit(x_train, y_train, epochs=10, callbacks=[tensorboard_callback])
+    early_stop = EarlyStopping(monitor="loss", verbose=1, patience=10)
+    history = model.fit(x_train, y_train, epochs=iter, validation_split=0.15, callbacks = [early_stop])
+
+    ret = model.evaluate(x_test, y_test, verbose=1)
+    print(history.history.keys())
+    plt.plot(history.history["loss"][2:-1], label = "Training Loss")
+    plt.plot(history.history["val_loss"][2:-1], label = "Validation Loss")
+    plt.legend()
 
     score = str(mean_squared_error(model.predict(x_test), y_test))
     print("MSE score:   " + str(score))
@@ -172,7 +188,7 @@ def nn_basic(x, y, scale):
 
     return model
 
-def cnn_basic(x, y, scale):
+def cnn_basic(x, y, scale, iter = 50):
     from tensorflow.compat.v1 import ConfigProto
     from tensorflow.compat.v1 import InteractiveSession
 
@@ -212,25 +228,13 @@ def cnn_basic(x, y, scale):
                      strides=1, data_format="channels_last"))
     model.add(MaxPooling2D(pool_size=2))
 
-    model.add(Conv2D(filters=128, kernel_size=3, activation='relu',
+    model.add(Conv2D(filters=32, kernel_size=2, activation='relu',
                      strides=1, data_format="channels_last"))
     model.add(MaxPooling2D(pool_size=2))
-
-    model.add(Conv2D(filters=256, kernel_size=3, activation='relu',
-                     strides=1, data_format="channels_last"))
-    model.add(MaxPooling2D(pool_size=2))
-
-    model.add(Conv2D(filters=512, kernel_size=3, activation='relu',
-                     strides=1, data_format="channels_last"))
-    model.add(MaxPooling2D(pool_size=2))
-
     model.add(Flatten())
+    model.add(Dense(512, activation="relu"))
     model.add(Dropout(0.5))
-
-    model.add(Dense(4096, activation="relu"))
-    model.add(Dropout(0.5))
-
-    model.add(Dense(1))
+    model.add(Dense(1, activation="linear"))
 
     model.summary()
     # mae = tf.keras.losses.MAE()
@@ -241,8 +245,13 @@ def cnn_basic(x, y, scale):
     model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
 
     # tensorboard_cbk = TensorBoard(log_dir=log_dir)
-    history = model.fit(x_train, y_train, epochs=10)
+    history = model.fit(x_train, y_train, epochs=iter, validation_split=0.15)
     ret = model.evaluate(x_test, y_test, verbose=2)
+
+    print(history.history.keys())
+    plt.plot(history.history["loss"][2:-1], label = "Training Loss")
+    plt.plot(history.history["val_loss"][2:-1], label = "Validation Loss")
+    plt.legend()
 
     score = str(mean_squared_error(model.predict(x_test), y_test))
     print("MSE score:   " + str(score))
@@ -259,7 +268,7 @@ def cnn_basic(x, y, scale):
 
     return model
 
-def cnn_norm_basic(x, y, scale):
+def cnn_norm_basic(x, y, scale, iter = 200):
     from tensorflow.compat.v1 import ConfigProto
     from tensorflow.compat.v1 import InteractiveSession
 
@@ -301,32 +310,27 @@ def cnn_norm_basic(x, y, scale):
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=2))
 
-    model.add(Conv2D(filters=128, kernel_size=3,
-                     strides=1, data_format="channels_last"))
+    #model.add(Conv2D(filters=64, kernel_size=3,
+    #                 strides=1, data_format="channels_last"))
     # model.add(BatchNormalization())
-    model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=2))
-
-    model.add(Conv2D(filters=256, kernel_size=3,
+    #model.add(Activation("relu"))
+    #model.add(MaxPooling2D(pool_size=2))
+    #model.add(Activation("relu"))
+    
+    model.add(Conv2D(filters=64, kernel_size=3,
                      strides=1, data_format="channels_last"))
-    # model.add(BatchNormalization())
-    model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=2))
-
-    model.add(Conv2D(filters=512, kernel_size=3,
-                     strides=1, data_format="channels_last"))
-    # model.add(BatchNormalization())
-    model.add(local)
+    model.add(BatchNormalization())
+    #model.add(local)
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=2))
 
     model.add(Flatten())
     model.add(Dropout(0.5))
 
-    model.add(Dense(4096, activation="relu"))
+    model.add(Dense(128, activation="relu"))
     model.add(Dropout(0.5))
 
-    model.add(Dense(1))
+    model.add(Dense(1, activation="linear"))
 
     model.summary()
     # mae = tf.keras.losses.MAE()
@@ -334,8 +338,12 @@ def cnn_norm_basic(x, y, scale):
     log_dir = "./logs/training/"
     model.compile(optimizer='adam', loss="MSE", metrics=["MeanSquaredError", "MAE"])
 
-    history = model.fit(x_train, y_train, epochs=100)
+    history = model.fit(x_train, y_train, epochs=iter, validation_split=0.15)
     ret = model.evaluate(x_test, y_test, verbose=2)
+    print(history.history.keys())
+    plt.plot(history.history["loss"][2:-1], label = "Training Loss")
+    plt.plot(history.history["val_loss"][2:-1], label = "Validation Loss")
+    plt.legend()
 
     score = str(mean_squared_error(model.predict(x_test), y_test))
     print("MSE score:   " + str(score))
