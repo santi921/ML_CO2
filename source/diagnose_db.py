@@ -1,7 +1,5 @@
 import os
-
 import pandas as pd
-
 
 def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
 
@@ -32,7 +30,3 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
             except:
                 print(db + " isn't working")
 
-# check_file("../data/desc/ZZ/", "../data/sdf/ZZ/")
-# check_file("../data/desc/test/", "../data/sdf/ZZ/")
-# check_file("../data/desc/DB/", "../data/sdf/DB/")
-# check_file("../data/desc/DB2/", "../data/sdf/DB2/")
