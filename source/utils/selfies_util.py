@@ -41,7 +41,6 @@ def multiple_selfies_to_hot(selfies_list, largest_molecule_len, alphabet):
         hot_list.append(onehot_encoded)
     return np.array(hot_list)
 
-
 def smile_to_hot(smile, largest_smile_len, alphabet):
     """Go from a single smile string to a one-hot encoding.
     """
@@ -61,7 +60,6 @@ def smile_to_hot(smile, largest_smile_len, alphabet):
         letter[value] = 1
         onehot_encoded.append(letter)
     return integer_encoded, np.array(onehot_encoded)
-
 
 def multiple_smile_to_hot(smiles_list, largest_molecule_len, alphabet):
     """Convert a list of smile strings to a one-hot encoding
@@ -111,7 +109,6 @@ def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
     return selfies_list, selfies_alphabet, largest_selfies_len, \
            smiles_list, smiles_alphabet, largest_smiles_len
 
-
 def compare_equality(x_test, autoencoded_selfies, dim, selfies_alphabet):
     '''
     method that computes the equality in encode-decode performance between a test
@@ -147,9 +144,6 @@ def compare_equality(x_test, autoencoded_selfies, dim, selfies_alphabet):
         if (canonical_autoencoder_smiles == canonical_smiles):
             count_good += 1
     print("Percent Reconstructed Molescules: " + str(count_good / test_size))
-
-
-
 
 def tanimoto_dist(x_test, autoencoded_selfies, dim, selfies_alphabet):
     '''
