@@ -2,9 +2,11 @@ import sys
 import pybel
 import numpy as np
 import pandas as pd
-from selfies import encoder
-from helpers import merge_dir_and_data
 import selfies as sf
+from rdkit import Chem
+from rdkit import DataStructs
+from selfies import encoder
+from utils.helpers import merge_dir_and_data
 
 # worked in python 3
 def selfies_to_hot(selfie, largest_selfie_len, alphabet):
@@ -39,6 +41,155 @@ def multiple_selfies_to_hot(selfies_list, largest_molecule_len, alphabet):
         hot_list.append(onehot_encoded)
     return np.array(hot_list)
 
+
+def smile_to_hot(smile, largest_smile_len, alphabet):
+    """Go from a single smile string to a one-hot encoding.
+    """
+
+    char_to_int = dict((c, i) for i, c in enumerate(alphabet))
+
+    # pad with ' '
+    smile += ' ' * (largest_smile_len - len(smile))
+
+    # integer encode input smile
+    integer_encoded = [char_to_int[char] for char in smile]
+
+    # one hot-encode input smile
+    onehot_encoded = list()
+    for value in integer_encoded:
+        letter = [0 for _ in range(len(alphabet))]
+        letter[value] = 1
+        onehot_encoded.append(letter)
+    return integer_encoded, np.array(onehot_encoded)
+
+
+def multiple_smile_to_hot(smiles_list, largest_molecule_len, alphabet):
+    """Convert a list of smile strings to a one-hot encoding
+    Returned shape (num_smiles x len_of_largest_smile x len_smile_encoding)
+    """
+
+    hot_list = []
+    for s in smiles_list:
+        _, onehot_encoded = smile_to_hot(s, largest_molecule_len, alphabet)
+        hot_list.append(onehot_encoded)
+    return np.array(hot_list)
+
+def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
+    """
+    Returns encoding, alphabet and length of largest molecule in SMILES and
+    SELFIES, given a file containing SMILES molecules.
+    input:
+        csv file with molecules. Column's name must be 'smiles'.
+    output:
+        - selfies encoding
+        - selfies alphabet
+        - longest selfies string
+        - smiles encoding (equivalent to file content)
+        - smiles alphabet (character based)
+        - longest smiles string
+    """
+
+    # df = pd.read_csv(file_path)
+    # smiles_list = np.asanyarray(df.smiles)
+
+    smiles_alphabet = list(set(''.join(smiles_list)))
+    smiles_alphabet.append(' ')  # for padding
+
+    largest_smiles_len = len(max(smiles_list, key=len))
+
+    print('--> Translating SMILES to SELFIES...')
+    selfies_list = list(map(sf.encoder, smiles_list))
+
+    all_selfies_symbols = sf.get_alphabet_from_selfies(selfies_list)
+    all_selfies_symbols.add('[nop]')
+    selfies_alphabet = list(all_selfies_symbols)
+
+    largest_selfies_len = max(sf.len_selfies(s) for s in selfies_list)
+
+    print('Finished translating SMILES to SELFIES.')
+
+    return selfies_list, selfies_alphabet, largest_selfies_len, \
+           smiles_list, smiles_alphabet, largest_smiles_len
+
+
+def compare_equality(x_test, autoencoded_selfies, dim, selfies_alphabet):
+    '''
+    method that computes the equality in encode-decode performance between a test
+    dataset and an encode-decoded dataset
+    '''
+
+    test_size = len(x_test)
+    count_good = 0
+    for i, mol in enumerate(x_test):
+
+        # single point - through vae
+        one_hot = np.zeros((dim[0], dim[1]))
+        one_hot_true = np.zeros((dim[0], dim[1]))
+
+        for ind, row in enumerate(autoencoded_selfies[i].reshape(dim[0], dim[1])):
+            lab_temp = np.argmax(row)
+            one_hot[ind][lab_temp] = 1
+
+        # single point - non vae
+        for ind, row in enumerate(mol.reshape(dim[0], dim[1])):
+            lab_temp = np.argmax(row)
+            one_hot_true[ind][lab_temp] = 1
+
+        self_test = sf.encoding_to_selfies(one_hot.tolist(), selfies_alphabet, "one_hot")
+        self_true = sf.encoding_to_selfies(one_hot_true.tolist(), selfies_alphabet, "one_hot")
+
+        canonical_smiles = Chem.CanonSmiles(sf.decoder(self_true))
+        canonical_autoencoder_smiles = Chem.CanonSmiles(sf.decoder(self_test))
+        if(i == 1):
+            print("Autoencoded Smiles: " + canonical_autoencoder_smiles)
+            print("True Smiles: " + canonical_smiles)
+
+        if (canonical_autoencoder_smiles == canonical_smiles):
+            count_good += 1
+    print("Percent Reconstructed Molescules: " + str(count_good / test_size))
+
+
+
+
+def tanimoto_dist(x_test, autoencoded_selfies, dim, selfies_alphabet):
+    '''
+    method that computes the equality in encode-decode performance between a test
+    dataset and an encode-decoded dataset
+    '''
+        
+    test_size = len(x_test)
+    count_good = 0
+    dist = []
+    
+    for i, mol in enumerate(x_test):
+        
+        # single point - through vae
+        one_hot = np.zeros((dim[0], dim[1]))
+        one_hot_true = np.zeros((dim[0], dim[1]))
+
+        for ind, row in enumerate(autoencoded_selfies[i].reshape(dim[0], dim[1])):
+            lab_temp = np.argmax(row)
+            one_hot[ind][lab_temp] = 1
+
+        # single point - non vae
+        for ind, row in enumerate(mol.reshape(dim[0], dim[1])):
+            lab_temp = np.argmax(row)
+            one_hot_true[ind][lab_temp] = 1
+
+        self_test = sf.encoding_to_selfies(one_hot.tolist(), selfies_alphabet, "one_hot")
+        self_true = sf.encoding_to_selfies(one_hot_true.tolist(), selfies_alphabet, "one_hot")
+
+        canonical_smiles = Chem.CanonSmiles(sf.decoder(self_test))
+        canonical_autoencoder_smiles = Chem.CanonSmiles(sf.decoder(self_true))
+        
+        fps1 = Chem.RDKFingerprint(Chem.MolFromSmiles(canonical_smiles))
+        fps2 = Chem.RDKFingerprint(Chem.MolFromSmiles(canonical_autoencoder_smiles))
+        diff = DataStructs.FingerprintSimilarity(fps1, fps2)
+        dist.append(float(diff))        
+        
+    return np.array(dist)
+    
+    
 def get_dataset_stats(smiles_arr):
         """
         Returns encoding, alphabet and length of largest molecule in SMILES and
@@ -160,4 +311,3 @@ def selfies(dir="../data/xyz/DB3/"):
 
     ret = np.array(ret)
     return names, ret, homo, homo1, diff
-

@@ -1,9 +1,3 @@
-import joblib, argparse, uuid, sigopt
-import numpy as np
-import pandas as pd
-from sklearn import preprocessing
-from sklearn_utils import *
-
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -107,7 +101,7 @@ def vae_train(x):
     vae.compile(optimizer=keras.optimizers.Adam())
     vae.fit(x, epochs=30, batch_size=64)
 
-from selfies_util import selfies
+from source.utils.selfies_util import selfies
 names, ret, homo, homo1, diff = selfies()
 print(names[0:100])
 print(len(names))

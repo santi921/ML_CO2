@@ -40,7 +40,6 @@ class ResidualUnit(keras.layers.Layer):
             skip_Z = layer(skip_Z)
         return self.activation(Z + skip_Z)
 
-
 def resnet34(x, y, scale, iter = 150):
     from tensorflow.compat.v1 import ConfigProto
     from tensorflow.compat.v1 import InteractiveSession

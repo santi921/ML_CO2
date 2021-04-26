@@ -1,8 +1,7 @@
 import joblib, argparse, uuid, sigopt
-import numpy as np
 import pandas as pd
 from sklearn import preprocessing
-from sklearn_utils import *
+from source.utils.sklearn_utils import *
 
 # todo: work on interpretability algo/aspects
 # todo: plots of parameter space
@@ -66,7 +65,7 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
             print("gaussian algo selected")
             reg = gaussian(x, y, scale)
         elif (algo == "xgboost"):
-            from xgboost_util import xgboost
+            from source.utils.xgboost_util import xgboost
             print("xgboost algo selected")
             reg = xgboost(x, y, scale)
         elif (algo == "tf_nn"):

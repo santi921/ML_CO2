@@ -1,5 +1,4 @@
-from helpers import process_input_DB3
-import multiprocessing as mp
+from source.utils.helpers import process_input_DB3
 
 des = ["auto","rdkit", "layer", "persist","aval", "morg", "vae", "self"]
 process_input_DB3(desc="auto", dir="DB3")

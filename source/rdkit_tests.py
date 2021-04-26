@@ -2,12 +2,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rdkit.Chem import AllChem, Descriptors, DataStructs
-from rdkit.Chem import Fingerprints, SDMolSupplier, RDKFingerprint
+from rdkit.Chem import AllChem, DataStructs
+from rdkit.Chem import SDMolSupplier
 from rdkit.Avalon import pyAvalonTools
-import rdkit.Chem as rdkit_util
-
-from helpers import xyz_to_smiles
 
 
 def rd_kit(dir_sdf = "../data/sdf/"):

@@ -2,7 +2,7 @@ import sklearn.utils.fixes
 from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
-import time, joblib, sigopt
+import time, sigopt
 from boruta import BorutaPy
 import numpy as np
 
@@ -16,7 +16,6 @@ from sklearn.preprocessing import scale
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import SGDRegressor, BayesianRidge
-from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor,\
@@ -122,7 +121,7 @@ def bayes_sigopt(x, y, method="sgd"):
 
     elif (method == "xgboost"):
         print(".........xgboost optimization selected.........")
-        from xgboost_util import xgboost_bayes_sigopt
+        from source.utils.xgboost_util import xgboost_bayes_sigopt
         reg = xgboost_bayes_sigopt(x, y)
 
     else:
@@ -253,7 +252,7 @@ def bayes(x, y, method="sgd", des = "rdkit"):
 
     xgb_csv = "../data/train/bayes_"+ des +".csv"
     if (method == "xgboost"):
-        from xgboost_util import xgboost_bayes_basic
+        from source.utils.xgboost_util import xgboost_bayes_basic
         print(".........xgboost optimization selected.........")
         reg = xgboost_bayes_basic(x, y, xgb_csv)
 
@@ -395,7 +394,7 @@ def grid(x, y, method="sgd"):
         reg = SGDRegressor()
 
     if (method == "xgboost"):
-        from xgboost_util import xgboost_grid
+        from source.utils.xgboost_util import xgboost_grid
 
         print(".........xgboost grid optimization selected.........")
         reg = xgboost_grid(x, y)
@@ -419,7 +418,7 @@ def grid(x, y, method="sgd"):
 
 def rand(x, y, method="sgd", desc = "morg"):
     #todo, make for all sklearn algorithms
-    from xgboost_util import xgboost_rand
+    from source.utils.xgboost_util import xgboost_rand
     csv_loc = "../data/train/rand_"+ desc + ".csv"
     xgboost_rand(x,y, csv_loc)
     return True

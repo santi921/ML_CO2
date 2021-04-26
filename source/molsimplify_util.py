@@ -1,7 +1,6 @@
-import glob
 import sys
 import numpy as np
-from helpers import merge_dir_and_data
+from source.utils.helpers import merge_dir_and_data
 from molSimplify.Classes.mol3D import *
 from molSimplify.Informatics.autocorrelation import *
 from molSimplify.Informatics.graph_analyze import *

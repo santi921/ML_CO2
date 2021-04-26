@@ -1,6 +1,5 @@
 import argparse
 import math
-import os
 
 import numpy as np
 import pandas as pd
@@ -10,7 +9,7 @@ def write_des(des, dir_temp):
     # check if this folder has other folders to traverse, works up to 1 layer deep
 
     if (des == "aval" or des == "morg" or des == "layer" or des == "rdkit"):
-        from helpers import rdk, aval, layer, morgan
+        from source.utils.helpers import rdk, layer, morgan
         dir = "../data/sdf/" + dir_temp + "/"
 
     else:
@@ -29,12 +28,12 @@ def write_des(des, dir_temp):
         name, mat, homo, homo1, diff = layer(dir)
 
     elif (des == "vae"):
-        from vae_util import vae
+        from source.utils.vae_util import vae
         print("...........vae started..........")
         name, mat, homo, homo1, diff  = vae(dir)
 
     elif (des == "self"):
-        from selfies_util import selfies
+        from source.utils.selfies_util import selfies
         print("...........selfies started..........")
         name, mat, homo, homo1, diff = selfies(dir)
 
@@ -50,12 +49,12 @@ def write_des(des, dir_temp):
         name, mat, homo, homo1, diff = metal_deltametrics(dir)
 
     elif (des == "persist"):
-        from Persist_util import persistent
+        from source.utils.Persist_util import persistent
         print("...........persistent images started..........")
         name, mat, homo, homo1, diff= persistent(dir)
 
     else:
-        from helpers import rdk
+        from source.utils.helpers import rdk
         print("...........rdk started..........")
         name, mat, homo, homo1, diff = rdk(dir)
 
