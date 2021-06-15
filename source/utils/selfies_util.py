@@ -1,5 +1,6 @@
 import sys
 import pybel
+import os
 import numpy as np
 import pandas as pd
 import selfies as sf
@@ -68,6 +69,7 @@ def multiple_smile_to_hot(smiles_list, largest_molecule_len, alphabet):
 
     hot_list = []
     for s in smiles_list:
+        
         _, onehot_encoded = smile_to_hot(s, largest_molecule_len, alphabet)
         hot_list.append(onehot_encoded)
     return np.array(hot_list)
@@ -89,15 +91,15 @@ def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
 
     # df = pd.read_csv(file_path)
     # smiles_list = np.asanyarray(df.smiles)
-
     smiles_alphabet = list(set(''.join(smiles_list)))
     smiles_alphabet.append(' ')  # for padding
-
     largest_smiles_len = len(max(smiles_list, key=len))
 
     print('--> Translating SMILES to SELFIES...')
+    
+    
     selfies_list = list(map(sf.encoder, smiles_list))
-
+         
     all_selfies_symbols = sf.get_alphabet_from_selfies(selfies_list)
     all_selfies_symbols.add('[nop]')
     selfies_alphabet = list(all_selfies_symbols)
@@ -182,8 +184,7 @@ def tanimoto_dist(x_test, autoencoded_selfies, dim, selfies_alphabet):
         dist.append(float(diff))        
         
     return np.array(dist)
-    
-    
+
 def get_dataset_stats(smiles_arr):
         """
         Returns encoding, alphabet and length of largest molecule in SMILES and
@@ -305,3 +306,130 @@ def selfies(dir="../data/xyz/DB3/"):
 
     ret = np.array(ret)
     return names, ret, homo, homo1, diff
+
+def sdf(dir="../data/xyz/DB3/"):
+
+    ret = []
+    homo = []
+    homo1 = []
+    diff = []
+    names = []
+
+    print("..........converting xyz to smiles.......")
+    dir_fl_names, list_to_sort = merge_dir_and_data(dir=dir)
+    smiles = []
+    rm_ind = []
+
+    for j, i in enumerate(dir_fl_names):
+        try:
+            mol = next(pybel.readfile("xyz", dir + i))
+            smi = mol.write(format="smi")
+            smiles.append(smi.split()[0].strip())
+            sys.stdout.write("\r %s / " % j + str(len(dir_fl_names)))
+            sys.stdout.flush()
+        except:
+            rm_ind.append(j)
+
+    rm_ind.reverse()
+    [dir_fl_names.pop(i) for i in rm_ind]
+    [list_to_sort.pop(i) for i in rm_ind]
+    print("\n\nsmiles length: " + str(len(smiles)) + "\n\n")
+
+    #---------------------------------------------------------------------------
+    for tmp, item in enumerate(smiles):
+
+        try:
+            sdf_file = pybel.readstring("smi",item).write("sdf")
+            sdf_file_shift = pybel.readstring("smi",smiles[tmp+1]).write("sdf")
+            sdf_file_shift_min = pybel.readstring("smi",smiles[tmp-1]).write("sdf")
+
+            mol = next(pybel.readfile("xyz", dir + list_to_sort[tmp].split(":")[0] + ".xyz"))
+            mol_shift = next(pybel.readfile("xyz", dir + list_to_sort[tmp+1].split(":")[0] + ".xyz"))
+            mol_shift_min = next(pybel.readfile("xyz", dir + list_to_sort[tmp-1].split(":")[0] + ".xyz"))
+
+            smi = mol.write(format="smi").split()[0].strip()
+            smi_shift = mol_shift.write(format="smi").split()[0].strip()
+            smi_shift_min = mol_shift_min.write(format="smi").split()[0].strip()
+
+
+            if (item == smi):
+
+                ret.append(sdf_file)
+                names.append(item)
+                homo_temp = float(list_to_sort[tmp].split(":")[1])
+                homo1_temp = float(list_to_sort[tmp].split(":")[2])
+                homo.append(homo_temp)
+                homo1.append(homo1_temp)
+                diff.append(homo_temp - homo1_temp)
+            else:
+                try:
+                    if (item == smi_shift):
+                        ret.append(sdf_file_shift)
+                        names.append(item)
+                        homo_temp = float(list_to_sort[tmp+1].split(":")[1])
+                        homo1_temp = float(list_to_sort[tmp+1].split(":")[2])
+                        homo.append(homo_temp)
+                        homo1.append(homo1_temp)
+                        diff.append(homo_temp - homo1_temp)
+                    else:
+                        pass
+
+                except:
+                    try:
+                        if ("item" == smi_shift_min):
+                            ret.append(sdf_file_shift_min)
+                            names.append(item)
+                            homo_temp = float(list_to_sort[tmp + 1].split(":")[1])
+                            homo1_temp = float(list_to_sort[tmp + 1].split(":")[2])
+                            homo.append(homo_temp)
+                            homo1.append(homo1_temp)
+                            diff.append(homo_temp - homo1_temp)
+                    except:
+                        print("failed to match")
+                        pass
+            sys.stdout.write("\r %s /" % tmp + str(len(dir_fl_names)))
+            sys.stdout.flush()
+        except:
+            pass
+
+    print(len(names))
+    print(len(ret))
+    print(len(homo))
+    print(len(homo1))
+    print(len(diff))
+
+    ret = np.array(ret)
+    return names, ret, homo, homo1, diff
+
+def smiles(dir="../data/xyz/DB3/", verbose = 1):
+
+    dir_str = "ls " + str(dir) + " | sort -d "
+    temp = os.popen(dir_str).read()
+    temp = str(temp).split()
+    ret_list = []
+    names = []
+    for j, i in enumerate(temp):
+        try:
+            mol = next(pybel.readfile("xyz", dir + i))
+            smi = mol.write(format="smi")
+            smi = Chem.CanonSmiles(smi)
+            ret_list.append(smi.split()[0].strip())
+            names.append(i)
+            if(verbose == 1):
+                        sys.stdout.write("\r %s / " % j + str(len(temp)))
+                        sys.stdout.flush()
+        except:
+            try:
+
+                f = open(dir + i, "r")
+                smi = f.readlines()[0]
+                if(len(smi > 5)):
+                    ret_list.append(smi)
+                    names.append(i)
+                if(verbose == 1):
+                        sys.stdout.write("\r %s / " % j + str(len(temp)))
+                        sys.stdout.flush()
+            except:
+                pass
+    # print(ret_list[0:4])
+    return names, ret_list
