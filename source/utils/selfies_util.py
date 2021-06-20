@@ -97,7 +97,6 @@ def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
 
     print('--> Translating SMILES to SELFIES...')
     
-    
     selfies_list = list(map(sf.encoder, smiles_list))
          
     all_selfies_symbols = sf.get_alphabet_from_selfies(selfies_list)

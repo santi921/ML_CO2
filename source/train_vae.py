@@ -6,6 +6,7 @@ from tensorflow.keras import layers, regularizers
 import numpy as np
 import pandas as pd
 import selfies as sf
+import os
 import argparse
 from sklearn.model_selection import train_test_split
 
@@ -105,8 +106,18 @@ if __name__ == "__main__":
     nn_decode = results.nn_decode
 
 
-    files, ret_list = smiles(verbose=verbose)
-    print(ret_list[0:100])
+    #files, ret_list = smiles(verbose=verbose)
+    #files, ret_list = smiles("../data/smi/DB3/", verbose=verbose)
+    ret_list = []
+    dir = "../data/smi/DB3/actual_smi/"
+    files = os.listdir(dir)
+    for file in files:
+        try:
+            with open(dir + file, "rb+") as filehandle:
+                ret_list.append(filehandle.readlines()[0].decode("utf-8"))
+        except:
+            pass
+    print(ret_list[0:10])
     selfies_list, selfies_alphabet, largest_selfies_len, \
     smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
 
