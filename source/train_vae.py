@@ -87,6 +87,8 @@ if __name__ == "__main__":
     parser.add_argument("--nn_decode", action="store", dest="nn_decode", default="100, 100, 100, 100",
                         help="nn decode dim")
     parser.add_argument("--verbose", action="store_true", dest="verbose", default=False, help="verbose")
+    parser.add_argument("--save", action="store_true", dest="save", default=False, help="save trained vae")
+
     results = parser.parse_args()
 
     global coef
@@ -95,6 +97,8 @@ if __name__ == "__main__":
     global timesteps
 
     verbose = int(results.verbose)
+    save = results.save
+
     coef = float(results.coef)
     tf_nn_vae = results.tf_nn_vae
     epochs = int(results.epochs)
@@ -230,6 +234,9 @@ if __name__ == "__main__":
         print("NN-based VAE")
     else:
         print("LSTM-based VAE")
+    if(save == True):
+        encoder.save("encoder")
+        decoder.save("decoder")
 
     print("epochs:" + str(epochs))
     print("latent dims:" + str(latent_dim))
