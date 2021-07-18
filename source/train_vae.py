@@ -191,7 +191,8 @@ if __name__ == "__main__":
 
         # Create encoder
         inputs = keras.Input(shape=(timesteps, input_size))
-        x = layers.LSTM(ltsm_encode, activation='relu')(inputs)
+        x = layers.LSTM(ltsm_encode)(inputs)
+
         # Sampling Layers
         z_mean = layers.Dense(latent_dim, name="z_mean")(x)
         z_log_var = layers.Dense(latent_dim, name="z_log_var")(x)
@@ -201,7 +202,11 @@ if __name__ == "__main__":
         # Create Decoder
         input_latent = keras.Input(shape=(latent_dim,))
         decoder1 = layers.RepeatVector(timesteps)(input_latent)
-        decoder1 = layers.LSTM(ltsm_decode, activation='sigmoid', return_sequences=True)(decoder1)
+        decoder1 = layers.Dropout(rate = 0.10)(decoder1)
+        decoder1 = layers.LSTM(ltsm_decode, return_sequences=True)(decoder1)
+        decoder1 = layers.Dropout(rate = 0.10)(decoder1)
+        decoder1 = layers.LSTM(ltsm_decode, return_sequences=True)(decoder1)
+        decoder1 = layers.Dropout(rate = 0.10)(decoder1)
         decoder1 = layers.TimeDistributed(layers.Dense(input_size))(decoder1)
         decoder = keras.Model(input_latent, decoder1)
 
@@ -213,6 +218,8 @@ if __name__ == "__main__":
         test_data = x_test.reshape(x_test.shape[0], data.shape[1], data.shape[2])
         print(type(train_data))
         print(np.shape(train_data))
+        encoder.summary()
+        decoder.summary()
         history = vae.fit(train_data, train_data, epochs=epochs, verbose=verbose)
 
     print(type(train_data))

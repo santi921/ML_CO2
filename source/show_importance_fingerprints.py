@@ -11,6 +11,7 @@ import xgboost as xgb
 from PIL import Image
 from io import BytesIO
 from IPython.display import HTML
+from collections import Counter
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -18,7 +19,7 @@ from sklearn import preprocessing
 from sklearn.ensemble import RandomForestRegressor
 
 from rdkit.Chem import AllChem, DataStructs, SDMolSupplier, Draw, RDConfig, rdBase
-from rdkit.Chem.Draw import IPythonConsole
+from rdkit.Chem.Draw import IPythonConsole, rdMolDraw2D
 
 pd.set_option('display.max_colwidth', -1)
 
@@ -63,16 +64,79 @@ def take(n, iterable):
     "Return first n items of the iterable as a list"
     return list(islice(iterable, n))
 
+
+#
+# Functions for providing detailed descriptions of MFP bits from Nadine Schneider 
+#  It's probably better to do this using the atomSymbols argument but this does work.
+#
+def includeRingMembership(s, n):
+    r=';R]'
+    d="]"
+    return r.join([d.join(s.split(d)[:n]),d.join(s.split(d)[n:])])
+ 
+def includeDegree(s, n, d):
+    r=';D'+str(d)+']'
+    d="]"
+    return r.join([d.join(s.split(d)[:n]),d.join(s.split(d)[n:])])
+ 
+def writePropsToSmiles(mol,smi,order):
+    #finalsmi = copy.deepcopy(smi)
+    finalsmi = smi
+    for i,a in enumerate(order):
+        atom = mol.GetAtomWithIdx(a)
+        if atom.IsInRing():
+            finalsmi = includeRingMembership(finalsmi, i+1)
+        finalsmi = includeDegree(finalsmi, i+1, atom.GetDegree())
+    return finalsmi
+ 
+def getSubstructSmi(mol,atomID,radius):
+    if radius>0:
+        env = Chem.FindAtomEnvironmentOfRadiusN(mol,radius,atomID)
+        atomsToUse=[]
+        for b in env:
+            atomsToUse.append(mol.GetBondWithIdx(b).GetBeginAtomIdx())
+            atomsToUse.append(mol.GetBondWithIdx(b).GetEndAtomIdx())
+        atomsToUse = list(set(atomsToUse))
+    else:
+        atomsToUse = [atomID]
+        env=None
+    smi = Chem.MolFragmentToSmiles(mol,atomsToUse,bondsToUse=env,allHsExplicit=True, allBondsExplicit=True, rootedAtAtom=atomID)
+    order = eval(mol.GetProp("_smilesAtomOutputOrder"))
+    smi2 = writePropsToSmiles(mol,smi,order)
+    return smi,smi2
+
+
+# do a depiction where the atom environment is highlighted normally and the central atom
+# is highlighted in blue
+def getSubstructDepiction(mol,atomID,radius,molSize=(450,200)):
+    if radius>0:
+        env = Chem.FindAtomEnvironmentOfRadiusN(mol,radius,atomID)
+        atomsToUse=[]
+        for b in env:
+            atomsToUse.append(mol.GetBondWithIdx(b).GetBeginAtomIdx())
+            atomsToUse.append(mol.GetBondWithIdx(b).GetEndAtomIdx())
+        atomsToUse = list(set(atomsToUse))       
+    else:
+        atomsToUse = [atomID]
+        env=None
+    return moltosvg(mol,molSize=molSize,highlightAtoms=atomsToUse,highlightAtomColors={atomID:(0.3,0.3,1)})
+def depictBit(bitId,examples,mols,molSize=(450,200)):
+    zid = examples[bitId]
+    info={}
+    fp = Chem.GetMorganFingerprintAsBitVect(mols[zid],2,2048,bitInfo=info)
+    aid,rad = info[bitId][0]
+    return getSubstructDepiction(mols[zid],aid,rad,molSize=molSize)
+
 def xgboost(x_train, x_test, y_train, y_test, scale, dict=None):
 
     params = {
         "colsample_bytree": 0.5,
-        "learning_rate": 0.1,
-        "max_depth": 10, "gamma": 0.00,
+        "learning_rate": 0.2,
+        "max_depth": 10, "gamma": 0.0,
         "lambda": 0.0,
-        "alpha": 0,
-        "eta": 0.01,
-        "n_estimators": 2000}
+        "alpha": 0.0,
+        "eta": 0.1,
+        "n_estimators": 1000}
 
     reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
 
@@ -150,16 +214,18 @@ print("input begun with processing dataframe")
 
 
 x = morganArr
-y = homo1
+y = diff
+corr_arr = [np.corrcoef(x[:,i],y, rowvar=False)[0,1]for i in range(1024)]
+
 scale = np.max(y) - np.min(y)
 
 #y = np.array(np.array(df["HOMO"])) # selected target
 indices = range(len(x))
 try:
-    x_train, x_test, y_train, y_test, indices_train, indices_test = train_test_split(x, y,indices, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test, indices_train, indices_test = train_test_split(x, y,indices, test_size=0.2)
 except:
     x = list(x)
-    x_train, x_test, y_train, y_test, indices_train, indices_test = train_test_split(x, y,indices, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test, indices_train, indices_test = train_test_split(x, y,indices, test_size=0.2)
 
 reg = xgboost(x_train, x_test, y_train, y_test, scale)
 
@@ -181,18 +247,29 @@ testidx = np.argsort(y_test)
 slice_conv = tuple(slice(x) for x in testidx)
 testmols = [molArr[i] for i in testidx]
 
+#testidx = np.argsort(y_train)
+#slice_conv = tuple(slice(x) for x in testidx)
+#testmols = [molArr[i] for i in testidx]
+
+
 #output for single molecule
 tpls = []
 #testmols = testmols[0:10]
 test_probe = 1
+
+
+#top50feat.append(286)
+#top50feat.append(972)
+#top50feat.append(717)
+draw_list = [114, 147, 286, 320, 365, 366, 584, 628, 676, 703, 715, 717, 753, 838, 906, 939, 972]
 
 for i in range(len(testmols)):
     bitInfo={}
     fp = AllChem.GetMorganFingerprintAsBitVect(testmols[i], 2, bitInfo=bitInfo)
     arr = np.zeros((1,))
     DataStructs.ConvertToNumpyArray(fp, arr)
-    onbit = [bit for bit in bitInfo.keys()]
-    importantonbits = list(set(onbit) & set(top15feat))
+    onbit = [bit for bit in bitInfo.keys()] 
+    importantonbits = list(set(onbit) & set(top50feat))
     
     #append to this array 
     if (importantonbits != []):
@@ -200,19 +277,36 @@ for i in range(len(testmols)):
     
 img = []
 rows = []
+
 for frag in tpls: 
     try:
         fp = frag[0][1]
-        img = Draw.DrawMorganBit(frag[0][0], frag[0][1], frag[0][2])
-        rows.append([fp, img])
-        df = pd.DataFrame(rows, columns=("FP", "Image"))
+        if (int(fp) in draw_list):
+            img = Draw.DrawMorganBit(frag[0][0], frag[0][1], frag[0][2])
+            img = depictBit(sorted(itms)[100][0], bitExamples, True ) 
+            rows.append([fp, corr_arr[fp], img])
+            df = pd.DataFrame(rows, columns=("FP","Corr_Y", "Image" ))
     except:
         pass
+
 print("Dimension of Bit Array")
 print(np.shape(df))
 html = df.sort_values("FP").to_html(formatters={'Image': image_formatter}, escape=False)
-html_out = open("reshomo1.html", "w")
+html_out = open("res_test_diff.html", "w")
 html_out.write(html)
 html_out.close()
 #View(df)
 
+bit_count = np.zeros(len(x[0]))
+for i in x:
+    for bit, loc in enumerate(i):
+        #print(bit)
+        if (loc == 1):
+            bit_count[bit] += 1
+print(sorted(np.array(bit_count)))
+plt.hist(sorted(np.array(bit_count)) , 'b-')
+plt.yscale("log")
+plt.ylabel("count")
+
+plt.title("count per bit, sorted")
+plt.show()
