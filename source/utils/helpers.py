@@ -71,12 +71,14 @@ def merge_dir_and_data(dir = "DB3"):
 def morgan(bit_length=256, dir="../data/sdf/DB3/", bit=True):
 
     morgan = []
+    morgan_bit = []
     names = []
     homo = []
     homo1 = []
     diff = []
 
     dir_fl_names, list_to_sort = merge_dir_and_data(dir = dir)
+    print("files to process: " + str(len(dir_fl_names)))
     #---------------------------------------------------------------------------
     for tmp, item in enumerate(dir_fl_names):
         try:
@@ -84,18 +86,20 @@ def morgan(bit_length=256, dir="../data/sdf/DB3/", bit=True):
 
             if (bit == True):
                 try:
-                    fp = AllChem.GetMorganFingerprintAsBitVect(suppl[0], int(2), nBits=int(bit_length))
+                    fp_bit = AllChem.GetMorganFingerprintAsBitVect(suppl[0], int(2), nBits=int(bit_length))
+                    morgan.append(fp_bit)
                 except:
+                    print("error")
                     pass
             else:
                 try:
                     fp = AllChem.GetMorganFingerprint(suppl[0], int(2))
+                    morgan.append(fp)
                 except:
                     print("error")
                     pass
 
             if (item[0:-4] == list_to_sort[tmp].split(":")[0] ):
-                morgan.append(fp)
                 names.append(item)
                 homo_temp = float(list_to_sort[tmp].split(":")[1])
                 homo1_temp = float(list_to_sort[tmp].split(":")[2])
@@ -541,3 +545,66 @@ def db_integrity(dir="DB3", desc="rdkit"):
     if(count_bad == 0):
         print(desc +" dataset looks good!")
 
+
+
+
+def pull_chembl_smiles(SMILES = [], ratio = 1.0, save = False, use_file = False, save_dir = "./data/mols_filter.sdf"):
+    similarity_query = new_client.similarity
+    similarity_query.set_format('sdf')
+    total_sim = 0
+    dark_smiles = []
+    count_distribution = []
+    SMILES_ret = []
+    if (os.path.isfile(save_dir) and use_file == True):
+        suppl = Chem.SDMolSupplier(save_dir)
+        print(len(suppl))
+        for i in suppl:
+            try:
+                SMILES_ret.append(Chem.MolToSmiles(i))
+            except: 
+                print("failed sdf access for a molecule")
+                pass
+    else:
+        for idx, line in enumerate(SMILES):
+            smile = str(line.strip())
+            res_rof0 = similarity_query.filter(smiles=smile, similarity=40).filter(molecule_properties__num_ro5_violations=0).filter(molecule_propertoes__full_mwt__lte=850, pchembl_value__isnull=False)    
+            res_rof1 = similarity_query.filter(smiles=smile, similarity=40).filter(molecule_properties__num_ro5_violations=1).filter(molecule_propertoes__full_mwt__lte=850, pchembl_value__isnull=False)    
+            res_rof2 = similarity_query.filter(smiles=smile, similarity=40).filter(molecule_properties__num_ro5_violations=2).filter(molecule_propertoes__full_mwt__lte=850, pchembl_value__isnull=False)    
+            res_rof3 = similarity_query.filter(smiles=smile, similarity=40).filter(molecule_properties__num_ro5_violations=3).filter(molecule_propertoes__full_mwt__lte=850, pchembl_value__isnull=False)    
+            res = []
+            if(len(res_rof0) > 0):
+                [res.append(i) for i in res_rof0]
+            if(len(res_rof1) > 0):
+                [res.append(i) for i in res_rof1]
+            if(len(res_rof2) > 0):
+                [res.append(i) for i in res_rof2]
+            if(len(res_rof3) > 0):
+                [res.append(i) for i in res_rof3]
+            
+            print("{0} {1} {2}".format(idx, smile, len(res)))
+            total_sim += len(res)
+            count_distribution.append(len(res))
+            if len(res) == 0:
+                dark_smiles.append(smile)
+            else:
+                print("len results: "+str(len(res)))
+                if(save == True):
+                    with open(save_dir, 'w') as output:
+                        for mol in res:
+                            output.write(mol.decode('utf-8'))
+                            output.write('$$$$\n')
+
+                for sdf_mol in res:
+                    if (len(sdf_mol) > 0 ):
+                        with open("./temp.sdf", "w") as file:
+                            file.write(sdf_mol.decode('utf-8'))
+                            file.write('$$$$\n')
+                        suppl = Chem.SDMolSupplier("./temp.sdf")
+                        SMILES_ret.append(Chem.MolToSmiles(suppl[0]))
+                        os.remove("./temp.sdf")
+
+        print("total molecules 40% similar to our molecules: " + str(total_sim))
+        plt.hist(count_distribution)
+        plt.show()
+    SMILES_ret = np.random.choice(set(SMILES_ret), size = int(ratio * len(SMILES)), replace=False)
+    return SMILES_ret
