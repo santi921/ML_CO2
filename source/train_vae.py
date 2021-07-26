@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import layers, regularizers
-from keras.regularizers import l2
 
 import numpy as np
 import pandas as pd
@@ -192,7 +191,7 @@ if __name__ == "__main__":
 
         # Create encoder
         inputs = keras.Input(shape=(timesteps, input_size))
-        x = layers.LSTM(ltsm_encode, kernel_regularizer=l2(0.001), recurrent_regularizer=l2(0.001), bias_regularizer=l2(0.001))(inputs)
+        x = layers.LSTM(ltsm_encode, kernel_regularizer=regularizers.l2(0.001), recurrent_regularizer=regularizers.l2(0.001), bias_regularizer=regularizers.l2(0.001))(inputs)
 
         # Sampling Layers
         z_mean = layers.Dense(latent_dim, name="z_mean")(x)
@@ -204,7 +203,7 @@ if __name__ == "__main__":
         input_latent = keras.Input(shape=(latent_dim,))
         decoder1 = layers.RepeatVector(timesteps)(input_latent)
         decoder1 = layers.Dropout(rate = 0.10)(decoder1)
-        decoder1 = layers.LSTM(ltsm_decode, return_sequences=True, kernel_regularizer=l2(0.001), recurrent_regularizer=l2(0.001), bias_regularizer=l2(0.001))(decoder1)
+        decoder1 = layers.LSTM(ltsm_decode, return_sequences=True, kernel_regularizer=regularizers.l2(0.001), recurrent_regularizer=regularizers.l2(0.001), bias_regularizer=regularizers.l2(0.001))(decoder1)
         decoder1 = layers.Dropout(rate = 0.10)(decoder1)
         decoder1 = layers.TimeDistributed(layers.Dense(input_size))(decoder1)
         decoder = keras.Model(input_latent, decoder1)
