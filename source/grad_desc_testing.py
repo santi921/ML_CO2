@@ -105,5 +105,12 @@ def train_model(x, y):
 
 names, ret_self, homo, homo1, diff = selfies()
 homo_cv = train_model(names, homo)
+print(homo_cv.best_params_)
 diff_cv = train_model(names, diff)
+print(diff_cv.best_params_)
+
 homo1_cv = train_model(names, homo1)
+print(homo1_cv.best_params_)
+
+
+
