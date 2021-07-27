@@ -545,9 +545,6 @@ def db_integrity(dir="DB3", desc="rdkit"):
     if(count_bad == 0):
         print(desc +" dataset looks good!")
 
-
-
-
 def pull_chembl_smiles(SMILES = [], ratio = 1.0, save = False, use_file = False, save_dir = "./data/mols_filter.sdf"):
     similarity_query = new_client.similarity
     similarity_query.set_format('sdf')

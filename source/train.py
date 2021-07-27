@@ -69,25 +69,25 @@ def calc(x, y, des, scale, rand_tf = False, grid_tf=False, bayes_tf=False, sigop
             print("xgboost algo selected")
             reg = xgboost(x, y, scale)
         elif (algo == "tf_nn"):
-            from tensorflow_util import nn_basic
+            from source.utils.tensorflow_util import nn_basic
             x = x.astype('float32')
             y = y.astype('float32')
 
             reg = nn_basic(x, y, scale)
         elif (algo == "tf_cnn"):
-            from tensorflow_util import cnn_basic
+            from source.utils.tensorflow_util import cnn_basic
             x = x.astype('float32')
             y = y.astype('float32')
 
             reg = cnn_basic(x, y, scale)
         elif (algo == "tf_cnn_norm"):
-            from tensorflow_util import cnn_norm_basic
+            from source.utils.tensorflow_util import cnn_norm_basic
             x = x.astype('float32')
             y = y.astype('float32')
 
             reg = cnn_norm_basic(x, y, scale)
         elif (algo == "resnet"):
-            from tensorflow_util import resnet34
+            from source.utils.tensorflow_util import resnet34
             x = x.astype('float32')
             y = y.astype('float32')
 

@@ -38,13 +38,13 @@ def write_des(des, dir_temp):
         name, mat, homo, homo1, diff = selfies(dir)
 
     elif (des == "auto"):
-        from molsimplify_util import full_autocorr
+        from source.utils.molsimplify_util import full_autocorr
         print("...........autocorrelation started..........")
         name, mat, homo, homo1, diff = full_autocorr(dir)
 
     #requires a metal in the compound for this desc
     elif (des == "delta"):
-        from molsimplify_util import metal_deltametrics
+        from source.utils.molsimplify_util import metal_deltametrics
         print("...........deltametrics started..........")
         name, mat, homo, homo1, diff = metal_deltametrics(dir)
 
