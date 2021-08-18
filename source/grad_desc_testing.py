@@ -53,7 +53,7 @@ def train_model(x, y):
     y_train = np.array([y[i] for i in train_ind])
     y_test = np.array([y[i] for i in test_ind])
         
-    """
+
     model = keras.Sequential() # this could be subbed with xgboost
     model.add(keras.layers.Input(shape = (len(x_encoded_test[0]),) ))
     model.add(keras.layers.Dense(1000, kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4)))
@@ -64,7 +64,8 @@ def train_model(x, y):
     model.fit(np.array(x_encoded_train), np.array(y_train), validation_data = (x_encoded_test, y_test), 
               epochs = 100)
     #callbacks = [es]
-    """
+
+    '''
     xgb_model = xgb.XGBRegressor(n_jobs=-1)
     extra_model = ExtraTreesRegressor(criterion="mse", bootstrap=True)
     params_xgb = {
@@ -100,17 +101,17 @@ def train_model(x, y):
     y_hat_train = cv_model.predict(np.array(x_encoded_train))
     print(r2_score(y_hat_train, y_train))
     return cv_model
+    '''
 
 
 
 names, ret_self, homo, homo1, diff = selfies()
-homo_cv = train_model(names, homo)
-print(homo_cv.best_params_)
-diff_cv = train_model(names, diff)
-print(diff_cv.best_params_)
-
-homo1_cv = train_model(names, homo1)
-print(homo1_cv.best_params_)
+train_model(names, homo)
+#print(homo_cv.best_params_)
+#diff_cv = train_model(names, diff)
+#print(diff_cv.best_params_)
+#homo1_cv = train_model(names, homo1)
+#print(homo1_cv.best_params_)
 
 
 
