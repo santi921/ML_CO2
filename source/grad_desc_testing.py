@@ -1,3 +1,8 @@
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras import layers,regularizers
+
 import numpy as np
 import xgboost as xgb
 
@@ -8,11 +13,6 @@ tanimoto_dist, smiles, selfies
 from scipy.integrate import odeint, trapz
 from skopt.searchcv import BayesSearchCV
 from skopt.space import Real, Integer
-
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras import layers,regularizers
 
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split, GridSearchCV
