@@ -2,10 +2,10 @@ import sklearn.utils.fixes
 from numpy.ma import MaskedArray
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
-import time, sigopt
 from boruta import BorutaPy
 import numpy as np
 
+import time, sigopt
 from sigopt import Connection
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.searchcv import BayesSearchCV
