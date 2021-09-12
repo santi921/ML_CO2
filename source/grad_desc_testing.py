@@ -63,45 +63,6 @@ def train_model(x, y):
     #es = keras.callbacks.EarlyStopping(monitor="val_loss", patience = 5)
     model.fit(np.array(x_encoded_train), np.array(y_train), validation_data = (x_encoded_test, y_test),
               epochs = 100)
-    #callbacks = [es]
-
-    '''
-    xgb_model = xgb.XGBRegressor(n_jobs=-1)
-    extra_model = ExtraTreesRegressor(criterion="mse", bootstrap=True)
-    params_xgb = {
-            "colsample_bytree": Real(0.3, 0.99),
-            "max_depth": Integer(5, 30),
-            "lambda": Real(0, 0.25),
-            "learning_rate": Real(0.001, 0.5, prior='log-uniform'),
-            "alpha": Real(0.01, 0.2, prior='log-uniform'),
-            "eta": Real(0.01, 0.2, prior='log-uniform'),
-            "gamma": Real(0.01, 0.2, prior='log-uniform'),
-            "n_estimators": Integer(100, 1000),
-            "objective": ["reg:squarederror"],
-            "tree_method": ["gpu_hist"]
-        }
-    params_extra = {
-          "n_estimators": Integer(100, 1000),
-          "max_depth": Integer(5, 25),
-          "min_samples_split": Integer(2,4),
-          "min_samples_leaf": Integer(2,4)
-          } 
-    
-    model_extra = BayesSearchCV(extra_model, params_extra, n_iter=20, verbose=1, cv=3) 
-    model_xgb = BayesSearchCV(xgb_model, params_xgb, n_iter=20, verbose=0, cv=3) 
-
-    cv_model = model_extra
-    cv_model.fit(np.array(x_encoded_train), np.array(y_train))
-    print("best model score:")
-    print(model_xgb.best_score_)
-    print("best test score: ")
-    y_hat_test = cv_model.predict(np.array(x_encoded_test))
-    print(r2_score(y_hat_test, y_test))
-    print("best train score: ")
-    y_hat_train = cv_model.predict(np.array(x_encoded_train))
-    print(r2_score(y_hat_train, y_train))
-    return cv_model
-    '''
 
 
 

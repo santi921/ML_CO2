@@ -125,6 +125,7 @@ if __name__ == "__main__":
     selfies_list, selfies_alphabet, largest_selfies_len, \
     smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
 
+    selfies_alphabet.sort()
     print("len of alphabet: " + str(len(selfies_alphabet)))
     print("alphabet list: " + str(selfies_alphabet))
 

@@ -22,7 +22,6 @@ if gpus:
     except RuntimeError as e:
         print(e)
 
-
 class Sampling(layers.Layer):
     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
 
@@ -33,7 +32,6 @@ class Sampling(layers.Layer):
         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
 
         return (z_mean + tf.exp(z_log_var) * epsilon)
-
 
 class VAE(keras.Model):
     def __init__(self, encoder, decoder, **kwargs):
@@ -73,7 +71,6 @@ class VAE(keras.Model):
             "loss": self.total_loss_tracker.result(),
             "reconstruction_loss": self.reconstruction_loss_tracker.result(),
             "kl_loss": self.kl_loss_tracker.result(), }
-
 
 if __name__ == "__main__":
     
