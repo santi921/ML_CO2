@@ -125,6 +125,9 @@ if __name__ == "__main__":
     selfies_list, selfies_alphabet, largest_selfies_len, \
     smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
 
+    print("len of alphabet: " + str(len(selfies_alphabet)))
+    print("alphabet list: " + str(selfies_alphabet))
+
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
     data_smiles = multiple_smile_to_hot(smiles_list, largest_smiles_len, smiles_alphabet)
     max_mol_len = data.shape[1]
@@ -140,9 +143,9 @@ if __name__ == "__main__":
 
         input_size = data.shape[1] * data.shape[2]
         timesteps = data.shape[1]
+
         # create Encoder
         inputs = keras.Input(shape=(data.shape[1] * data.shape[2]))
-
         encode_arr = nn_encode.split(",")
         decode_arr = nn_decode.split(",")
         for ind, temp_layer in enumerate(encode_arr):
