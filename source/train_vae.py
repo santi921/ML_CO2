@@ -132,7 +132,7 @@ if __name__ == "__main__":
     len_alphabet_mol = alpha_len * max_mol_len
 
     data_reshape = data.reshape(data.shape[0], data.shape[1] * data.shape[2], )
-    train_ind, test_ind = train_test_split(range(data.shape[0]), test_size=0.15)
+    train_ind, test_ind = train_test_split(range(data.shape[0]), test_size=0.15, random_state=11)
     x_train = data_reshape[train_ind]
     x_test = data_reshape[test_ind]
 
@@ -226,8 +226,13 @@ if __name__ == "__main__":
     encoder_test = vae.encoder.predict(test_data)
     print(type(encoder_test))
     print(np.shape(encoder_test))
-    code_decode_train = vae.decoder.predict(encoder_train)
-    code_decode_test = vae.decoder.predict(encoder_test)
+
+    try:
+        code_decode_train = vae.decoder.predict(encoder_train)
+        code_decode_test = vae.decoder.predict(encoder_test)
+    except:
+        code_decode_train = vae.decoder.predict(encoder_train[0])
+        code_decode_test = vae.decoder.predict(encoder_test[0])
 
     encoder.summary()
     decoder.summary()
