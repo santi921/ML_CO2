@@ -123,11 +123,11 @@ if __name__ == "__main__":
     '''
     # more standard method
 
-    names, ret_self, homo, homo1, diff = selfies()
+    names, ret_list, homo, homo1, diff = selfies()
     print(ret_list[0:10])
 
     selfies_list, selfies_alphabet, largest_selfies_len, \
-    smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
+    smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(names)
 
     selfies_alphabet.sort()
     print("len of alphabet: " + str(len(selfies_alphabet)))
