@@ -3,16 +3,13 @@ from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import layers, regularizers
 
-import numpy as np
-import pandas as pd
-import selfies as sf
-import os
 import argparse
+import numpy as np
 from sklearn.model_selection import train_test_split
 
 from utils.selfies_util import smile_to_hot, multiple_smile_to_hot, selfies_to_hot, \
     multiple_selfies_to_hot, get_selfie_and_smiles_encodings_for_dataset, compare_equality, \
-    tanimoto_dist, smiles
+    tanimoto_dist, smiles, selfies
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -112,7 +109,9 @@ if __name__ == "__main__":
 
     #files, ret_list = smiles(verbose=verbose)
     #files, ret_list = smiles("../data/smi/DB3/", verbose=verbose)
-    ret_list = []
+    #ret_list = []
+    '''
+    ### This is one option for pulling smis for vae training
     dir = "../data/smi/DB3/actual_smi/"
     files = os.listdir(dir)
     for file in files:
@@ -121,7 +120,12 @@ if __name__ == "__main__":
                 ret_list.append(filehandle.readlines()[0].decode("utf-8"))
         except:
             pass
+    '''
+    # more standard method
+
+    names, ret_self, homo, homo1, diff = selfies()
     print(ret_list[0:10])
+
     selfies_list, selfies_alphabet, largest_selfies_len, \
     smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
 
