@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import layers, regularizers
+tf.get_logger().setLevel('INFO')
 
 import argparse
 import numpy as np
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     # more standard method
 
     names, ret_list, homo, homo1, diff = selfies()
-    print(ret_list[0:10])
+    print(ret_list[-10:])
 
     selfies_list, selfies_alphabet, largest_selfies_len, \
     smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(names)
@@ -132,6 +133,8 @@ if __name__ == "__main__":
     selfies_alphabet.sort()
     print("len of alphabet: " + str(len(selfies_alphabet)))
     print("alphabet list: " + str(selfies_alphabet))
+    print("number of molecules: " + str(len(names)))
+    [print(i) for i in selfies_list[-10:]]
 
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
     data_smiles = multiple_smile_to_hot(smiles_list, largest_smiles_len, smiles_alphabet)
