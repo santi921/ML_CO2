@@ -10,11 +10,18 @@ import os
 import argparse
 from sklearn.model_selection import train_test_split
 
-from utils.selfies_util import smile_to_hot, multiple_smile_to_hot, selfies_to_hot, \
-    multiple_selfies_to_hot, get_selfie_and_smiles_encodings_for_dataset, compare_equality, \
-    tanimoto_dist, smiles
+from utils.selfies_util import (
+    smile_to_hot,
+    multiple_smile_to_hot,
+    selfies_to_hot,
+    multiple_selfies_to_hot,
+    get_selfie_and_smiles_encodings_for_dataset,
+    compare_equality,
+    tanimoto_dist,
+    smiles,
+)
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
+gpus = tf.config.experimental.list_physical_devices("GPU")
 if gpus:
     try:
         for gpu in gpus:
@@ -32,7 +39,7 @@ class Sampling(layers.Layer):
         dim = tf.shape(z_mean)[1]
         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
 
-        return (z_mean + tf.exp(z_log_var) * epsilon)
+        return z_mean + tf.exp(z_log_var) * epsilon
 
 
 class VAE(keras.Model):
@@ -42,7 +49,8 @@ class VAE(keras.Model):
         self.decoder = decoder
         self.total_loss_tracker = keras.metrics.Mean(name="total_loss")
         self.reconstruction_loss_tracker = keras.metrics.Mean(
-            name="reconstruction_loss")
+            name="reconstruction_loss"
+        )
         self.kl_loss_tracker = keras.metrics.Mean(name="kl_loss")
 
     @property
@@ -50,7 +58,8 @@ class VAE(keras.Model):
         return [
             self.total_loss_tracker,
             self.reconstruction_loss_tracker,
-            self.kl_loss_tracker, ]
+            self.kl_loss_tracker,
+        ]
 
     def train_step(self, data):
         with tf.GradientTape() as tape:
@@ -58,10 +67,10 @@ class VAE(keras.Model):
             reconstruction = self.decoder(z)
             reconstruction_loss = keras.losses.mse(data, reconstruction)
             # reconstruction_loss = keras.losses.binary_crossentropy(data, reconstruction)
-            kl_loss = (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
+            kl_loss = 1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var)
             kl_loss = -0.5 * tf.reduce_mean(kl_loss)
             beta = coef * latent_dim / input_size
-            total_loss = 100* (reconstruction_loss + beta * kl_loss)
+            total_loss = 100 * (reconstruction_loss + beta * kl_loss)
 
         grads = tape.gradient(total_loss, self.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
@@ -72,26 +81,74 @@ class VAE(keras.Model):
         return {
             "loss": self.total_loss_tracker.result(),
             "reconstruction_loss": self.reconstruction_loss_tracker.result(),
-            "kl_loss": self.kl_loss_tracker.result(), }
+            "kl_loss": self.kl_loss_tracker.result(),
+        }
 
 
 if __name__ == "__main__":
-    
-    parser = argparse.ArgumentParser(description='parameters of vae to train')
-    parser.add_argument("--nn", action="store_true", dest="tf_nn_vae", default=False, help="ltsm or nn encoder?")
-    parser.add_argument("-beta", action="store", dest="coef", default=0.1, help="coef for beta in vae loss")
-    parser.add_argument("-epochs", action="store", dest="epochs", default=20, help="epochs")
-    parser.add_argument("-latdim", action="store", dest="latdim", default=50, help="latent dimension")
-    parser.add_argument("-ltsm_encode", action="store", dest="ltsm_encode", default=50, help="ltsm encoder dim")
-    parser.add_argument("-ltsm_decode", action="store", dest="ltsm_decode", default=25, help="ltsm decode dim")
-    parser.add_argument("--nn_encode", action="store", dest="nn_encode", default="100, 100", help="nn encode dim")
-    parser.add_argument("--nn_decode", action="store", dest="nn_decode", default="100, 100, 100, 100",
-                        help="nn decode dim")
-    parser.add_argument("--verbose", action="store_true", dest="verbose", default=False, help="verbose")
-    parser.add_argument("--save", action="store_true", dest="save", default=False, help="save trained vae")
+
+    parser = argparse.ArgumentParser(description="parameters of vae to train")
+    parser.add_argument(
+        "--nn",
+        action="store_true",
+        dest="tf_nn_vae",
+        default=False,
+        help="ltsm or nn encoder?",
+    )
+    parser.add_argument(
+        "-beta",
+        action="store",
+        dest="coef",
+        default=0.1,
+        help="coef for beta in vae loss",
+    )
+    parser.add_argument(
+        "-epochs", action="store", dest="epochs", default=20, help="epochs"
+    )
+    parser.add_argument(
+        "-latdim", action="store", dest="latdim", default=50, help="latent dimension"
+    )
+    parser.add_argument(
+        "-ltsm_encode",
+        action="store",
+        dest="ltsm_encode",
+        default=50,
+        help="ltsm encoder dim",
+    )
+    parser.add_argument(
+        "-ltsm_decode",
+        action="store",
+        dest="ltsm_decode",
+        default=25,
+        help="ltsm decode dim",
+    )
+    parser.add_argument(
+        "--nn_encode",
+        action="store",
+        dest="nn_encode",
+        default="100, 100",
+        help="nn encode dim",
+    )
+    parser.add_argument(
+        "--nn_decode",
+        action="store",
+        dest="nn_decode",
+        default="100, 100, 100, 100",
+        help="nn decode dim",
+    )
+    parser.add_argument(
+        "--verbose", action="store_true", dest="verbose", default=False, help="verbose"
+    )
+    parser.add_argument(
+        "--save",
+        action="store_true",
+        dest="save",
+        default=False,
+        help="save trained vae",
+    )
 
     results = parser.parse_args()
-    
+
     global coef
     global latent_dim
     global input_size
@@ -109,9 +166,8 @@ if __name__ == "__main__":
     nn_encode = results.nn_encode
     nn_decode = results.nn_decode
 
-
-    #files, ret_list = smiles(verbose=verbose)
-    #files, ret_list = smiles("../data/smi/DB3/", verbose=verbose)
+    # files, ret_list = smiles(verbose=verbose)
+    # files, ret_list = smiles("../data/smi/DB3/", verbose=verbose)
     ret_list = []
     dir = "../data/smi/DB3/actual_smi/"
     files = os.listdir(dir)
@@ -122,54 +178,63 @@ if __name__ == "__main__":
         except:
             pass
     print(ret_list[0:10])
-    selfies_list, selfies_alphabet, largest_selfies_len, \
-    smiles_list, smiles_alphabet, largest_smiles_len = get_selfie_and_smiles_encodings_for_dataset(ret_list)
+    (
+        selfies_list,
+        selfies_alphabet,
+        largest_selfies_len,
+        smiles_list,
+        smiles_alphabet,
+        largest_smiles_len,
+    ) = get_selfie_and_smiles_encodings_for_dataset(ret_list)
 
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
-    data_smiles = multiple_smile_to_hot(smiles_list, largest_smiles_len, smiles_alphabet)
+    data_smiles = multiple_smile_to_hot(
+        smiles_list, largest_smiles_len, smiles_alphabet
+    )
     max_mol_len = data.shape[1]
     alpha_len = data.shape[2]
     len_alphabet_mol = alpha_len * max_mol_len
 
-    data_reshape = data.reshape(data.shape[0], data.shape[1], data.shape[2], )
+    data_reshape = data.reshape(
+        data.shape[0],
+        data.shape[1],
+        data.shape[2],
+    )
     train_ind, test_ind = train_test_split(range(data.shape[0]), test_size=0.15)
     x_train = data_reshape[train_ind]
     x_test = data_reshape[test_ind]
 
-
     timesteps = data.shape[1]
     input_size = data.shape[2]
-    
+
     # create Encoder
     inputs = keras.Input(shape=(timesteps, input_size))
     x = layers.LSTM(ltsm_encode)(inputs)
-    x = layers.Dropout(rate = 0.20)(x)
+    x = layers.Dropout(rate=0.20)(x)
 
-    #----------------------------
-    
+    # ----------------------------
+
     # Sampling Layers
     z_mean = layers.Dense(latent_dim, name="z_mean")(x)
     z_log_var = layers.Dense(latent_dim, name="z_log_var")(x)
     z = Sampling()([z_mean, z_log_var])
     encoder = keras.Model(inputs, [z_mean, z_log_var, z], name="encoder")
-    
- 
+
     # Create Decoder
     input_latent = keras.Input(shape=(latent_dim,))
     decoder1 = layers.RepeatVector(timesteps)(input_latent)
-    decoder1 = layers.Dropout(rate = 0.20)(decoder1)
-    decoder1 = layers.LSTM(ltsm_decode, return_sequences=True)(decoder1)    
+    decoder1 = layers.Dropout(rate=0.20)(decoder1)
+    decoder1 = layers.LSTM(ltsm_decode, return_sequences=True)(decoder1)
     decoder1 = layers.TimeDistributed(layers.Dense(input_size))(decoder1)
     decoder = keras.Model(input_latent, decoder1)
 
-    
-    #decoder = keras.Model(input_latent, decoder1)
+    # decoder = keras.Model(input_latent, decoder1)
 
-    #----------------------------
-    
+    # ----------------------------
+
     vae = VAE(encoder, decoder)
     vae.compile(keras.optimizers.Adam(learning_rate=0.00001))
-    es = EarlyStopping(monitor='loss', mode='min', verbose=0, patience=5)
+    es = EarlyStopping(monitor="loss", mode="min", verbose=0, patience=5)
     train_data = x_train.reshape(x_train.shape[0], data.shape[1], data.shape[2])
     test_data = x_test.reshape(x_test.shape[0], data.shape[1], data.shape[2])
     print(type(train_data))
@@ -178,7 +243,9 @@ if __name__ == "__main__":
     encoder.summary()
     decoder.summary()
 
-    history = vae.fit(train_data, train_data, epochs=epochs, verbose=verbose, callbacks = [es])
+    history = vae.fit(
+        train_data, train_data, epochs=epochs, verbose=verbose, callbacks=[es]
+    )
 
     print(type(train_data))
     print(np.shape(train_data))
@@ -186,35 +253,29 @@ if __name__ == "__main__":
     encoder_test = vae.encoder.predict(test_data)
     print(type(encoder_test))
     print(np.shape(encoder_test))
-    #code_decode_train = vae.decoder.predict(encoder_train)
+    # code_decode_train = vae.decoder.predict(encoder_train)
     code_decode_test = vae.decoder.predict(encoder_test)
 
-
     print("..............statistics for training dataset..............")
-    #compare_equality(
+    # compare_equality(
     #    train_data,
     #    code_decode_train,
     #    (data.shape[1], data.shape[2]),
     #    selfies_alphabet)
     print("..............statistics for test dataset..............")
     compare_equality(
-        test_data,
-        code_decode_test,
-        (data.shape[1], data.shape[2]),
-        selfies_alphabet)
+        test_data, code_decode_test, (data.shape[1], data.shape[2]), selfies_alphabet
+    )
     print(".................Model Parameters.................")
 
-    if (tf_nn_vae == True):
+    if tf_nn_vae == True:
         print("NN-based VAE")
     else:
         print("LSTM-based VAE")
-    if(save == True):
+    if save == True:
         encoder.save("encoder")
         decoder.save("decoder")
 
     print("epochs:" + str(epochs))
     print("latent dims:" + str(latent_dim))
     print("beta: " + str(coef))
-
-
-

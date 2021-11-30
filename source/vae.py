@@ -3,13 +3,14 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
+gpus = tf.config.experimental.list_physical_devices("GPU")
 if gpus:
     try:
         for gpu in gpus:
             tf.config.experimental.set_memory_growth(gpu, True)
     except RuntimeError as e:
         print(e)
+
 
 class Sampling(layers.Layer):
     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
@@ -20,6 +21,7 @@ class Sampling(layers.Layer):
         dim = tf.shape(z_mean)[1]
         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
         return z_mean + tf.exp(0.5 * z_log_var) * epsilon
+
 
 class VAE(keras.Model):
     def __init__(self, encoder, decoder, **kwargs):
@@ -66,10 +68,12 @@ class VAE(keras.Model):
 
 def vae_train(x):
 
-    #encoder
-    latent_dim = 2 # <------------------------------TUNE THIS
-    encoder_inputs = keras.Input(shape=(28, 28, 1)) # <--------TUNE THIS
-    x = layers.Conv2D(32, 3, activation="relu", strides=2, padding="same")(encoder_inputs)
+    # encoder
+    latent_dim = 2  # <------------------------------TUNE THIS
+    encoder_inputs = keras.Input(shape=(28, 28, 1))  # <--------TUNE THIS
+    x = layers.Conv2D(32, 3, activation="relu", strides=2, padding="same")(
+        encoder_inputs
+    )
     x = layers.Conv2D(64, 3, activation="relu", strides=2, padding="same")(x)
     x = layers.Flatten()(x)
     x = layers.Dense(16, activation="relu")(x)
@@ -77,8 +81,7 @@ def vae_train(x):
     z_log_var = layers.Dense(latent_dim, name="z_log_var")(x)
     z = Sampling()([z_mean, z_log_var])
     encoder = keras.Model(encoder_inputs, [z_mean, z_log_var, z], name="encoder")
-    #encoder.summary()
-
+    # encoder.summary()
 
     # decoder
     latent_inputs = keras.Input(shape=(latent_dim,))
@@ -86,24 +89,26 @@ def vae_train(x):
     x = layers.Reshape((7, 7, 64))(x)
     x = layers.Conv2DTranspose(64, 3, activation="relu", strides=2, padding="same")(x)
     x = layers.Conv2DTranspose(32, 3, activation="relu", strides=2, padding="same")(x)
-    decoder_outputs = layers.Conv2DTranspose(1, 3, activation="sigmoid", padding="same")(x)
+    decoder_outputs = layers.Conv2DTranspose(
+        1, 3, activation="sigmoid", padding="same"
+    )(x)
     # check about the last layer here
     decoder = keras.Model(latent_inputs, decoder_outputs, name="decoder")
-    #decoder.summary()
+    # decoder.summary()
 
-
-
-    #(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    #mnist_digits = np.concatenate([x_train, x_test], axis=0)
-    #mnist_digits = np.expand_dims(mnist_digits, -1).astype("float32") / 255
+    # (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+    # mnist_digits = np.concatenate([x_train, x_test], axis=0)
+    # mnist_digits = np.expand_dims(mnist_digits, -1).astype("float32") / 255
 
     vae = VAE(encoder, decoder)
     vae.compile(optimizer=keras.optimizers.Adam())
     vae.fit(x, epochs=30, batch_size=64)
 
+
 from source.utils.selfies_util import selfies
+
 names, ret, homo, homo1, diff = selfies()
 print(names[0:100])
 print(len(names))
 
-#vae_train(names)
+# vae_train(names)

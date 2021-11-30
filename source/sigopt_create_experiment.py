@@ -1,2 +1,3 @@
-import sigopt 
+import sigopt
+
 sigopt.log_dataset("rdkit")
