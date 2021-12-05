@@ -1,6 +1,7 @@
 from ripser import Rips
 from ripser import ripser
 rips = Rips()
+from rdkit import Chem
 from sklearn.base import TransformerMixin
 import collections
 import numpy as np
@@ -12,12 +13,31 @@ import matplotlib.pyplot as plt
 
 
 def Makexyzdistance(t):
-    element=np.loadtxt(t,dtype=str,usecols=(0,), skiprows=2)
-    x=np.loadtxt(t,dtype=float,usecols=(1), skiprows=2)
-    y=np.loadtxt(t,dtype=float,usecols=(2),skiprows=2)
-    z=np.loadtxt(t,dtype=float,usecols=(3),skiprows=2)
+    try:
+        element=np.loadtxt(t,dtype=str,usecols=(0,), skiprows=2)
+        x=np.loadtxt(t,dtype=float,usecols=(1), skiprows=2)
+        y=np.loadtxt(t,dtype=float,usecols=(2),skiprows=2)
+        z=np.loadtxt(t,dtype=float,usecols=(3),skiprows=2)
 
-   #print (x)
+    except:
+
+        num_atoms = int(Chem.MolToMolBlock(t).split('\n')[3].split(" ")[2])
+        element = []
+        x = []
+        y = []
+        z = []
+        vert_shift = 4
+        for i in range(vert_shift, num_atoms + vert_shift - 1):
+            #shift = int(Chem.MolToMolBlock(t).split('\n')[i].split(" ")[3] == '')
+            if (len(Chem.MolToMolBlock(t).split('\n')[i].split()) > 15):
+                element.append(Chem.MolToMolBlock(t).split('\n')[i].split()[3])
+                x.append(float(Chem.MolToMolBlock(t).split('\n')[i].split()[0]))
+                y.append(float(Chem.MolToMolBlock(t).split('\n')[i].split()[1]))
+                z.append(float(Chem.MolToMolBlock(t).split('\n')[i].split()[2]))
+
+            else:
+                break
+
    #def Distance(x):
     Distance=np.zeros(shape=(len(x),len(x)))
     for i in range(0,len(x)):
@@ -243,7 +263,7 @@ class PersImage(TransformerMixin):
             ax.imshow(img, cmap=plt.get_cmap("plasma"))
             ax.axis("off")
             
-from elements import ELEMENTS
+from utils.elements import ELEMENTS
 def VariancePersistv1(Filename, pixelx=100, pixely=100, myspread=2, myspecs={"maxBD": 2, "minBD":0}, showplot=True):
     #Generate distance matrix and elementlist
     D,elements=Makexyzdistance(Filename)
@@ -285,8 +305,6 @@ def VariancePersistv1(Filename, pixelx=100, pixely=100, myspread=2, myspecs={"ma
 
                     #plt.show()
     #print (Totalmatrix)
-
-
 
 def VariancePersist(Filename, pixelx=100, pixely=100, myspread=2, myspecs={"maxBD": 2, "minBD":0}, showplot=True):
     #Generate distance matrix and elementlist

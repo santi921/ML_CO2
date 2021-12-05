@@ -1,13 +1,17 @@
+
+
 import numpy as np
-import tensorflow as tf
-import tensorflow.keras as keras
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+
+import tensorflow as tf
+import tensorflow.keras as keras
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping
 from tensorflow.keras.layers import Dense, MaxPooling2D, Conv2D, Dropout, \
     Flatten, BatchNormalization, Activation, GlobalAvgPool2D
 from tensorflow.keras.models import Sequential
-import matplotlib.pyplot as plt
 
 class ResidualUnit(keras.layers.Layer):
     def __init__(self, filters, strides=1, activation="relu", **kwargs):

@@ -43,7 +43,7 @@ def draw_from_pop_dist(pop_loss, log = False):
     draw = np.random.rand() * total_loss
     ind = 0
     track = pop_loss[0]
-
+    #print(pop_loss)
     while track < draw:
         ind += 1
         track += pop_loss[ind]

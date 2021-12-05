@@ -91,24 +91,35 @@ def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
 
     # df = pd.read_csv(file_path)
     # smiles_list = np.asanyarray(df.smiles)
-    smiles_alphabet = list(set(''.join(smiles_list)))
-    smiles_alphabet.append(' ')  # for padding
+    smiles_alphabet = list(set("".join(smiles_list)))
+    smiles_alphabet.append(" ")  # for padding
     largest_smiles_len = len(max(smiles_list, key=len))
 
-    print('--> Translating SMILES to SELFIES...')
-    
-    selfies_list = list(map(sf.encoder, smiles_list))
-         
+    print("--> Translating SMILES to SELFIES...")
+
+    # selfies_list = list(map(sf.encoder, smiles_list))
+    selfies_list = []
+    for smile in smiles_list:
+        try:
+            selfies_list.append(sf.encoder(smile))
+        except:
+            print("failed to convert: " + str(smile))
     all_selfies_symbols = sf.get_alphabet_from_selfies(selfies_list)
-    all_selfies_symbols.add('[nop]')
+    all_selfies_symbols.add("[nop]")
     selfies_alphabet = list(all_selfies_symbols)
 
     largest_selfies_len = max(sf.len_selfies(s) for s in selfies_list)
 
-    print('Finished translating SMILES to SELFIES.')
+    print("Finished translating SMILES to SELFIES.")
 
-    return selfies_list, selfies_alphabet, largest_selfies_len, \
-           smiles_list, smiles_alphabet, largest_smiles_len
+    return (
+        selfies_list,
+        selfies_alphabet,
+        largest_selfies_len,
+        smiles_list,
+        smiles_alphabet,
+        largest_smiles_len,
+    )
 
 def compare_equality(x_test, autoencoded_selfies, dim, selfies_alphabet):
     '''
