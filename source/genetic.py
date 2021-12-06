@@ -1,4 +1,3 @@
-from utils.tensorflow_util import cnn_basic
 import os
 import random
 import argparse
@@ -7,6 +6,7 @@ import pandas as pd
 import selfies as sf
 from tqdm import tqdm
 from rdkit import Chem
+from rdkit.Chem import AllChem
 warnings.filterwarnings("ignore")
 
 from sklearn.neural_network import MLPRegressor
@@ -184,10 +184,11 @@ class optimizer_genetic(object):
 
     def loss(self, smiles):
         mol_obj= Chem.MolFromSmiles(smiles)
-        x_mat = VariancePersistv1(
-            mol_obj,
-            pixelx=50, pixely=50,
-            myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
+        x_mat = AllChem.GetMorganFingerprintAsBitVect(temp, 2, bitInfo=bi)
+        #x_mat = VariancePersistv1(
+        #    mol_obj,
+        #    pixelx=50, pixely=50,
+        #    myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
 
         x_mat = self.scaler.transform(x_mat.reshape(1, -1))
         homo_pred = np.abs(self.homo_model.predict(x_mat)[0])
@@ -209,7 +210,7 @@ class optimizer_genetic(object):
     def train_models(
             self, test=False, transfer=False, ret_list=[]
     ):
-        des = 'persist'
+        des = 'morg'
         print("done processing dataframe")
         str = "../data/desc/DB3/desc_calc_DB3_" + des + ".h5"
         print(str)
@@ -259,12 +260,13 @@ class optimizer_genetic(object):
 
         HOMO = (HOMO - self.min_homo ) / self.scale_homo
         HOMO_1 = (HOMO_1 - self.min_homo1 ) / self.scale_homo1
+        #from utils.tensorflow_util import cnn_basic
 
         self.homo_model = calc(
-            mat, HOMO, des, self.scale_homo, algo = 'tf_cnn'
+            mat, HOMO, des, self.scale_homo, algo = 'rf'
         )
         self.homo1_model = calc(
-            mat, HOMO_1, des, self.scale_homo1, algo = 'tf_cnn'
+            mat, HOMO_1, des, self.scale_homo1, algo = 'rf'
         )
 
     def selection(self):
@@ -281,6 +283,10 @@ class optimizer_genetic(object):
             self_i = sf.encoding_to_selfies(
                 i.tolist(), self.selfies_alphabet, "one_hot"
             )
+            smiles_i = sf.decoder(self_i)
+            temp_loss = self.loss(smiles_i)
+            pop_loss.append(temp_loss)
+            pop_temp.append(temp_loss)
 
 
             try: # computes loss of every value in new generation
