@@ -300,7 +300,7 @@ class optimizer_genetic(object):
         while len(parent_ind) <= int(successful_mol_count * ratio_children + 1):
             log = False
             draw = draw_from_pop_dist(pop_loss_temp, log=log)
-            #print('draw')
+            print('draw')
             if (parent_ind.count(draw) == 0):
                 parent_ind.append(draw)
                 parent_gen_loss.append(pop_loss[draw])
