@@ -316,26 +316,22 @@ class optimizer_genetic(object):
 
         parent_gen = [population[i] for i in parent_ind]
         parent_gen_order = np.array(parent_gen_loss).argsort().tolist()[::-1]
-
+        #print(parent_gen)
         parent_gen_index_tracker = [i for i in range(len(parent_gen))]
 
         # here we want to shuffle indexes, not take just the best in order
 
         for i in range(int(len(parent_gen) / 2)):
             draw1 = random.choice(parent_gen_index_tracker)
-            parent_gen_index_tracker.remove(draw1)
+            #parent_gen_index_tracker.remove(draw1)
             draw2 = random.choice(parent_gen_index_tracker)
-            parent_gen_index_tracker.remove(draw2)
+            #parent_gen_index_tracker.remove(draw2)
             cross_res1, cross_res2 = cross(parent_gen[draw1], parent_gen[draw2])
-
             pop_new.append(cross_res1)
             pop_new.append(cross_res2)
 
-        print(parent_gen)
-        print(parent_gen_order)
-
-        [pop_new.append(parent_gen[i])
-         for i in parent_gen_order[0:int(len(parent_gen_order) / 2 + 1)]]
+        #[pop_new.append(parent_gen[i])
+        # for i in parent_gen_order[0:int(len(parent_gen_order) / 2 + 1)]]
 
         return pop_new
 
@@ -359,7 +355,6 @@ class optimizer_genetic(object):
         else:
            gen_start = 1
 
-
         for gen in range(gen_start, gens + 1):
 
             if (int(self.start_pop_size * 0.1) > len(self.population_sample)):
@@ -368,6 +363,7 @@ class optimizer_genetic(object):
             print("Gen " + str(gen) + "/" + str(gens))
             print("selection + cross...")
             pop_new = self.selection()
+            print(pop_new)
             pop_mut_new = []
             pop_loss = []
 
@@ -471,7 +467,7 @@ if __name__ == "__main__":
     ) = get_selfie_and_smiles_encodings_for_dataset(mols_smiles)
 
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
-    opt = optimizer_genetic(data, selfies_alphabet, largest_selfies_len, ckpt = ckpt, start_pop_size=start_pop_size)
+    opt = optimizer_genetic(data, selfies_alphabet, largest_selfies_len, ckpt = ckpt, start_pop_size = start_pop_size)
     opt.train_models()
     mean_loss = opt.enrich_pop(gens=gens, longitudnal_save=long)
     print(":" * 50)
