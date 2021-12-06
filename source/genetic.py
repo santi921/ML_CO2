@@ -184,12 +184,14 @@ class optimizer_genetic(object):
 
     def loss(self, smiles):
         mol_obj= Chem.MolFromSmiles(smiles)
-        x_mat = AllChem.GetMorganFingerprintAsBitVect(temp, 2, bitInfo=bi)
+        bit_obj = AllChem.GetMorganFingerprintAsBitVect(mol_obj, 2, nBits = int(1024))
+        x_mat = np.array([int(i) for i in bit_obj])
+        #persist version
+        #x_mat = AllChem.GetMorganFingerprint(mol_obj, int(2))
         #x_mat = VariancePersistv1(
         #    mol_obj,
         #    pixelx=50, pixely=50,
         #    myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
-
         x_mat = self.scaler.transform(x_mat.reshape(1, -1))
         homo_pred = np.abs(self.homo_model.predict(x_mat)[0])
         homo1_pred = np.abs(self.homo1_model.predict(x_mat)[0])
@@ -261,12 +263,12 @@ class optimizer_genetic(object):
         HOMO = (HOMO - self.min_homo ) / self.scale_homo
         HOMO_1 = (HOMO_1 - self.min_homo1 ) / self.scale_homo1
         #from utils.tensorflow_util import cnn_basic
-
+        algo = 'sgd'
         self.homo_model = calc(
-            mat, HOMO, des, self.scale_homo, algo = 'rf'
+            mat, HOMO, des, self.scale_homo, algo = algo
         )
         self.homo1_model = calc(
-            mat, HOMO_1, des, self.scale_homo1, algo = 'rf'
+            mat, HOMO_1, des, self.scale_homo1, algo = algo
         )
 
     def selection(self):
@@ -283,11 +285,6 @@ class optimizer_genetic(object):
             self_i = sf.encoding_to_selfies(
                 i.tolist(), self.selfies_alphabet, "one_hot"
             )
-            smiles_i = sf.decoder(self_i)
-            temp_loss = self.loss(smiles_i)
-            pop_loss.append(temp_loss)
-            pop_temp.append(temp_loss)
-
 
             try: # computes loss of every value in new generation
                 smiles_i = sf.decoder(self_i)
@@ -300,13 +297,11 @@ class optimizer_genetic(object):
                 print("---------invalid molecule @ selection for keys---------")
                 np.delete(population, ind)
 
-        parent_ind, parent_gen_loss, parent_prob_dist = [], [], []
+        parent_ind, parent_gen_loss, parent_prob_dist = [], [], []        
         pop_loss_temp = pop_loss
-
-        while len(parent_ind) <= int(successful_mol_count * ratio_children + 1):
+        while len(parent_ind) <= int(successful_mol_count * ratio_children - 1):
             log = False
             draw = draw_from_pop_dist(pop_loss_temp, log=log)
-            print('draw')
             if (parent_ind.count(draw) == 0):
                 parent_ind.append(draw)
                 parent_gen_loss.append(pop_loss[draw])
@@ -319,7 +314,7 @@ class optimizer_genetic(object):
         if len(parent_ind) % 2 == 1: # chop off member from parent gen if odd numbered
             parent_ind = parent_ind[0:-1]
             parent_gen_loss = parent_gen_loss[0:-1]
-
+        
         parent_gen = [population[i] for i in parent_ind]
         parent_gen_order = np.array(parent_gen_loss).argsort().tolist()[::-1]
         #print(parent_gen)
@@ -369,7 +364,6 @@ class optimizer_genetic(object):
             print("Gen " + str(gen) + "/" + str(gens))
             print("selection + cross...")
             pop_new = self.selection()
-            print(pop_new)
             pop_mut_new = []
             pop_loss = []
 
