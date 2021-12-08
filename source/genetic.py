@@ -1,3 +1,5 @@
+from utils.tensorflow_util import *
+
 import os
 import random
 import argparse
@@ -155,7 +157,8 @@ def calc(
 
 class optimizer_genetic(object):
     def __init__(
-            self, population, alphabet, largest_selfies_len, mut_prob=0.1, steps=10, start_pop_size=100, ckpt = True
+            self, population, alphabet, largest_selfies_len, algo = 'sgd', desc = 'persist',
+            mut_prob=0.1, steps=10, start_pop_size=100, ckpt = True
     ):
         self.ckpt = ckpt
         self.mut_prob = mut_prob
@@ -164,6 +167,8 @@ class optimizer_genetic(object):
         self.start_pop_size = start_pop_size
         self.selfies_alphabet = alphabet
         self.largest_selfies_len = largest_selfies_len
+        self.desc = desc
+        self.algo = algo
         self.population_sample = [
             population[int(i)]
             for i in np.random.randint(
@@ -182,21 +187,23 @@ class optimizer_genetic(object):
             decoded_smiles = self_out
         return decoded_smiles
 
-    def loss(self, smiles):
-        mol_obj= Chem.MolFromSmiles(smiles)
-        bit_obj = AllChem.GetMorganFingerprintAsBitVect(mol_obj, 2, nBits = int(1024))
-        x_mat = np.array([int(i) for i in bit_obj])
-        #persist version
-        #x_mat = AllChem.GetMorganFingerprint(mol_obj, int(2))
-        #x_mat = VariancePersistv1(
-        #    mol_obj,
-        #    pixelx=50, pixely=50,
-        #    myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
-        x_mat = self.scaler.transform(x_mat.reshape(1, -1))
-        homo_pred = np.abs(self.homo_model.predict(x_mat)[0])
-        homo1_pred = np.abs(self.homo1_model.predict(x_mat)[0])
+    def loss(self, smiles):        #persist version
+        mol_obj = Chem.MolFromSmiles(smiles)
+        if (self.desc == 'persist'):
+            x_mat = VariancePersistv1(
+                mol_obj,
+                pixelx=50, pixely=50,
+                myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
+            x_mat = self.scaler.transform(x_mat.reshape(1, -1))
+        else:
+            #x_mat = AllChem.GetMorganFingerprint(mol_obj, int(2))
+            bit_obj = AllChem.GetMorganFingerprintAsBitVect(mol_obj, 2, nBits=int(1024))
+            x_mat = np.array([int(i) for i in bit_obj]).reshape(1, -1)
 
-        return homo_pred
+        homo_pred = self.homo_model.predict(x_mat)[0]
+        homo1_pred = self.homo1_model.predict(x_mat)[0]
+
+        return np.abs(homo_pred) + np.abs(homo_pred - homo1_pred)
 
     def struct_to_latent(self, smiles):
         data = multiple_selfies_to_hot(
@@ -212,7 +219,8 @@ class optimizer_genetic(object):
     def train_models(
             self, test=False, transfer=False, ret_list=[]
     ):
-        des = 'morg'
+        #des = 'persist'
+        des = self.desc
         print("done processing dataframe")
         str = "../data/desc/DB3/desc_calc_DB3_" + des + ".h5"
         print(str)
@@ -263,7 +271,8 @@ class optimizer_genetic(object):
         HOMO = (HOMO - self.min_homo ) / self.scale_homo
         HOMO_1 = (HOMO_1 - self.min_homo1 ) / self.scale_homo1
         #from utils.tensorflow_util import cnn_basic
-        algo = 'sgd'
+        algo = self.algo
+
         self.homo_model = calc(
             mat, HOMO, des, self.scale_homo, algo = algo
         )
@@ -286,9 +295,11 @@ class optimizer_genetic(object):
                 i.tolist(), self.selfies_alphabet, "one_hot"
             )
 
+            smiles_i = sf.decoder(self_i)
+            temp_loss = np.abs(self.loss(smiles_i))
             try: # computes loss of every value in new generation
-                smiles_i = sf.decoder(self_i)
-                temp_loss = self.loss(smiles_i)
+
+
                 pop_loss.append(temp_loss)
                 pop_temp.append(temp_loss)
                 total_loss += temp_loss
@@ -297,17 +308,24 @@ class optimizer_genetic(object):
                 print("---------invalid molecule @ selection for keys---------")
                 np.delete(population, ind)
 
-        parent_ind, parent_gen_loss, parent_prob_dist = [], [], []        
+        parent_ind, parent_gen_loss, parent_prob_dist = [], [], []
         pop_loss_temp = pop_loss
+        pop_loss_temp = np.array(pop_loss_temp)
+        #print(pop_loss)
+        pop_loss_temp /= np.min(pop_loss_temp)
+        pop_loss_temp = pop_loss_temp.tolist()
+        print(pop_loss_temp)
+
         while len(parent_ind) <= int(successful_mol_count * ratio_children - 1):
             log = False
+            #print('draw')
             draw = draw_from_pop_dist(pop_loss_temp, log=log)
             if (parent_ind.count(draw) == 0):
                 parent_ind.append(draw)
                 parent_gen_loss.append(pop_loss[draw])
-
+                #print('draw succ')
                 if (log == False):
-                    pop_loss_temp[draw] = 0.00001
+                    pop_loss_temp[draw] = 0.01
                 else:
                     pop_loss_temp[draw] = 1.1
 
@@ -324,9 +342,10 @@ class optimizer_genetic(object):
 
         for i in range(int(len(parent_gen) / 2)):
             draw1 = random.choice(parent_gen_index_tracker)
-            #parent_gen_index_tracker.remove(draw1)
             draw2 = random.choice(parent_gen_index_tracker)
-            #parent_gen_index_tracker.remove(draw2)
+            #parent_gen_index_tracker.remove(draw1)
+            # parent_gen_index_tracker.remove(draw2)
+
             cross_res1, cross_res2 = cross(parent_gen[draw1], parent_gen[draw2])
             pop_new.append(cross_res1)
             pop_new.append(cross_res2)
@@ -447,6 +466,22 @@ if __name__ == "__main__":
         "-gens", action="store", dest="gens", default=2, help="generations"
     )
 
+    parser.add_argument(
+        "-desc",
+        action="store",
+        dest="desc",
+        default="persist",
+        help="select descriptor to convert to",
+    )
+
+    parser.add_argument(
+        "-model",
+        action="store",
+        dest="algo",
+        default="sgd",
+        help="algo",
+    )
+
     results = parser.parse_args()
     long = bool(results.longitudnal)
     print("Longitudinal study:" + str(long))
@@ -454,6 +489,8 @@ if __name__ == "__main__":
     gens = int(results.gens)
     start_pop_size = int(results.start_pop_size)
     ckpt = bool(results.ckpt)
+    desc = str(results.desc)
+    algo = str(results.algo)
     print("number of molecules in sample: " + str(len(mols_smiles)))
 
     #######################
@@ -467,7 +504,7 @@ if __name__ == "__main__":
     ) = get_selfie_and_smiles_encodings_for_dataset(mols_smiles)
 
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
-    opt = optimizer_genetic(data, selfies_alphabet, largest_selfies_len, ckpt = ckpt, start_pop_size = start_pop_size)
+    opt = optimizer_genetic(data, selfies_alphabet, largest_selfies_len, algo = algo, desc = desc, ckpt = ckpt, start_pop_size = start_pop_size)
     opt.train_models()
     mean_loss = opt.enrich_pop(gens=gens, longitudnal_save=long)
     print(":" * 50)
