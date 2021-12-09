@@ -320,7 +320,7 @@ class optimizer_genetic(object):
             boltz = True
             #print('draw')
             draw = draw_from_pop_dist(pop_loss_temp, boltz = boltz)
-            #if (parent_ind.count(draw) == 0):
+            #if (parent_ ind.count(draw) == 0):
             parent_ind.append(draw)
             parent_gen_loss.append(pop_loss[draw])
             #print('draw succ')
