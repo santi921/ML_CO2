@@ -37,15 +37,24 @@ def cross(one_hot_1, one_hot_2):
     return np.array(temp), np.array(temp_2)
 
 
-def draw_from_pop_dist(pop_loss, log = False):
-    total_loss = 0
-    for i in pop_loss: total_loss += i
+def draw_from_pop_dist(pop_loss, boltz = True):
+
+    if (boltz == True):
+        k = 1
+        total_loss = 0
+        for i in pop_loss: total_loss += np.exp(i / k)
+    else:
+        total_loss = 0
+        for i in pop_loss: total_loss += i
     draw = np.random.rand() * total_loss
     ind = 0
     track = pop_loss[0]
     #print(pop_loss)
     while track < draw:
         ind += 1
-        track += pop_loss[ind]
+        if (boltz == True):
+            track += np.exp(pop_loss[ind])
+        else:
+            track += pop_loss[ind]
 
     return ind

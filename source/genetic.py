@@ -317,17 +317,17 @@ class optimizer_genetic(object):
         print(pop_loss_temp)
 
         while len(parent_ind) <= int(successful_mol_count * ratio_children - 1):
-            log = False
+            boltz = True
             #print('draw')
-            draw = draw_from_pop_dist(pop_loss_temp, log=log)
-            if (parent_ind.count(draw) == 0):
-                parent_ind.append(draw)
-                parent_gen_loss.append(pop_loss[draw])
-                #print('draw succ')
-                if (log == False):
-                    pop_loss_temp[draw] = 0.01
-                else:
-                    pop_loss_temp[draw] = 1.1
+            draw = draw_from_pop_dist(pop_loss_temp, boltz = boltz)
+            #if (parent_ind.count(draw) == 0):
+            parent_ind.append(draw)
+            parent_gen_loss.append(pop_loss[draw])
+            #print('draw succ')
+            #if (log == False):
+            #    pop_loss_temp[draw] = 0.01
+            #else:
+            #    pop_loss_temp[draw] = 1.1
 
         if len(parent_ind) % 2 == 1: # chop off member from parent gen if odd numbered
             parent_ind = parent_ind[0:-1]
@@ -388,7 +388,7 @@ class optimizer_genetic(object):
 
             print("mutation...")
             for i in pop_new:
-                pop_mut_new.append(random_mutation(i, mut_chance=0.2))
+                pop_mut_new.append(random_mutation(i, mut_chance=0.1))
 
             self.population_sample = pop_mut_new
 
@@ -475,7 +475,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-model",
+        "-algo",
         action="store",
         dest="algo",
         default="sgd",
