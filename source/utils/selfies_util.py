@@ -37,9 +37,16 @@ def multiple_selfies_to_hot(selfies_list, largest_molecule_len, alphabet):
     """
 
     hot_list = []
+    failed_mol = 0
+
     for s in selfies_list:
-        _, onehot_encoded = selfies_to_hot(s, largest_molecule_len, alphabet)
-        hot_list.append(onehot_encoded)
+        try:
+            _, onehot_encoded = selfies_to_hot(s, largest_molecule_len, alphabet)
+            hot_list.append(onehot_encoded)
+        except:
+            print("pfailed mol")
+            failed_mol += 1
+    print("failed one hot in: " + str(failed_mol) + "/" + str(len(selfies_list)) + " molecules")
     return np.array(hot_list)
 
 def smile_to_hot(smile, largest_smile_len, alphabet):
@@ -99,17 +106,21 @@ def get_selfie_and_smiles_encodings_for_dataset(smiles_list):
 
     # selfies_list = list(map(sf.encoder, smiles_list))
     selfies_list = []
+    fail_count = 0
     for smile in smiles_list:
         try:
+            smile = Chem.MolToSmiles(Chem.MolFromSmiles(smile))
             selfies_list.append(sf.encoder(smile))
         except:
             print("failed to convert: " + str(smile))
+            fail_count += 1
     all_selfies_symbols = sf.get_alphabet_from_selfies(selfies_list)
     all_selfies_symbols.add("[nop]")
+    #all_selfies_symbols.add("[NH0]")
     selfies_alphabet = list(all_selfies_symbols)
 
     largest_selfies_len = max(sf.len_selfies(s) for s in selfies_list)
-
+    print("Failed number of molecules: " + str(fail_count) + " / " + str(len(smiles_list)))
     print("Finished translating SMILES to SELFIES.")
 
     return (

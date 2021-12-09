@@ -312,9 +312,9 @@ class optimizer_genetic(object):
         pop_loss_temp = pop_loss
         pop_loss_temp = np.array(pop_loss_temp)
         #print(pop_loss)
-        pop_loss_temp /= np.min(pop_loss_temp)
+        #pop_loss_temp /= np.min(pop_loss_temp)
         pop_loss_temp = pop_loss_temp.tolist()
-        print(pop_loss_temp)
+        #print(pop_loss_temp)
 
         while len(parent_ind) <= int(successful_mol_count * ratio_children - 1):
             boltz = True
@@ -368,7 +368,7 @@ class optimizer_genetic(object):
             selfies = [sf.encoder(smiles) for smiles in gen_mols]
             gen_start = df['gen'].max()
             data = multiple_selfies_to_hot(selfies, self.largest_selfies_len, self.selfies_alphabet)
-            print(len(data))
+            #print(len(data))
             self.population_sample = [np.array(i) for i in data]
             print("resuming from generation: " + str(gen_start) + " with [" + str(len(self.population_sample)) + "] molecules")
 
@@ -408,7 +408,7 @@ class optimizer_genetic(object):
                 except:
                     print("---------invalid molecule in new gen---------")
                     pop_mut_new = np.delete(pop_mut_new, ind)
-            print(len(pop_mut_new))
+            #print(len(pop_mut_new))
 
             total_loss = 0
             mean_loss_arr.append(np.array(pop_loss).mean())
@@ -484,13 +484,15 @@ if __name__ == "__main__":
 
     results = parser.parse_args()
     long = bool(results.longitudnal)
-    print("Longitudinal study:" + str(long))
-    mols_smiles = mols_smiles[0:int(results.mols_data)]
-    gens = int(results.gens)
-    start_pop_size = int(results.start_pop_size)
     ckpt = bool(results.ckpt)
     desc = str(results.desc)
     algo = str(results.algo)
+    gens = int(results.gens)
+    mols_smiles = mols_smiles[0:int(results.mols_data)]
+    start_pop_size = int(results.start_pop_size)
+
+
+    print("Longitudinal study:" + str(long))
     print("number of molecules in sample: " + str(len(mols_smiles)))
 
     #######################
