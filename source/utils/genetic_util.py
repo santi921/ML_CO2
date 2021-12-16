@@ -42,9 +42,17 @@ def draw_from_pop_dist(pop_loss, boltz = False):
     k = 1
 
     if(boltz == True):
-        for i in pop_loss: total_loss += np.exp(i / k)
-        track = np.exp(pop_loss[0] / k)
+        try:
+            for i in pop_loss: total_loss += np.exp(i / k)
 
+            track = np.exp(pop_loss[0] / k)
+
+        except:
+            print(pop_loss)
+
+            for i in pop_loss: total_loss += np.exp(i[0] / k)
+
+            track = np.exp(pop_loss[0] / k)
     else:
         for i in pop_loss: total_loss += i
         track = pop_loss[0]
@@ -55,8 +63,7 @@ def draw_from_pop_dist(pop_loss, boltz = False):
     while track < draw:
         ind += 1
         if(boltz):
-            track += np.exp(pop_loss[ind] / k)
-
+            track += np.exp(pop_loss[ind][0] / k)
         else:
             track += pop_loss[ind]
 

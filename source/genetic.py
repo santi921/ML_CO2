@@ -195,6 +195,10 @@ class optimizer_genetic(object):
                 pixelx=50, pixely=50,
                 myspread=0.28, myspecs={"maxBD": 2.5, "minBD": -.10}, showplot=False)
             x_mat = self.scaler.transform(x_mat.reshape(1, -1))
+            if (self.algo == 'tf_cnn' or self.algo == 'tf_nn'):
+                x_mat = x_mat.reshape((np.shape(x_mat)[0], 50, 50))
+                x_mat = np.expand_dims(x_mat, -1)
+
         else:
             #x_mat = AllChem.GetMorganFingerprint(mol_obj, int(2))
             bit_obj = AllChem.GetMorganFingerprintAsBitVect(mol_obj, 2, nBits=int(1024))
@@ -296,10 +300,8 @@ class optimizer_genetic(object):
             )
 
             smiles_i = sf.decoder(self_i)
-            temp_loss = np.abs(self.loss(smiles_i))
             try: # computes loss of every value in new generation
-
-
+                temp_loss = np.abs(self.loss(smiles_i))
                 pop_loss.append(temp_loss)
                 pop_temp.append(temp_loss)
                 total_loss += temp_loss
