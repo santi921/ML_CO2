@@ -23,10 +23,10 @@ from utils.Element_PI import VariancePersistv1
 from utils.sklearn_util import *
 from utils.genetic_util import *
 from utils.selfies_util import (
-    selfies_to_hot,
     multiple_selfies_to_hot,
     get_selfie_and_smiles_encodings_for_dataset,
 )
+from utils.helpers import quinone_check
 
 def calc(
     x,
@@ -187,7 +187,7 @@ class optimizer_genetic(object):
             decoded_smiles = self_out
         return decoded_smiles
 
-    def loss(self, smiles):        #persist version
+    def loss(self, smiles):
         mol_obj = Chem.MolFromSmiles(smiles)
         if (self.desc == 'persist'):
             x_mat = VariancePersistv1(
@@ -206,8 +206,10 @@ class optimizer_genetic(object):
 
         homo_pred = self.homo_model.predict(x_mat)[0]
         homo1_pred = self.homo1_model.predict(x_mat)[0]
+        quinone_tf = quinone_check(smiles)
+        print(quinone_tf)
+        return np.abs(homo_pred) + np.abs(homo_pred - homo1_pred) + quinone_tf
 
-        return np.abs(homo_pred) + np.abs(homo_pred - homo1_pred)
 
     def struct_to_latent(self, smiles):
         data = multiple_selfies_to_hot(

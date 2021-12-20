@@ -6,8 +6,9 @@ import numpy as np
 import pybel
 
 from rdkit.Avalon import pyAvalonTools
-from rdkit.Chem import AllChem
-from rdkit.Chem import SDMolSupplier
+from rdkit.Chem import AllChem, SDMolSupplier
+from rdkit.Chem import rdRGroupDecomposition as rdRGD
+from rdkit import Chem
 
 def merge_dir_and_data(dir = "DB3"):
     # all files in the directory
@@ -600,3 +601,92 @@ def pull_chembl_smiles(SMILES = [], ratio = 1.0, save = False, use_file = False,
         plt.show()
     SMILES_ret = np.random.choice(set(SMILES_ret), size = int(ratio * len(SMILES)), replace=False)
     return SMILES_ret
+
+
+def quinone_check(mol_smiles):
+    mol = Chem.MolFromSmiles(mol_smiles)
+    res_1, res_2, res_3, res_4, res_5, res_6, res_7, res_8 = [], [], [], [], [], [], [], []
+
+    quinone = Chem.MolFromSmiles("c1(ccc(cc1)[O])[O]")
+    quinone_2 = Chem.MolFromSmiles("C1=CC(=O)C=CC1=O")
+    quinone_3 = Chem.MolFromSmiles("C1=CC(=O)CCC1=O")
+    quinone_4 = Chem.MolFromSmiles("C1CC(=O)CCC1=O")
+    quinone_5 = Chem.MolFromSmiles("C1=CC(=O)C=CC1[O]")
+    quinone_6 = Chem.MolFromSmiles("C1CC(=O)CC=C1[O]")
+    quinone_7 = Chem.MolFromSmiles("C1CC(=O)CCC1[O]")
+    quinone_8 = Chem.MolFromSmiles("[CH]=1[CH]C(=O)C=CC1[O]")
+
+    frag_list = []
+    success = 0
+
+    try:
+        res1, unmatched = rdRGD.RGroupDecompose([quinone], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res2, unmatched = rdRGD.RGroupDecompose([quinone_2], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res3, unmatched = rdRGD.RGroupDecompose([quinone_3], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res4, unmatched = rdRGD.RGroupDecompose([quinone_4], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res5, unmatched = rdRGD.RGroupDecompose([quinone_5], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res6, unmatched = rdRGD.RGroupDecompose([quinone_6], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res7, unmatched = rdRGD.RGroupDecompose([quinone_7], [mol], asSmiles=True)
+    except:
+        pass
+    try:
+        res8, unmatched = rdRGD.RGroupDecompose([quinone_8], [mol], asSmiles=True)
+    except:
+        pass
+
+    if (len(res8) > 1 or len(res7) > 1 or len(res6) > 1 or len(res5) > 1 or len(res4) > 1 or len(res3) > 1 or len(
+            res2) > 1 or len(res1) > 1):
+        print("longer than 1, shit's wrong")
+
+    if (len(res1) != 0):
+        frag_list.append(res1)
+        success = 1
+    else:
+        if (len(res2) != 0):
+            frag_list.append(res2)
+            success = 1
+        else:
+            if (len(res3) != 0):
+                frag_list.append(res3)
+                success = 1
+            else:
+                if (len(res4) != 0):
+                    frag_list.append(res4)
+                    success = 1
+                else:
+                    if (len(res5) != 0):
+                        frag_list.append(res5)
+                        success = 1
+                    else:
+                        if (len(res6) != 0):
+                            frag_list.append(res6)
+                            success = 1
+                        else:
+                            if (len(res7) != 0):
+                                frag_list.append(res7)
+                                success = 1
+                            else:
+                                if (len(res8) != 0):
+                                    frag_list.append(res8)
+                                    success = 1
+                                else:
+                                    success = 0
+    return success
