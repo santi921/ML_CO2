@@ -37,34 +37,41 @@ def cross(one_hot_1, one_hot_2):
     return np.array(temp), np.array(temp_2)
 
 
-def draw_from_pop_dist(pop_loss, boltz = False):
+def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
     total_loss = 0
     k = 1
 
     if(boltz == True):
         try:
-            for i in pop_loss: total_loss += np.exp(i / k)
-
-            track = np.exp(pop_loss[0] / k)
-
+            for ind, i in enumerate(pop_loss):
+                total_loss += np.exp(i / k) + quinone_tf[ind]
+            track = np.exp(pop_loss[0] / k) + quinone_tf[0]
         except:
             print(pop_loss)
 
-            for i in pop_loss: total_loss += np.exp(i[0] / k)
+            for ind, i in enumerate(pop_loss):
+                total_loss += np.exp(i[0] / k)
+                total_loss += quinone_tf[ind]
 
             track = np.exp(pop_loss[0] / k)
     else:
-        for i in pop_loss: total_loss += i
+        for i, ind in enumerate(pop_loss):
+            total_loss += i
+            total_loss += quinone_tf[ind]
+
         track = pop_loss[0]
+        track += quinone_tf[0]
+
     draw = np.random.rand() * total_loss
     ind = 0
 
-    #print(pop_loss)
     while track < draw:
         ind += 1
         if(boltz):
             track += np.exp(pop_loss[ind][0] / k)
+
         else:
             track += pop_loss[ind]
 
+        track += quinone_tf[ind]
     return ind

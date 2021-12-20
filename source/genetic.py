@@ -207,8 +207,8 @@ class optimizer_genetic(object):
         homo_pred = self.homo_model.predict(x_mat)[0]
         homo1_pred = self.homo1_model.predict(x_mat)[0]
         quinone_tf = quinone_check(smiles)
-        print(quinone_tf)
-        return np.abs(homo_pred) + np.abs(homo_pred - homo1_pred) + quinone_tf
+
+        return np.abs(homo_pred) + np.abs(homo_pred - homo1_pred) , quinone_tf
 
 
     def struct_to_latent(self, smiles):
@@ -289,6 +289,7 @@ class optimizer_genetic(object):
     def selection(self):
         pop_loss = []
         pop_new = []
+        quinone_tf_arr = []
         total_loss = 0.0
         ratio_children = 1.0
         population = self.population_sample
@@ -303,9 +304,12 @@ class optimizer_genetic(object):
 
             smiles_i = sf.decoder(self_i)
             try: # computes loss of every value in new generation
-                temp_loss = np.abs(self.loss(smiles_i))
+
+                temp_loss, quinone_tf = self.loss(smiles_i)
+                temp_loss = np.abs(temp_loss)
                 pop_loss.append(temp_loss)
                 pop_temp.append(temp_loss)
+                quinone_tf_arr.append(quinone_tf)
                 total_loss += temp_loss
                 successful_mol_count += 1
             except:
@@ -323,15 +327,11 @@ class optimizer_genetic(object):
         while len(parent_ind) <= int(successful_mol_count * ratio_children - 1):
             boltz = True
             #print('draw')
-            draw = draw_from_pop_dist(pop_loss_temp, boltz = boltz)
+            draw = draw_from_pop_dist(pop_loss_temp, quinone_tf_arr, boltz = boltz)
             # if (parent_ ind.count(draw) == 0):
             parent_ind.append(draw)
             parent_gen_loss.append(pop_loss[draw])
-            #print('draw succ')
-            #if (log == False):
-            #    pop_loss_temp[draw] = 0.01
-            #else:
-            #    pop_loss_temp[draw] = 1.1
+
 
         if len(parent_ind) % 2 == 1: # chop off member from parent gen if odd numbered
             parent_ind = parent_ind[0:-1]
@@ -389,6 +389,7 @@ class optimizer_genetic(object):
             pop_new = self.selection()
             pop_mut_new = []
             pop_loss = []
+            quinone_tf_arr = []
 
             print("mutation...")
             for i in pop_new:
@@ -404,9 +405,12 @@ class optimizer_genetic(object):
                     self_i = sf.encoding_to_selfies(
                         i, self.selfies_alphabet, "one_hot")
                     smiles_i = sf.decoder(self_i)
-                    temp_loss = self.loss(smiles_i)
+
+                    temp_loss, quinone_tf = self.loss(smiles_i)
+                    temp_loss = np.abs(temp_loss)
                     smiles_scored.append(smiles_i)
                     pop_loss.append(temp_loss)
+                    quinone_tf_arr.append(quinone_tf)
                     total_loss += temp_loss
                     successful_mol_count += 1
                 except:
@@ -424,17 +428,18 @@ class optimizer_genetic(object):
             if (longitudnal_save == True):
                 print("saving generation for longitudinal study")
                 for ind, element in enumerate(smiles_scored):
-                    df_temp_row = [element, pop_loss[ind], gen]
+                    quinone_tf = quinone_check(element)
+                    df_temp_row = [element, quinone_tf, pop_loss[ind], gen]
                     df_temp_list.append(df_temp_row)
 
                 if (os.path.exists(write_to_file)):
                     df_old = pd.read_hdf(write_to_file)
-                    df = pd.DataFrame(df_temp_list, columns=['str', 'loss', 'gen'])
+                    df = pd.DataFrame(df_temp_list, columns=['str', 'quinone', 'loss', 'gen'])
                     df = df_old.append(df, ignore_index = True)
                     df.to_hdf(write_to_file, key='df')
 
                 else:
-                    df = pd.DataFrame(df_temp_list, columns=['str', 'loss', 'gen'])
+                    df = pd.DataFrame(df_temp_list, columns=['str', 'quinone', 'loss', 'gen'])
                     df.to_hdf(write_to_file, key='df')
 
         return mean_loss_arr
