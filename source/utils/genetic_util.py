@@ -68,8 +68,7 @@ def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
     while track < draw:
         ind += 1
         if(boltz):
-            track += np.exp(pop_loss[ind][0] / k)
-
+            track += np.exp(pop_loss[ind] / k)
         else:
             track += pop_loss[ind]
 

@@ -120,7 +120,7 @@ def calc(
             print("gaussian algo selected")
             reg = gaussian(x, y, scale)
         elif algo == "xgboost":
-            from source.utils.xgboost_util import xgboost
+            from utils.xgboost_util import xgboost
 
             print("xgboost algo selected")
             reg = xgboost(x, y, scale)
