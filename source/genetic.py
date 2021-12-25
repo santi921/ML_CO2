@@ -340,7 +340,8 @@ class optimizer_genetic(object):
         parent_gen = [population[i] for i in parent_ind]
         parent_gen_index_tracker = [i for i in range(len(parent_gen))]
 
-        for i in range(int(len(parent_gen) / 2)):
+        while (len(pop_new) < len(parent_gen)):
+
             draw1 = random.choice(parent_gen_index_tracker)
             draw2 = random.choice(parent_gen_index_tracker)
 
@@ -353,17 +354,14 @@ class optimizer_genetic(object):
 
             cross_smiles1 = sf.decoder(self_cross_1)
             cross_smiles2 = sf.decoder(self_cross_2)
+
             quinone_tf1 = quinone_check(cross_smiles1)
             quinone_tf2 = quinone_check(cross_smiles2)
 
             if(quinone_tf1 == True):
                 pop_new.append(cross_res1)
-
             if(quinone_tf2 == True):
                 pop_new.append(cross_res2)
-
-        #[pop_new.append(parent_gen[i])
-        # for i in parent_gen_order[0:int(len(parent_gen_order) / 2 + 1)]]
 
         return pop_new
 
