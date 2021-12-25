@@ -338,21 +338,29 @@ class optimizer_genetic(object):
             parent_gen_loss = parent_gen_loss[0:-1]
         
         parent_gen = [population[i] for i in parent_ind]
-        parent_gen_order = np.array(parent_gen_loss).argsort().tolist()[::-1]
-        #print(parent_gen)
         parent_gen_index_tracker = [i for i in range(len(parent_gen))]
-
-        # here we want to shuffle indexes, not take just the best in order
 
         for i in range(int(len(parent_gen) / 2)):
             draw1 = random.choice(parent_gen_index_tracker)
             draw2 = random.choice(parent_gen_index_tracker)
-            #parent_gen_index_tracker.remove(draw1)
-            # parent_gen_index_tracker.remove(draw2)
 
             cross_res1, cross_res2 = cross(parent_gen[draw1], parent_gen[draw2])
-            pop_new.append(cross_res1)
-            pop_new.append(cross_res2)
+
+            self_cross_1 = sf.encoding_to_selfies(
+                cross_res1.tolist(), self.selfies_alphabet, "one_hot")
+            self_cross_2 = sf.encoding_to_selfies(
+                cross_res2.tolist(), self.selfies_alphabet, "one_hot")
+
+            cross_smiles1 = sf.decoder(self_cross_1)
+            cross_smiles2 = sf.decoder(self_cross_2)
+            quinone_tf1 = quinone_check(cross_smiles1)
+            quinone_tf2 = quinone_check(cross_smiles2)
+
+            if(quinone_tf1 == True):
+                pop_new.append(cross_res1)
+
+            if(quinone_tf2 == True):
+                pop_new.append(cross_res2)
 
         #[pop_new.append(parent_gen[i])
         # for i in parent_gen_order[0:int(len(parent_gen_order) / 2 + 1)]]
