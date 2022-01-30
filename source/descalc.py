@@ -48,19 +48,19 @@ def write_des(des, dir_temp):
 
     # requires a metal in the compound for this desc
     elif des == "delta":
-        from source.utils.molsimplify_util import metal_deltametrics
+        from utils.molsimplify_util import metal_deltametrics
 
         print("...........deltametrics started..........")
         name, mat, homo, homo1, diff = metal_deltametrics(dir)
 
     elif des == "persist":
-        from source.utils.persist_util import persistent
+        from utils.persist_util import persistent
 
         print("...........persistent images started..........")
         name, mat, homo, homo1, diff = persistent(dir)
 
     else:
-        from source.utils.helpers import rdk
+        from utils.helpers import rdk
 
         print("...........rdk started..........")
         name, mat, homo, homo1, diff = rdk(dir)

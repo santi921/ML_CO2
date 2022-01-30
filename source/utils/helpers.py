@@ -392,7 +392,7 @@ def process_input_DB3(dir="DB3", desc="rdkit"):
     df["HOMO-1"] = 0
     df["diff"] = 0
     list_to_sort = []
-    with open("../../data/DATA_DB3") as fp:
+    with open("../data/DATA_DB3") as fp:
         line = fp.readline()
         while line:
             list_to_sort.append(line[0:-2])
@@ -498,7 +498,7 @@ def db_integrity(dir="DB3", desc="rdkit"):
     final_lines = []
 
     added_seg = "BQ"
-    with open("../../data/DATA_DB3") as fp:
+    with open("../data/DATA_DB3") as fp:
         line = fp.readline()
         while line:
             if(line.split()[0] == "----"):

@@ -1,6 +1,6 @@
 import sys
 from Element_PI import VariancePersistv1
-from helpers import merge_dir_and_data
+from utils.helpers import merge_dir_and_data
 
 
 def persistent(dir="../data/xyz/", pixelsx=50, pixelsy=50, spread=0.28, Max=2.5):

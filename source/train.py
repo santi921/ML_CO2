@@ -1,7 +1,7 @@
 import joblib, argparse, uuid, sigopt
 import pandas as pd
 from sklearn import preprocessing
-from source.utils.sklearn_util import *
+from utils.sklearn_util import *
 
 
 def calc(
@@ -181,39 +181,29 @@ if __name__ == "__main__":
 
     print("parser parsed")
     print("pulling directory: " + dir_temp + " with descriptor: " + des)
-
+    print(des)
+    print(dir_temp)
     if homo1_tf == False and homo_tf == False:
         diff_tf = True
 
     if dir_temp == "DB3" or dir_temp == "DB2":
         try:
             print("done processing dataframe")
-            str = (
-                "../data/desc/"
-                + dir_temp
-                + "/desc_calc_"
-                + dir_temp
-                + "_"
-                + des
-                + ".pkl"
-            )
-            print(str)
-            df = pd.read_pickle(str)
-            pkl = 1
+            str_temp = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_"  + str(des)  + ".h5"
+            print(str_temp)
+            df = pd.read_hdf(str_temp)
+
         except:
             print("done processing dataframe")
-            str = (
-                "../data/desc/"
-                + dir_temp
-                + "/desc_calc_"
-                + dir_temp
-                + "_"
-                + des
-                + ".h5"
-            )
-            print(str)
-            df = pd.read_hdf(str)
-            pkl = 0
+            str_temp = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_"  + str(des)  + ".pkl"
+            print(str_temp)
+            df = pd.read_pickle(str_temp)
+
+    print("done processing dataframe")
+    str_temp = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_"  + str(des)  + ".h5"
+    print(str_temp)
+    df = pd.read_hdf(str_temp)
+
     print(len(df))
     print(df.head())
     HOMO = df["HOMO"].to_numpy()
