@@ -2,7 +2,7 @@ import joblib, argparse, uuid, sigopt
 import pandas as pd
 from sklearn import preprocessing
 from utils.sklearn_util import *
-
+import random
 
 def calc(
     x,
@@ -156,6 +156,8 @@ if __name__ == "__main__":
         default="DB",
         help="options: [svr_rbf, svr_poly, svr_lin, grad, rf, sgd, bayes, kernel, gaussian, nn]",
     )
+
+    parser.add_argument('--benzo', dest = 'benzo', action='store_true')
     parser.add_argument("--grid", dest="grid_tf", action="store_true")
     parser.add_argument("--bayes", dest="bayes_tf", action="store_true")
     parser.add_argument("--sigopt", dest="sigopt", action="store_true")
@@ -178,6 +180,7 @@ if __name__ == "__main__":
     diff_tf = results.diff
     homo_tf = results.homo
     homo1_tf = results.homo1
+    benzo_tf = results.benzo
 
     print("parser parsed")
     print("pulling directory: " + dir_temp + " with descriptor: " + des)
@@ -232,9 +235,11 @@ if __name__ == "__main__":
 
     print("Using " + des + " as the descriptor")
     print("Matrix Dimensions: {0}".format(np.shape(mat)))
+    df_benzo = pd.read_hdf('../data/benzo/compiled.h5')
+    mat_benzo = df_benzo['mat']
 
     # finish optimization
-    if homo_tf == True:
+    if homo_tf:
         des = des + "_homo"
         print(".........................HOMO..................")
         scale_HOMO = np.max(HOMO) - np.min(HOMO)
@@ -243,7 +248,14 @@ if __name__ == "__main__":
             mat, HOMO, des, scale_HOMO, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
 
-    if homo1_tf == True:
+        if (benzo_tf):
+
+            homo_benzo = df_benzo['homo']
+            X_train, X_test, y_train, y_test = train_test_split(mat, homo_benzo, test_size=0.2)
+            y_test_pred = reg_HOMO.predict(X_test)
+            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
+
+    if homo1_tf:
         des = des + "_homo_1"
 
         print(".........................HOMO1..................")
@@ -252,8 +264,15 @@ if __name__ == "__main__":
         reg_HOMO = calc(
             mat, HOMO_1, des, scale_HOMO_1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
+        if (benzo_tf):
+            homo1_benzo = df_benzo['homo1']
+            X_train, X_test, y_train, y_test = train_test_split(mat, homo1_benzo, test_size=0.2)
+            y_test_pred = reg_HOMO.predict(X_test)
+            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
 
-    if diff_tf == True:
+
+    if diff_tf:
+
         des = des + "_diff"
 
         print(".........................diff..................")
@@ -263,3 +282,11 @@ if __name__ == "__main__":
         reg_diff = calc(
             mat, diff, des, scale_diff, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
+        if (benzo_tf):
+
+            diff_benzo = df_benzo['diff']
+            X_train, X_test, y_train, y_test = train_test_split(mat, diff_benzo, test_size=0.2)
+            y_test_pred = reg_diff.predict(X_test)
+            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
+
+
