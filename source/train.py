@@ -249,11 +249,10 @@ if __name__ == "__main__":
         )
 
         if (benzo_tf):
-
             homo_benzo = df_benzo['homo']
-            X_train, X_test, y_train, y_test = train_test_split(mat, homo_benzo, test_size=0.2)
-            y_test_pred = reg_HOMO.predict(X_test)
-            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
+            #X_train, X_test, y_train, y_test = train_test_split(mat, homo_benzo, test_size=0.2)
+            y_test_pred = reg_HOMO.predict(mat)
+            print("extrapolate benzo r^2: " + str(r2_score(homo_benzo, y_test_pred)))
 
     if homo1_tf:
         des = des + "_homo_1"
@@ -266,9 +265,9 @@ if __name__ == "__main__":
         )
         if (benzo_tf):
             homo1_benzo = df_benzo['homo1']
-            X_train, X_test, y_train, y_test = train_test_split(mat, homo1_benzo, test_size=0.2)
-            y_test_pred = reg_HOMO.predict(X_test)
-            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
+            #X_train, X_test, y_train, y_test = train_test_split(mat, homo1_benzo, test_size=0.2)
+            y_test_pred = reg_HOMO.predict(mat)
+            print("extrapolate benzo r^2: " + str(r2_score(homo1_benzo, y_test_pred)))
 
 
     if diff_tf:
@@ -283,10 +282,9 @@ if __name__ == "__main__":
             mat, diff, des, scale_diff, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
         if (benzo_tf):
-
             diff_benzo = df_benzo['diff']
-            X_train, X_test, y_train, y_test = train_test_split(mat, diff_benzo, test_size=0.2)
-            y_test_pred = reg_diff.predict(X_test)
-            print("extrapolate benzo r^2: " + str(r2_score(y_test, y_test_pred)))
+            #X_train, X_test, y_train, y_test = train_test_split(mat, diff_benzo, test_size=0.2)
+            y_test_pred = reg_diff.predict(mat)
+            print("extrapolate benzo r^2: " + str(r2_score(diff_benzo, y_test_pred)))
 
 

@@ -10,4 +10,5 @@ ii) HOMO-1 orbital energy = second column
 iii) HOMO orbital energy = third column
    - calculated as the single-point at the DFT (RI-PBE0-D3/def2-SVP CPCM(DMF)) level of theory
 
-NOTE: All of the calculations are performed on the 'biradical' oxidation state of quinone = total charge -2, multiplicity = 1; except for structures with substituents containing "[N](C)(C)C" substring that are positively charged. Based on the number of these substituents, up to charge +1 for "XX[N](C)(C)C_XX[N](C)(C)C_XX[N](C)(C)C" is achieved.
+NOTE: All of the calculations are performed on the 'biradical' oxidation state of quinone = total charge -2, multiplicity = 1; except for structures with substituents containing "[N](C)(C)C" substring that are positively charged. Based on the number of these 
+substituents, up to charge +1 for "XX[N](C)(C)C_XX[N](C)(C)C_XX[N](C)(C)C" is achieved.
