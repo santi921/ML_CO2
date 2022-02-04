@@ -150,16 +150,9 @@ def nn_basic(x, y, scale, iter = 50):
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.Dense(1024, activation="relu"))
 
-    #model.add(tf.keras.layers.Dense(2048, activation="relu"))
-    #model.add(tf.keras.layers.Dense(1024, activation="relu"))
-    #model.add(tf.keras.layers.Dense(512, activation="relu"))
 
     model.add(tf.keras.layers.Dense(1, activation="linear"))
     model.summary()
-    # tf.keras.layers.Dropout(0.2),
-    # tf.keras.layers.Dense(256),
-    # mse = tf.keras.losses.MeanSquaredError()
-    # mae = tf.keras.losses.MeanAverageError()
 
     # mae = tf.keras.losses.MAE()
     # rmse = tf.keras.losses.RMSE()
@@ -312,13 +305,6 @@ def cnn_norm_basic(x, y, scale, iter = 200):
     # model.add(BatchNormalization())
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=2))
-
-    #model.add(Conv2D(filters=64, kernel_size=3,
-    #                 strides=1, data_format="channels_last"))
-    # model.add(BatchNormalization())
-    #model.add(Activation("relu"))
-    #model.add(MaxPooling2D(pool_size=2))
-    #model.add(Activation("relu"))
     
     model.add(Conv2D(filters=64, kernel_size=3,
                      strides=1, data_format="channels_last"))
