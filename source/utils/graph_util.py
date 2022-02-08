@@ -47,6 +47,7 @@ import seaborn as sns
 
 from utils.sklearn_util import *
 from utils.selfies_util import *
+
 ATOM_TYPES = [1, 6, 7, 8, 9, 17, 35]
 BOND_TYPES = [1, 2, 3]
 HEADER_SIZE = 3
@@ -377,22 +378,17 @@ class dataset(Dataset):
         super().__init__(**kwargs)
 
     def read(self):
-        
         names, ret, homo, homo1, diff = sdf()
-        
         mean = np.mean(diff)
         std = np.std(diff)
         diff_scale = (diff - mean) / std
-        
         mean = np.mean(homo)
         std = np.std(homo)
         homo_scale = (homo - mean) / std
-        
-        
-        data = [parse_sdf(i) for i in ret]
-        data = Parallel(n_jobs=-1)(delayed(read_mol)(mol) for mol in tqdm(data, ncols=80))
+
+        data_sdf = [parse_sdf(i) for i in ret]
+        data = Parallel(n_jobs=1)(delayed(read_mol)(mol) for mol in tqdm(data_sdf, ncols=80))
         x_list, a_list, e_list = list(zip(*data))
-        
         dataset = [Graph(x=x, a=a, e=e, y = y) for x, a, e, y 
                    in zip(x_list, a_list, e_list, homo_scale)]
 
@@ -444,9 +440,9 @@ def gnn_model_v1(dataset, loader_train):
     #X_3 = GlobalSumPool()(X_2)
 
     X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
-    X_2 = ECCConv(16, activation="relu")([X_1, A_in, E_in])
+    X_2 = ECCConv(256, activation="relu")([X_1, A_in, E_in])
     X_3 = Dense(1000)(X_2)
-    output = Dense(1000)(X_3)
+    output = Dense(500)(X_3)
 
     output = Dense(n_out)(output)
     model = Model(inputs=[X_in, A_in, E_in], outputs=output)

@@ -1,3 +1,4 @@
+
 import joblib, argparse, uuid, sigopt
 import pandas as pd
 from sklearn import preprocessing
@@ -96,33 +97,33 @@ def calc(
             print("gaussian algo selected")
             reg = gaussian(x, y, scale)
         elif algo == "xgboost":
-            from source.utils.xgboost_util import xgboost
+            from utils.xgboost_util import xgboost
 
             print("xgboost algo selected")
             reg = xgboost(x, y, scale)
         elif algo == "tf_nn":
-            from source.utils.tensorflow_util import nn_basic
+            from utils.tensorflow_util import nn_basic
 
             x = x.astype("float32")
             y = y.astype("float32")
 
             reg = nn_basic(x, y, scale)
         elif algo == "tf_cnn":
-            from source.utils.tensorflow_util import cnn_basic
+            from utils.tensorflow_util import cnn_basic
 
             x = x.astype("float32")
             y = y.astype("float32")
 
             reg = cnn_basic(x, y, scale)
         elif algo == "tf_cnn_norm":
-            from source.utils.tensorflow_util import cnn_norm_basic
+            from utils.tensorflow_util import cnn_norm_basic
 
             x = x.astype("float32")
             y = y.astype("float32")
 
             reg = cnn_norm_basic(x, y, scale)
         elif algo == "resnet":
-            from source.utils.tensorflow_util import resnet34
+            from utils.tensorflow_util import resnet34
 
             x = x.astype("float32")
             y = y.astype("float32")
@@ -203,9 +204,6 @@ if __name__ == "__main__":
             df = pd.read_pickle(str_temp)
 
     print("done processing dataframe")
-    str_temp = "../data/desc/" + dir_temp + "/desc_calc_" + dir_temp + "_"  + str(des)  + ".h5"
-    print(str_temp)
-    df = pd.read_hdf(str_temp)
 
     print(len(df))
     print(df.head())
@@ -235,56 +233,73 @@ if __name__ == "__main__":
 
     print("Using " + des + " as the descriptor")
     print("Matrix Dimensions: {0}".format(np.shape(mat)))
+
     df_benzo = pd.read_hdf('../data/benzo/compiled.h5')
-    mat_benzo = df_benzo['mat']
+    mat_benzo = [i for i in df_benzo['mat']]
+    mat_benzo = preprocessing.scale(np.array(np.array(mat_benzo)))
+
 
     # finish optimization
     if homo_tf:
         des = des + "_homo"
         print(".........................HOMO..................")
-        scale_HOMO = np.max(HOMO) - np.min(HOMO)
-        HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
+        #scale_HOMO = np.max(HOMO) - np.min(HOMO)
+        #HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
+        #reg_HOMO = calc(
+        #    mat, HOMO, des, scale_HOMO, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+        #)
+
         reg_HOMO = calc(
-            mat, HOMO, des, scale_HOMO, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+            mat, HOMO, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
 
         if (benzo_tf):
             homo_benzo = df_benzo['homo']
             #X_train, X_test, y_train, y_test = train_test_split(mat, homo_benzo, test_size=0.2)
-            y_test_pred = reg_HOMO.predict(mat)
+            y_test_pred = reg_HOMO.predict(mat_benzo)
+            print(np.min(y_test_pred), np.min(y_test_pred), np.std(y_test_pred))
+
+            print(y_test_pred)
+            #y_test_pred = (y_test_pred - np.min(HOMO)) / scale_HOMO
+            print(homo_benzo)
             print("extrapolate benzo r^2: " + str(r2_score(homo_benzo, y_test_pred)))
 
     if homo1_tf:
         des = des + "_homo_1"
-
         print(".........................HOMO1..................")
-        scale_HOMO_1 = np.max(HOMO_1) - np.min(HOMO_1)
-        HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
+        #scale_HOMO_1 = np.max(HOMO_1) - np.min(HOMO_1)
+        #HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
+        #reg_HOMO = calc(
+        #    mat, HOMO_1, des, scale_HOMO_1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+        #)
         reg_HOMO = calc(
-            mat, HOMO_1, des, scale_HOMO_1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+            mat, HOMO_1, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
         if (benzo_tf):
             homo1_benzo = df_benzo['homo1']
             #X_train, X_test, y_train, y_test = train_test_split(mat, homo1_benzo, test_size=0.2)
-            y_test_pred = reg_HOMO.predict(mat)
+            y_test_pred = reg_HOMO.predict(mat_benzo)
+            #y_test_pred = (y_test_pred - np.min(HOMO_1)) / scale_HOMO_1
             print("extrapolate benzo r^2: " + str(r2_score(homo1_benzo, y_test_pred)))
 
 
     if diff_tf:
-
         des = des + "_diff"
-
         print(".........................diff..................")
-
         scale_diff = np.max(diff) - np.min(diff)
-        diff = (diff - np.min(diff)) / scale_diff
+        # diff = (diff - np.min(diff)) / scale_diff
+        #reg_diff = calc(
+        #    mat, diff, des, scale_diff, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+        #)
         reg_diff = calc(
-            mat, diff, des, scale_diff, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
+            mat, diff, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
+
         if (benzo_tf):
             diff_benzo = df_benzo['diff']
             #X_train, X_test, y_train, y_test = train_test_split(mat, diff_benzo, test_size=0.2)
-            y_test_pred = reg_diff.predict(mat)
+            y_test_pred = reg_diff.predict(mat_benzo)
+            #y_test_pred = (y_test_pred - np.min(diff)) / scale_diff
             print("extrapolate benzo r^2: " + str(r2_score(diff_benzo, y_test_pred)))
 
 
