@@ -25,7 +25,7 @@ from spektral.utils import label_to_one_hot, load_sdf, load_csv
 from spektral.datasets import QM9
 from spektral.data import Dataset, Graph
 from spektral.utils import label_to_one_hot, sparse
-from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool
+from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool, GraphMasking
 from spektral.models import GeneralGNN, GCN
 
 
@@ -387,7 +387,7 @@ class dataset(Dataset):
         mean = np.mean(homo)
         std = np.std(homo)
         homo_scale = (homo - mean) / std
-        homo_scale = homo # change back
+        #homo_scale = homo # change back
 
         data_sdf = [parse_sdf(i) for i in ret]
         data = Parallel(n_jobs=1)(delayed(read_mol)(mol) for mol in tqdm(data_sdf, ncols=80))
@@ -417,7 +417,7 @@ class dataset_benzo(Dataset):
         mean = np.mean(np.array(homo))
         std = np.std(np.array(homo))
         homo_scale = (np.array(homo) - mean) / std
-        homo_scale = np.array(homo)
+        #homo_scale = np.array(homo)
 
         with open('../data/benzo/save_smiles.txt') as f: 
             smiles_full_line = f.readlines()
@@ -492,12 +492,11 @@ def gnn_model_v1(dataset, loader_train):
     X_in = Input(shape=(None, F))
     A_in = Input(shape=(None, None))
     E_in = Input(shape=(None, None, S))
+    I_in = Input(shape=(), dtype=tf.int64)
 
-    X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
-    X_2 = ECCConv(128, activation="relu")([X_1, A_in, E_in])
-    output = Dense(100)(X_2)
-
-    output = Dense(n_out)(output)
+    X_1 = ECCConv(64, activation="relu")([X_in, A_in, E_in])
+    X_2 = ECCConv(32, activation='relu')([X_1, A_in, E_in])
+    output = GlobalSumPool()(X_2)    
     model = Model(inputs=[X_in, A_in, E_in], outputs=output)
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
@@ -533,7 +532,7 @@ def gnn_model_v2(dataset, loader_train):
     #X_3 = GlobalSumPool()(X_2)
 
     X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
-    X_2 = ECCConv(256, activation="relu")([X_1, A_in, E_in])
+    X_2 = ECCConv(128, activation="relu")([X_1, A_in, E_in])
     X_3 = Dense(100)(X_2)
     X_4 = Dense(100)(X_3)
     output = Dense(n_out)(X_4)
