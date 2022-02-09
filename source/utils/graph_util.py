@@ -518,6 +518,8 @@ def gnn_model_v2(dataset, loader_train):
     batch_size = 1 # Batch size
     
     # input 
+    N = max(data.n_nodes for data in dataset)
+
     F = dataset.n_node_features  # Dimension of node features
     S = dataset.n_edge_features  # Dimension of edge features
     n_out = dataset.n_labels     # Dimension of the target
@@ -527,7 +529,7 @@ def gnn_model_v2(dataset, loader_train):
     
     X_1 = GraphMasking()([X_in])
     X_2 = GCSConv(32, activation="relu")([X_1, A_in])
-    X_3, A_2 = MinCutPool(100 // 2)
+    X_3, A_2 = MinCutPool(N // 2)
     X_4 = GCSConv(32, activation="relu")([X_3, A_2])
     output = GlobalSumPool()(X_4)
     output = Dense(n_out, activation='linear')(output)
