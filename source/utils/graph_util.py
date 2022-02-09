@@ -492,7 +492,6 @@ def gnn_model_v1(dataset, loader_train):
     X_in = Input(shape=(None, F))
     A_in = Input(shape=(None, None))
     E_in = Input(shape=(None, None, S))
-    I_in = Input(shape=(), dtype=tf.int64)
 
     X_1 = ECCConv(64, activation="relu")([X_in, A_in, E_in])
     X_2 = ECCConv(32, activation='relu')([X_1, A_in, E_in])
@@ -502,11 +501,9 @@ def gnn_model_v1(dataset, loader_train):
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
     model.summary()
-
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = 50, callbacks = [es])
+          epochs = epochs, callbacks = [es], batch_size=batch_size)
 
     return model 
 
@@ -527,17 +524,40 @@ def gnn_model_v2(dataset, loader_train):
 
     X_in = Input(shape=(None, F))
     A_in = Input(shape=(None, None))
-    E_in = Input(shape=(None, None, S))
+    
+    X_1 = GraphMasking()([X_in])
+    X_2 = GCSConv(32, activation="relu")([X_1, A_in])
+    X_3, A_2 = MinCutPool(100 // 2)
+    X_4 = GCSConv(32, activation="relu")([X_3, A_2])
+    output = GlobalSumPool()(X_4)
+    output = Dense(n_out, activation='linear')(output)
+    model = Model(inputs=[X_in, A_in], outputs=output)
+    
+    #------------------------------------------------------
+    optimizer = Adam(lr=learning_rate)
+    model.compile(optimizer=optimizer, loss="mse")
+    model.summary()
+    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
+    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
+          epochs = epochs, callbacks = [es], batch_size=batch_size)
 
-    #X_3 = GlobalSumPool()(X_2)
 
-    X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
-    X_2 = ECCConv(128, activation="relu")([X_1, A_in, E_in])
-    X_3 = Dense(100)(X_2)
-    X_4 = Dense(100)(X_3)
-    output = Dense(n_out)(X_4)
+    return model 
 
-    model = Model(inputs=[X_in, A_in, E_in], outputs=output)
+
+def gnn_model_v3(dataset, loader_train):
+
+    ################################################################################
+    # PARAMETERS
+    ################################################################################
+    learning_rate = 1e-3  # Learning rate
+    epochs = 50  # Number of training epochs
+    batch_size = 1 # Batch size
+    
+    # input 
+    n_out = dataset.n_labels     # Dimension of the target
+
+    model = GeneralGNN(n_out, activation="linear")
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
@@ -546,8 +566,86 @@ def gnn_model_v2(dataset, loader_train):
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
 
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = 50, callbacks = [es])
+          epochs = epochs, callbacks = [es], batch_size=batch_size)
 
+    return model 
+
+
+def gnn_model_v4(dataset, loader_train):
+
+    ################################################################################
+    # PARAMETERS
+    ################################################################################
+    learning_rate = 1e-3  # Learning rate
+    epochs = 50  # Number of training epochs
+    batch_size = 1 # Batch size
+    
+    # input 
+    F = dataset.n_node_features  # Dimension of node features
+    n_out = dataset.n_labels     # Dimension of the target
+
+    #------------------------------------------------------
+
+    X_in = Input(shape=(None, F))
+    A_in = Input(shape=(None, None))
+    graph_conv_1 = GraphConv(32,
+                        activation='elu',
+                        kernel_regularizer=l2(l2_reg),
+                        use_bias=True)([X_in, A_in])
+    graph_conv_2 = GraphConv(32,
+                        activation='elu',
+                        kernel_regularizer=l2(l2_reg),
+                        use_bias=True)([graph_conv_1, A_in])
+    flatten = Flatten()(graph_conv_2)
+    fc = Dense(512, activation='relu')(flatten)
+    output = Dense(n_out, activation='linear')(fc)
+    model = Model(inputs=[X_in, A_in], outputs=output)
+    
+    #------------------------------------------------------
+    optimizer = Adam(lr=learning_rate)
+    model.compile(optimizer=optimizer, loss="mse")
+    model.summary()
+    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
+    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
+          epochs = epochs, callbacks = [es], batch_size=batch_size)
+
+    return model 
+
+
+
+def gnn_model_v5(dataset, loader_train):
+
+    ################################################################################
+    # PARAMETERS
+    ################################################################################
+    learning_rate = 1e-4  # Learning rate
+    epochs = 50  # Number of training epochs
+    batch_size = 32 # Batch size
+    l2_reg = 5e-4  
+
+    # input 
+    F = dataset.n_node_features  # Dimension of node features
+    S = dataset.n_edge_features  # Dimension of edge features
+    n_out = dataset.n_labels     # Dimension of the target
+    
+    #------------------------------------------------------
+    X_in = Input(shape=(None, F))
+    A_in = Input(shape=(None, None))
+    gc1 = GraphAttention(32, activation='relu', kernel_regularizer=l2(l2_reg))([X_in, A_in]) 
+    gc2 = GraphAttention(64, activation='relu', kernel_regularizer=l2(l2_reg))([gc1, A_in]) 
+    pool = GlobalAttentionPool(128)(gc2) 
+    output = Dense(n_out, activation='linear')(pool) 
+    
+    # Build model 
+    model = Model(inputs=[X_in, A_in], outputs=output)
+    
+    #------------------------------------------------------
+    optimizer = Adam(lr=learning_rate)
+    model.compile(optimizer=optimizer, loss="mse")
+    model.summary()
+    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
+    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
+          epochs = epochs, callbacks = [es], batch_size=batch_size)
 
     return model 
 
