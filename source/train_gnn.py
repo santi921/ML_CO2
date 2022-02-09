@@ -26,3 +26,10 @@ if __name__ == "__main__":
     y_test = [loader_test.dataset[i]["y"] for i in range(len(loader_test))]
     y_test_pred = model.predict(loader_test.load(), verbose = 1, steps=loader_test.steps_per_epoch)
     print(r2_score(y_test_pred, y_test))
+
+    benzo_set = dataset_benzo()
+    loader_benzo = BatchLoader(benzo_set, batch_size = 100)
+    y_test = [loader_test.dataset[i]["y"] for i in range(len(loader_test))]
+    y_test_pred = model.predict(loader_benzo.load(), verbose = 1, steps=loader_benzo.steps_per_epoch)
+    print(r2_score(y_test_pred, y_test))
+

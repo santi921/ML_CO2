@@ -1,4 +1,5 @@
 from turtle import delay
+from glob import glob
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import regularizers, Input
@@ -38,7 +39,7 @@ import matplotlib.pyplot as plt
 from joblib import Parallel, delayed
 
 #from rdkit.Chem import PandasTools, SDMolSupplier, Descriptors
-#from rdkit import Chem, DataStructs
+from rdkit import Chem, DataStructs
 
 import numpy as np
 import pandas as pd
@@ -48,7 +49,7 @@ import seaborn as sns
 from utils.sklearn_util import *
 from utils.selfies_util import *
 
-ATOM_TYPES = [1, 6, 7, 8, 9, 17, 35]
+ATOM_TYPES = [1, 5, 6, 7, 8, 9, 11, 13, 14, 15, 16, 17, 35]
 BOND_TYPES = [1, 2, 3]
 HEADER_SIZE = 3
 NUM_TO_SYMBOL = {
@@ -379,12 +380,14 @@ class dataset(Dataset):
 
     def read(self):
         names, ret, homo, homo1, diff = sdf()
+        #print(ret[0]) 
         mean = np.mean(diff)
         std = np.std(diff)
         diff_scale = (diff - mean) / std
         mean = np.mean(homo)
         std = np.std(homo)
         homo_scale = (homo - mean) / std
+        homo_scale = homo # change back
 
         data_sdf = [parse_sdf(i) for i in ret]
         data = Parallel(n_jobs=1)(delayed(read_mol)(mol) for mol in tqdm(data_sdf, ncols=80))
@@ -394,10 +397,62 @@ class dataset(Dataset):
 
         return dataset
 
+
+class dataset_benzo(Dataset):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def read(self):
+        ret = []
+        data_graph = []
+        df = pd.read_hdf("../data/benzo/compiled.h5")
+        sdf_full = glob("../data/benzo/*/input1.sdf")
+        
+        homo = df["homo"].tolist()
+        homo1 = df["homo1"].tolist()
+        diff = df['diff'].tolist()
+        smiles = df["smiles"].tolist()
+        smiles = [Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles]
+        
+        mean = np.mean(np.array(homo))
+        std = np.std(np.array(homo))
+        homo_scale = (np.array(homo) - mean) / std
+        homo_scale = np.array(homo)
+
+        with open('../data/benzo/save_smiles.txt') as f: 
+            smiles_full_line = f.readlines()
+
+        smiles_files = [i.split(":")[1] for i in smiles_full_line]
+        smiles_files = [Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles_files]
+        
+        for ind in range(len(smiles)):    
+            if(smiles[ind] in smiles_files):
+                ret.append(pybel.readstring("smi",smiles[ind]).write("sdf"))
+        
+        data = [parse_sdf(i) for i in ret]
+
+        for mol in tqdm(data, ncols=80):
+            try:
+                data_graph.append(read_mol(mol))
+            except:
+                print("failed molecule")
+                
+                pass
+        #data = Parallel(n_jobs=-1)(delayed(read_mol)(mol) for mol in tqdm(data, ncols=80))
+        
+        x_list, a_list, e_list = list(zip(*data_graph))
+
+        dataset = [Graph(x=x, a=a, e=e, y = y) for x, a, e, y 
+                   in zip(x_list, a_list, e_list, homo_scale)]
+        
+        print(mean)
+        return dataset
+
+
 def partition_dataset(dataset):
     learning_rate = 1e-3  # Learning rate
     epochs = 50  # Number of training epochs
-    batch_size = 1 # Batch size
+    batch_size = 100 # Batch size
     
     # Train/test split
     idxs = np.random.permutation(len(dataset))
@@ -419,7 +474,45 @@ def partition_dataset(dataset):
 
     return loader_train, loader_test, loader
 
+
 def gnn_model_v1(dataset, loader_train):
+
+    ################################################################################
+    # PARAMETERS
+    ################################################################################
+    learning_rate = 1e-3  # Learning rate
+    epochs = 50  # Number of training epochs
+    batch_size = 1 # Batch size
+    
+    # input 
+    F = dataset.n_node_features  # Dimension of node features
+    S = dataset.n_edge_features  # Dimension of edge features
+    n_out = dataset.n_labels     # Dimension of the target
+
+    X_in = Input(shape=(None, F))
+    A_in = Input(shape=(None, None))
+    E_in = Input(shape=(None, None, S))
+
+    X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
+    X_2 = ECCConv(128, activation="relu")([X_1, A_in, E_in])
+    output = Dense(100)(X_2)
+
+    output = Dense(n_out)(output)
+    model = Model(inputs=[X_in, A_in, E_in], outputs=output)
+    #------------------------------------------------------
+    optimizer = Adam(lr=learning_rate)
+    model.compile(optimizer=optimizer, loss="mse")
+    model.summary()
+
+    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
+
+    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
+          epochs = 50, callbacks = [es])
+
+    return model 
+
+
+def gnn_model_v2(dataset, loader_train):
 
     ################################################################################
     # PARAMETERS
@@ -441,10 +534,10 @@ def gnn_model_v1(dataset, loader_train):
 
     X_1 = ECCConv(256, activation="relu")([X_in, A_in, E_in])
     X_2 = ECCConv(256, activation="relu")([X_1, A_in, E_in])
-    X_3 = Dense(1000)(X_2)
-    output = Dense(500)(X_3)
+    X_3 = Dense(100)(X_2)
+    X_4 = Dense(100)(X_3)
+    output = Dense(n_out)(X_4)
 
-    output = Dense(n_out)(output)
     model = Model(inputs=[X_in, A_in, E_in], outputs=output)
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
