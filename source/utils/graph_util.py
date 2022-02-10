@@ -515,6 +515,8 @@ def gnn_model_v2(dataset, loader_train):
     batch_size = 1 # Batch size
     
     # input 
+    N = max(data.n_nodes for data in dataset)
+
     F = dataset.n_node_features  # Dimension of node features
     S = dataset.n_edge_features  # Dimension of edge features
     n_out = dataset.n_labels     # Dimension of the target
