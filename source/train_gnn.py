@@ -15,21 +15,24 @@ from utils.selfies_util import *
 
 
 if __name__ == "__main__":
-    dataset = dataset()
-    model = 1
-
+    #dataset = dataset()
+    model = 3
+    #loader_train, loader_test, loader = partition_dataset(dataset)
+    dataset = dataset_benzo()
+    #loader_benzo = BatchLoader(benzo_set, batch_size = 100)
     loader_train, loader_test, loader = partition_dataset(dataset)
+
     
     if (model == 1):
-      model = gnn_model_v1(dataset, loader_train)
+      model = gnn_model_v1(dataset, loader_train) # working
     if (model == 2):
-      model = gnn_model_v2(dataset, loader_train)
+      model = gnn_model_v2(dataset, loader_train) # not working
     if (model == 3):
-      model = gnn_model_v3(dataset, loader_train)
+      model = gnn_model_v3(dataset, loader_train) # not working
     if (model == 4):
       model = gnn_model_v4(dataset, loader_train)
     if (model == 5):
-          model = gnn_model_v5(dataset, loader_train)
+      model = gnn_model_v5(dataset, loader_train)
     
 
 

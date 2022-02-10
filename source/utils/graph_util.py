@@ -26,6 +26,8 @@ from spektral.datasets import QM9
 from spektral.data import Dataset, Graph
 from spektral.utils import label_to_one_hot, sparse
 from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool, GraphMasking
+from spektral.layers.convolutional import GCSConv, MessagePassing, GeneralConv, GATConv
+from spektral.layers.pooling import MinCutPool
 from spektral.models import GeneralGNN, GCN
 
 
@@ -424,7 +426,6 @@ class dataset_benzo(Dataset):
 
         smiles_files = [i.split(":")[1] for i in smiles_full_line]
         smiles_files = [Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles_files]
-        
         for ind in range(len(smiles)):    
             if(smiles[ind] in smiles_files):
                 ret.append(pybel.readstring("smi",smiles[ind]).write("sdf"))
@@ -436,16 +437,12 @@ class dataset_benzo(Dataset):
                 data_graph.append(read_mol(mol))
             except:
                 print("failed molecule")
-                
                 pass
         #data = Parallel(n_jobs=-1)(delayed(read_mol)(mol) for mol in tqdm(data, ncols=80))
-        
         x_list, a_list, e_list = list(zip(*data_graph))
 
         dataset = [Graph(x=x, a=a, e=e, y = y) for x, a, e, y 
                    in zip(x_list, a_list, e_list, homo_scale)]
-        
-        print(mean)
         return dataset
 
 
@@ -488,23 +485,23 @@ def gnn_model_v1(dataset, loader_train):
     F = dataset.n_node_features  # Dimension of node features
     S = dataset.n_edge_features  # Dimension of edge features
     n_out = dataset.n_labels     # Dimension of the target
-
+    print(F)
+    print(dataset)
     X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None))
+    A_in = Input(shape=(None, None), sparse = True)
     E_in = Input(shape=(None, None, S))
 
-    X_1 = ECCConv(64, activation="relu")([X_in, A_in, E_in])
-    X_2 = ECCConv(32, activation='relu')([X_1, A_in, E_in])
+    X_1 = GeneralConv(64, activation="relu")([X_in, A_in])
+    X_2 = GeneralConv(32, activation='relu')([X_1, A_in])
     output = GlobalSumPool()(X_2)    
     model = Model(inputs=[X_in, A_in, E_in], outputs=output)
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
-    model.summary()
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
           epochs = epochs, callbacks = [es], batch_size=batch_size)
-
+    model.summary()
     return model 
 
 
@@ -525,23 +522,21 @@ def gnn_model_v2(dataset, loader_train):
     X_in = Input(shape=(None, F))
     A_in = Input(shape=(None, None))
     
-    X_1 = GraphMasking()([X_in])
+    X_1 = GraphMasking()(X_in)
     X_2 = GCSConv(32, activation="relu")([X_1, A_in])
-    X_3, A_2 = MinCutPool(100 // 2)
-    X_4 = GCSConv(32, activation="relu")([X_3, A_2])
-    output = GlobalSumPool()(X_4)
+    X_3 = MinCutPool(100 // 2, return_mask = True)
+    #X_4 = GCSConv(32, activation="relu")(X_3)
+    output = GlobalSumPool()(X_3)
     output = Dense(n_out, activation='linear')(output)
     model = Model(inputs=[X_in, A_in], outputs=output)
     
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
-    model.summary()
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
           epochs = epochs, callbacks = [es], batch_size=batch_size)
-
-
+    model.summary()
     return model 
 
 
@@ -555,19 +550,18 @@ def gnn_model_v3(dataset, loader_train):
     batch_size = 1 # Batch size
     
     # input 
+    F = dataset.n_node_features  # Dimension of node features
+    X_in = Input(shape=(None, F))
+    A_in = Input(shape=(None, None), sparse = True)
     n_out = dataset.n_labels     # Dimension of the target
-
-    model = GeneralGNN(n_out, activation="linear")
+    model = GeneralGNN(1, activation="linear", inputs=[X_in, A_in])
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
-    model.summary()
-
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
           epochs = epochs, callbacks = [es], batch_size=batch_size)
-
+    model.summary()
     return model 
 
 
@@ -579,22 +573,25 @@ def gnn_model_v4(dataset, loader_train):
     learning_rate = 1e-3  # Learning rate
     epochs = 50  # Number of training epochs
     batch_size = 1 # Batch size
-    
+    l2_reg = 1e-5
+
     # input 
+    S = dataset.n_edge_features  # Dimension of edge features
     F = dataset.n_node_features  # Dimension of node features
     n_out = dataset.n_labels     # Dimension of the target
-
+    print("f value: " + str(F))
+    print(dataset)
     #------------------------------------------------------
 
     X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None))
-    graph_conv_1 = GraphConv(32,
-                        activation='elu',
-                        kernel_regularizer=l2(l2_reg),
+    A_in = Input(shape=(None, None), sparse = True)
+    graph_conv_1 = GeneralConv(32,
+                        activation='relu',
+                        kernel_regularizer=regularizers.L2(l2_reg),
                         use_bias=True)([X_in, A_in])
-    graph_conv_2 = GraphConv(32,
-                        activation='elu',
-                        kernel_regularizer=l2(l2_reg),
+    graph_conv_2 = GeneralConv(32,
+                        activation='relu',
+                        kernel_regularizer=regularizers.L2(l2_reg),
                         use_bias=True)([graph_conv_1, A_in])
     flatten = Flatten()(graph_conv_2)
     fc = Dense(512, activation='relu')(flatten)
@@ -604,11 +601,10 @@ def gnn_model_v4(dataset, loader_train):
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
-    model.summary()
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
           epochs = epochs, callbacks = [es], batch_size=batch_size)
-
+    model.summary()
     return model 
 
 
@@ -631,8 +627,8 @@ def gnn_model_v5(dataset, loader_train):
     #------------------------------------------------------
     X_in = Input(shape=(None, F))
     A_in = Input(shape=(None, None))
-    gc1 = GraphAttention(32, activation='relu', kernel_regularizer=l2(l2_reg))([X_in, A_in]) 
-    gc2 = GraphAttention(64, activation='relu', kernel_regularizer=l2(l2_reg))([gc1, A_in]) 
+    gc1 = GATConv(32, activation='relu', kernel_regularizer=regularizers.L2(l2_reg))([X_in, A_in]) 
+    gc2 = GATConv(64, activation='relu', kernel_regularizer=regularizers.L2(l2_reg))([gc1, A_in]) 
     pool = GlobalAttentionPool(128)(gc2) 
     output = Dense(n_out, activation='linear')(pool) 
     
@@ -642,10 +638,9 @@ def gnn_model_v5(dataset, loader_train):
     #------------------------------------------------------
     optimizer = Adam(lr=learning_rate)
     model.compile(optimizer=optimizer, loss="mse")
-    model.summary()
     es = EarlyStopping(monitor='loss', mode='min', patience = 5)
     model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
           epochs = epochs, callbacks = [es], batch_size=batch_size)
-
+    model.summary()
     return model 
 
