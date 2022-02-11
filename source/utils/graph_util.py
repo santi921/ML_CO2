@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.utils import get_file
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Dropout
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -19,17 +19,16 @@ if gpus:
 
 
 from spektral.data import BatchLoader, Graph, Dataset, Loader, utils, DisjointLoader, MixedLoader, SingleLoader
-from spektral.utils import label_to_one_hot, load_sdf, load_csv
-#from spektral.utils.io import _parse_header,_parse_bonds_block,_parse_data_fields
-#parse_counts_line, parse_atoms_block, parse_properties
 from spektral.datasets import QM9
-from spektral.data import Dataset, Graph
-from spektral.utils import label_to_one_hot, sparse
-from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool, GraphMasking
-from spektral.layers.convolutional import GCSConv, MessagePassing, GeneralConv, GATConv
-from spektral.layers.pooling import MinCutPool
+
+from spektral.utils import label_to_one_hot, load_sdf, load_csv
 from spektral.models import GeneralGNN, GCN
 
+from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GINConv,\
+     GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool, GlobalAvgPool
+from spektral.layers.convolutional import GCSConv, MessagePassing, GeneralConv, GATConv
+from spektral.transforms.normalize_adj import NormalizeAdj
+from spektral.layers.pooling import MinCutPool, TopKPool
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, scale
 from sklearn.metrics import r2_score
@@ -37,10 +36,10 @@ from sklearn.metrics import r2_score
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt 
- 
+from scipy import sparse as sp
+
 from joblib import Parallel, delayed
 
-#from rdkit.Chem import PandasTools, SDMolSupplier, Descriptors
 from rdkit import Chem, DataStructs
 
 import numpy as np
@@ -375,6 +374,24 @@ def load_sdf(filename, amount=None):
     with open(filename) as f:
         return parse_sdf_file(f, amount=amount)
 
+
+def sp_matrix_to_sp_tensor(m):
+    """
+    Converts a Scipy sparse matrix to a SparseTensor.
+    The indices of the output are reordered in the canonical row-major ordering, and
+    duplicate entries are summed together (which is the default behaviour of Scipy).
+    :param x: a Scipy sparse matrix.
+    :return: a SparseTensor.
+    """
+    x = sp.csr_matrix(m)
+    
+    if len(x.shape) != 2:
+        raise ValueError("x must have rank 2")
+    row, col, values = sp.find(x)
+    out = tf.SparseTensor(
+        indices=np.array([row, col]).T, values=values, dense_shape=x.shape
+    )
+    return tf.sparse.reorder(out)
     
 class dataset(Dataset):
     def __init__(self, **kwargs):
@@ -472,177 +489,117 @@ def partition_dataset(dataset):
     return loader_train, loader_test, loader
 
 
-def gnn_model_v1(dataset, loader_train):
 
-    ################################################################################
-    # PARAMETERS
-    ################################################################################
-    learning_rate = 1e-3  # Learning rate
-    epochs = 50  # Number of training epochs
-    batch_size = 1 # Batch size
-    
-    # input 
-    F = dataset.n_node_features  # Dimension of node features
-    S = dataset.n_edge_features  # Dimension of edge features
-    n_out = dataset.n_labels     # Dimension of the target
-    print(F)
-    print(dataset)
-    X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None), sparse = True)
-    E_in = Input(shape=(None, None, S))
+class gnn_v5(Model):
+    def __init__(self, N):
+        super().__init__()
+        
+        #self.mask = GraphMasking()
+        self.conv1 = GCSConv(32, activation="relu")
+        self.pool = MinCutPool(N / 2)
+        self.conv2 = GCSConv(32, activation="relu")
+        #self.global_pool = GlobalSumPool()
+        self.dense1 = Dense(1)
 
-    X_1 = GeneralConv(64, activation="relu")([X_in, A_in])
-    X_2 = GeneralConv(32, activation='relu')([X_1, A_in])
-    output = GlobalSumPool()(X_2)    
-    model = Model(inputs=[X_in, A_in, E_in], outputs=output)
-    #------------------------------------------------------
-    optimizer = Adam(lr=learning_rate)
-    model.compile(optimizer=optimizer, loss="mse")
-    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = epochs, callbacks = [es], batch_size=batch_size)
-    model.summary()
-    return model 
+    def call(self, inputs):
 
+        x, a, _ = inputs
+        #x = self.mask(x)
+        x = self.conv1([x, a])
+        x_pool, a_pool = self.pool([x, a])
+        x_pool = self.conv2([x_pool, a_pool])
+        #output = self.global_pool(x_pool)
+        output = self.dense1(output)
+        return output
 
-def gnn_model_v2(dataset, loader_train):
+class gnn_v2(Model):
+    def __init__(self):
+        super().__init__()
+        #self.masking = GraphMasking()
+        self.conv1 = ECCConv(32, activation="relu")
+        self.conv2 = ECCConv(32, activation="relu")
+        self.global_pool = GlobalSumPool()
+        self.dense = Dense(1)
 
-    ################################################################################
-    # PARAMETERS
-    ################################################################################
-    learning_rate = 1e-3  # Learning rate
-    epochs = 50  # Number of training epochs
-    batch_size = 1 # Batch size
-    
-    # input 
-    N = max(data.n_nodes for data in dataset)
+    def call(self, inputs):
+        x, a, e = inputs
+        #x = self.masking(x)
+        x = self.conv1([x, a, e])
+        x = self.conv2([x, a, e])
+        output = self.global_pool(x)
+        output = self.dense(output)
+        return output
 
-    F = dataset.n_node_features  # Dimension of node features
-    S = dataset.n_edge_features  # Dimension of edge features
-    n_out = dataset.n_labels     # Dimension of the target
+class gnn_v3(Model):
+    def __init__(self, channels = 64, n_layers = 3):
+        super().__init__()
+        self.conv1 = ECCConv(channels, epsilon=0, mlp_hidden=[channels, channels])
+        self.convs = []
+        for _ in range(1, n_layers):
+            self.convs.append(
+                ECCConv(channels, epsilon=0, mlp_hidden=[channels, channels])
+            )
+        self.pool = GlobalSumPool()
+        self.dense1 = Dense(channels, activation="relu")
+        self.dropout = Dropout(0.5)
+        self.dense2 = Dense(1, activation="linear")
 
-    X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None))
-    
-    X_1 = GraphMasking()(X_in)
-    X_2 = GCSConv(32, activation="relu")([X_1, A_in])
-    X_3 = MinCutPool(100 // 2, return_mask = True)
-    #X_4 = GCSConv(32, activation="relu")(X_3)
-    output = GlobalSumPool()(X_3)
-    output = Dense(n_out, activation='linear')(output)
-    model = Model(inputs=[X_in, A_in], outputs=output)
-    
-    #------------------------------------------------------
-    optimizer = Adam(lr=learning_rate)
-    model.compile(optimizer=optimizer, loss="mse")
-    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = epochs, callbacks = [es], batch_size=batch_size)
-    model.summary()
-    return model 
+    def call(self, inputs):
+        x, a, e = inputs
+        #a = sp_matrix_to_sp_tensor(a)
+        
+        x = self.conv1([x, a, e])
+        for conv in self.convs:
+            x = conv([x, a, e])
+        x = self.pool(x)
+        x = self.dense1(x)
+        x = self.dropout(x)
+        return self.dense2(x)
 
 
-def gnn_model_v3(dataset, loader_train):
+class gnn_v4(Model):
+    def __init__(self):
+        super().__init__()
+        #self.masking = GraphMasking()
+        self.conv1 = GCSConv(32, activation="relu")
+        self.conv2 = GCSConv(32, activation="relu")
+        self.global_pool = GlobalSumPool()
+        self.dense1 = Dense(24)
+        self.dense2 = Dense(1)
 
-    ################################################################################
-    # PARAMETERS
-    ################################################################################
-    learning_rate = 1e-3  # Learning rate
-    epochs = 50  # Number of training epochs
-    batch_size = 1 # Batch size
-    
-    # input 
-    F = dataset.n_node_features  # Dimension of node features
-    X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None), sparse = True)
-    n_out = dataset.n_labels     # Dimension of the target
-    model = GeneralGNN(1, activation="linear", inputs=[X_in, A_in])
-    #------------------------------------------------------
-    optimizer = Adam(lr=learning_rate)
-    model.compile(optimizer=optimizer, loss="mse")
-    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = epochs, callbacks = [es], batch_size=batch_size)
-    model.summary()
-    return model 
+    def call(self, inputs):
+        x, a, e = inputs
+        #x = self.masking(x)
+        x = self.conv1([x, a])
+        x = self.conv2([x, a])
+        output = self.global_pool(x)
+        output = self.dense1(output)
+        output = self.dense2(output)
 
-
-def gnn_model_v4(dataset, loader_train):
-
-    ################################################################################
-    # PARAMETERS
-    ################################################################################
-    learning_rate = 1e-3  # Learning rate
-    epochs = 50  # Number of training epochs
-    batch_size = 1 # Batch size
-    l2_reg = 1e-5
-
-    # input 
-    S = dataset.n_edge_features  # Dimension of edge features
-    F = dataset.n_node_features  # Dimension of node features
-    n_out = dataset.n_labels     # Dimension of the target
-    print("f value: " + str(F))
-    print(dataset)
-    #------------------------------------------------------
-
-    X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None), sparse = True)
-    graph_conv_1 = GeneralConv(32,
-                        activation='relu',
-                        kernel_regularizer=regularizers.L2(l2_reg),
-                        use_bias=True)([X_in, A_in])
-    graph_conv_2 = GeneralConv(32,
-                        activation='relu',
-                        kernel_regularizer=regularizers.L2(l2_reg),
-                        use_bias=True)([graph_conv_1, A_in])
-    flatten = Flatten()(graph_conv_2)
-    fc = Dense(512, activation='relu')(flatten)
-    output = Dense(n_out, activation='linear')(fc)
-    model = Model(inputs=[X_in, A_in], outputs=output)
-    
-    #------------------------------------------------------
-    optimizer = Adam(lr=learning_rate)
-    model.compile(optimizer=optimizer, loss="mse")
-    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = epochs, callbacks = [es], batch_size=batch_size)
-    model.summary()
-    return model 
+        return output
 
 
 
-def gnn_model_v5(dataset, loader_train):
+class gnn_v1(Model):
 
-    ################################################################################
-    # PARAMETERS
-    ################################################################################
-    learning_rate = 1e-4  # Learning rate
-    epochs = 50  # Number of training epochs
-    batch_size = 32 # Batch size
-    l2_reg = 5e-4  
+    def __init__(self):
+        super().__init__()
+        self.conv1 = GCSConv(32, activation="relu")
+        self.pool1 = TopKPool(ratio=0.5)
+        self.conv2 = GCSConv(32, activation="relu")
+        self.pool2 = TopKPool(ratio=0.5)
+        self.conv3 = GCSConv(32, activation="relu")
+        self.global_pool = GlobalAvgPool()
+        self.dense = Dense(1, activation="linear")
 
-    # input 
-    F = dataset.n_node_features  # Dimension of node features
-    S = dataset.n_edge_features  # Dimension of edge features
-    n_out = dataset.n_labels     # Dimension of the target
-    
-    #------------------------------------------------------
-    X_in = Input(shape=(None, F))
-    A_in = Input(shape=(None, None))
-    gc1 = GATConv(32, activation='relu', kernel_regularizer=regularizers.L2(l2_reg))([X_in, A_in]) 
-    gc2 = GATConv(64, activation='relu', kernel_regularizer=regularizers.L2(l2_reg))([gc1, A_in]) 
-    pool = GlobalAttentionPool(128)(gc2) 
-    output = Dense(n_out, activation='linear')(pool) 
-    
-    # Build model 
-    model = Model(inputs=[X_in, A_in], outputs=output)
-    
-    #------------------------------------------------------
-    optimizer = Adam(lr=learning_rate)
-    model.compile(optimizer=optimizer, loss="mse")
-    es = EarlyStopping(monitor='loss', mode='min', patience = 5)
-    model.fit(loader_train.load(),  steps_per_epoch=loader_train.steps_per_epoch, 
-          epochs = epochs, callbacks = [es], batch_size=batch_size)
-    model.summary()
-    return model 
+    def call(self, inputs):
+        x, a, i = inputs
+        x = self.conv1([x, a])
+        x1, a1, i1 = self.pool1([x, a, i])
+        x1 = self.conv2([x1, a1])
+        x2, a2, i2 = self.pool1([x1, a1, i1])
+        x2 = self.conv3([x2, a2])
+        output = self.global_pool([x2, i2])
+        output = self.dense(output)
 
+        return output
