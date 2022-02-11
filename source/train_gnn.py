@@ -17,13 +17,13 @@ from utils.selfies_util import *
 
 
 if __name__ == "__main__":
-    #dataset = dataset()
-    #loader_train, loader_test, loader = partition_dataset(dataset)
-    #dataset = dataset_benzo()
-    #loader_benzo = BatchLoader(dataset, batch_size = 100)
+    dataset = dataset()
+    loader_train, loader_test, loader = partition_dataset(dataset)
+    dataset = dataset_benzo()
+    loader_benzo = BatchLoader(dataset, batch_size = 128)
     
-    from spektral.datasets import QM9
-    dataset = QM9(amount = 1000)
+    #from spektral.datasets import QM9
+    #dataset = QM9(amount = 1000)
     
     print("..........partition dataset..........")
     loader_train, loader_test, loader = partition_dataset(dataset)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     print(r2_score(y_test_pred, y_test))
 
     benzo_set = dataset_benzo()
-    loader_benzo = BatchLoader(benzo_set, batch_size=1)
+    loader_benzo = BatchLoader(benzo_set, batch_size=batch_size)
     y_test = [loader_test.dataset[i]["y"] for i in range(len(loader_test.dataset))]
     y_test_pred = model.predict(loader_benzo.load(), verbose = 1, steps=loader_benzo.steps_per_epoch)
     print(r2_score(y_test_pred, y_test))
