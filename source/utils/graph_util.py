@@ -186,6 +186,7 @@ def atom_to_feature(atom):
     return np.concatenate((atomic_num, coords, [charge, iso]), -1)
 
 
+
 def mol_to_adj(mol):
     
     row, col, edge_features = [], [], []
@@ -195,7 +196,7 @@ def mol_to_adj(mol):
         col += [end, start]
         edge_features += [bond["type"]] * 2
 
-    a, e = sparse.edge_index_to_matrix(
+    a, e = edge_index_to_matrix(
         edge_index=np.array((row, col)).T,
         edge_weight=np.ones_like(row),
         edge_features=label_to_one_hot(edge_features, BOND_TYPES),
@@ -203,10 +204,50 @@ def mol_to_adj(mol):
     return a, e
 
 
+
+def reorder(edge_index, edge_weight=None, edge_features=None):
+    """
+    Reorders `edge_index`, `edge_weight`, and `edge_features` according to the row-major
+    ordering of `edge_index`.
+    :param edge_index: np.array of shape `[n_edges, 2]` (representing rows and columns
+    of the adjacency matrix), indices to sort in row-major order.
+    :param edge_weight: np.array or None, edge weight to sort according to the new
+    order of the indices.
+    :param edge_features: np.array or None, edge features to sort according to the new
+    order of the indices.
+    :return:
+        - edge_index: np.array, edge_index sorted in row-major order.
+        - edge_weight: If edge_weight is not None, edge_weight sorted according to the
+        new order of the indices. Otherwise, None.
+        - edge_features: If edge_features is not None, edge_features sorted according to
+        the new order of the indices. Otherwise, None.
+    """
+    sort_idx = np.lexsort(np.flipud(edge_index.T))
+    output = [edge_index[sort_idx]]
+    if edge_weight is not None:
+        output.append(edge_weight[sort_idx])
+    if edge_features is not None:
+        output.append(edge_features[sort_idx])
+
+    return tuple(output)
+
+
+
+def edge_index_to_matrix(edge_index, edge_weight, edge_features=None, shape=None):
+    reordered = reorder(edge_index, edge_weight, edge_features)
+    a = sp.csr_matrix((reordered[1], reordered[0].T), shape=shape)
+
+    if edge_features is not None:
+        return a, reordered[2]
+    else:
+        return a
+
+
 def read_mol(mol):
     x = np.array([atom_to_feature(atom) for atom in mol["atoms"]])
     a, e = mol_to_adj(mol)
     return x, a, e
+
 
 
 def parse_sdf(sdf):
@@ -222,6 +263,7 @@ def parse_sdf(sdf):
     )
     sdf_out["data"] = _parse_data_fields(sdf)
     return sdf_out
+
 
 
 def _get_atomic_num(symbol):
@@ -512,6 +554,7 @@ class gnn_v5(Model):
         output = self.dense1(output)
         return output
 
+
 class gnn_v2(Model):
     def __init__(self):
         super().__init__()
@@ -529,6 +572,7 @@ class gnn_v2(Model):
         output = self.global_pool(x)
         output = self.dense(output)
         return output
+
 
 class gnn_v3(Model):
     def __init__(self, channels = 64, n_layers = 3):
@@ -577,7 +621,6 @@ class gnn_v4(Model):
         output = self.dense2(output)
 
         return output
-
 
 
 class gnn_v1(Model):

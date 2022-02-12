@@ -17,13 +17,16 @@ from utils.selfies_util import *
 
 
 if __name__ == "__main__":
-    dataset = dataset()
-    loader_train, loader_test, loader = partition_dataset(dataset)
-    dataset = dataset_benzo()
-    loader_benzo = BatchLoader(dataset, batch_size = 128)
-    
-    #from spektral.datasets import QM9
-    #dataset = QM9(amount = 1000)
+    test = True
+
+    if test:
+      from spektral.datasets import QM9
+      dataset = QM9(amount = 1000)
+    else: 
+      dataset = dataset()
+      loader_train, loader_test, loader = partition_dataset(dataset)
+      dataset = dataset_benzo()
+      loader_benzo = BatchLoader(dataset, batch_size = 128)
     
     print("..........partition dataset..........")
     loader_train, loader_test, loader = partition_dataset(dataset)
