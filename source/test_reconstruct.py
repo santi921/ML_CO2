@@ -1,4 +1,6 @@
-
+import tensorflow as tf
+import tensorflow.keras as keras
+import numpy as np
 from utils.selfies_util import (
     smile_to_hot,
     multiple_smile_to_hot,
@@ -10,11 +12,6 @@ from utils.selfies_util import (
     smiles,
     selfies,
 )
-
-import tensorflow as tf
-import tensorflow.keras as keras
-import numpy as np
-
 
 
 names, ret_list, homo, homo1, diff = selfies()
