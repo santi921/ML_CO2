@@ -90,3 +90,9 @@ encoded_data = encoder.predict(data_reshape)
 code_decode = decoder.predict(encoded_data)
 print("prediction step")
 compare_equality(data, code_decode, (data.shape[1], data.shape[2]), selfies_alphabet)
+
+
+textfile = open("vae_alpha.txt", "w")
+for element in selfies_alphabet2:
+    textfile.write(element + "\n")
+textfile.close()
