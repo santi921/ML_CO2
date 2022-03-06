@@ -17,7 +17,7 @@ from utils.selfies_util import *
 
 
 if __name__ == "__main__":
-    test = True
+    test = False
 
     if test:
       from spektral.datasets import QM9
@@ -35,11 +35,11 @@ if __name__ == "__main__":
     F = dataset.n_node_features  # Dimension of node features
     S = dataset.n_edge_features  # Dimension of edge features
     batch_size = 128
-    epochs = 10
+    epochs = 100
     
 
     print("..........   pull model   ...........")
-    model = 3
+    model = 2
     if (model == 1): # fails
       model = gnn_v1() 
     if (model == 2): # works
@@ -63,14 +63,13 @@ if __name__ == "__main__":
     print("..........testing model..........")
     #----------------- testing segment -----------------
     model_loss = model.evaluate(loader_test.load(), steps=loader_test.steps_per_epoch)
-    #print("Done. Test loss: {}".format(model_loss))
+    print("Done. Test loss: {}".format(model_loss))
     y_test = [loader_test.dataset[i]["y"] for i in range(len(loader_test.dataset))]
     y_test_pred = model.predict(loader_test.load(), verbose = 1, steps=loader_test.steps_per_epoch)
     print(r2_score(y_test_pred, y_test))
 
     benzo_set = dataset_benzo()
     loader_benzo = BatchLoader(benzo_set, batch_size=batch_size)
-    y_test = [loader_test.dataset[i]["y"] for i in range(len(loader_test.dataset))]
+    y_test = [loader_benzo.dataset[i]["y"] for i in range(len(loader_benzo.dataset))]
     y_test_pred = model.predict(loader_benzo.load(), verbose = 1, steps=loader_benzo.steps_per_epoch)
     print(r2_score(y_test_pred, y_test))
-

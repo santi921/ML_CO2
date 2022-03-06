@@ -1,17 +1,15 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 
-import os
-import uuid 
-import joblib
-import argparse
+import os, uuid, joblib, argparse, pybel, tqdm
+from glob import glob
 import numpy as np
 import pandas as pd
 import selfies as sf
 sf.set_semantic_constraints("hypervalent")
 
 from tqdm import tqdm
-from rdkit import Chem
+from rdkit import Chem, RDLogger
 from rdkit.Chem import AllChem
 from terminaltables import AsciiTable
 
@@ -29,9 +27,11 @@ from utils.selfies_util import (
     multiple_selfies_to_hot,
     get_selfie_and_smiles_encodings_for_dataset,
     selfies_to_hot,
+    compare_equality
 )
-from utils.helpers import quinone_check
 
+from utils.helpers import quinone_check
+RDLogger.DisableLog("rdApp.*")
 
 
 def calc(
@@ -164,18 +164,19 @@ def calc(
 
 class optimizer_vae(object):
 
-    def __init__(self, data, selfies_alphabet, longi=True, ckpt=True, test_vae=False, gens=2, start_pop_size=100, population_sample = []):
+    def __init__(self, data, selfies_alphabet, desc ="morg", algo = "xgboost",  longi=True, ckpt=True, test_vae=False, gens=2, start_pop_size=100, population_sample = []):
         self.encoder = keras.models.load_model("./encoder")  # need to get newer vae
         self.decoder = keras.models.load_model("./decoder")
         self.ckpt = ckpt
         self.longi = longi
         self.gens = gens
-        self.start_pop_size = start_pop_size
+        self.desc = desc
+        self.algo = algo
         self.selfies_alphabet = selfies_alphabet
-        self.start_pop_size = start_pop_size
+        self.start_pop_size = start_pop_size 
         self.population = data
         self.max_mol_len = data.shape[1]
-        self.alpha_len = data.shape[2]
+        self.alpha_len = len(selfies_alphabet)
         if(population_sample == []):
             self.population_sample = [
             self.population[int(i)]
@@ -183,11 +184,12 @@ class optimizer_vae(object):
             ]
         else:
              self.population_sample = population_sample
-
+        test_vae = True
+        print(self.population_sample)
         if test_vae == True:
             self.test()
         else:
-            self.stdev = [2 for _ in range(75)]
+            self.stdev = [10 for _ in range(200)]
 
 
     def vect_to_struct(self, coordinates, selfies = True):
@@ -294,10 +296,10 @@ class optimizer_vae(object):
         algo = self.algo
 
         self.homo_model = calc(
-            mat, HOMO, des, self.scale_homo, algo = algo
+            mat, HOMO, des, self.scale_homo, algo = self.algo
         )
         self.homo1_model = calc(
-            mat, HOMO_1, des, self.scale_homo1, algo = algo
+            mat, HOMO_1, des, self.scale_homo1, algo = self.algo
         )
 
     def smiles_to_encoded(self, smiles):
@@ -310,7 +312,7 @@ class optimizer_vae(object):
         return encoded
 
     def encoding_to_smiles(self, encoded):
-        encoded = encoded.reshape(-1, 75)
+        encoded = encoded.reshape(-1, 200)
         #print(encoded)
         decode = self.decoder.predict(encoded)
 
@@ -355,16 +357,18 @@ class optimizer_vae(object):
             return self.loss(canonical_smiles)
 
     def pull_gradient(self, smiles):
-        y_0 = self.loss(smiles) # for refrence molecules 
+        y_0, quinone_tf_0 = self.loss(smiles) # for reference molecule 
         x_0 = self.smiles_to_encoded(smiles)
         dy_arr = []
         dx_arr = []
+        print(len(self.stdev))
+        print(len(x_0))
         for ind, i in enumerate(self.stdev):
             encoded_x_0 = x_0
             encoded_x_0[ind] += i
             dx_arr.append(encoded_x_0)
             try:
-                encoded_loss = self.encoded_to_loss(encoded_x_0, smiles)
+                encoded_loss, quinone_tf = self.encoded_to_loss(encoded_x_0, smiles)
             except:
                 print("failed subgradient")
                 encoded_loss = -1    
@@ -372,8 +376,11 @@ class optimizer_vae(object):
                 dy_arr.append(0)
             else:
                 dy_arr.append(encoded_loss)
+
+        print(dy_arr)
         dy_arr = np.array(dy_arr) - y_0 
-        dy_arr /= (self.stdev)
+        for ind in range(len(dy_arr)): dy_arr[ind] = dy_arr[ind]/self.stdev[ind]
+        #dy_arr /= (self.stdev)
         return dy_arr, dx_arr
 
     def grad_iter(self):
@@ -397,11 +404,10 @@ class optimizer_vae(object):
                     print("failed molecular conversion")
                     filter_val = False
 
-                if(not(filter_val)):
-                    print("non lipinski, redrawing")
-                else:
+                if(filter_val):
+                    print("quinone found")
                     try:
-                        smiles_ret.append(smiles_grad) 
+                        smiles_ret.append(10*smiles_grad) 
                         succ_ind.append(mol_ind)
                         print(smiles, smiles_grad)
                     except:
@@ -535,8 +541,12 @@ class optimizer_vae(object):
             (self.max_mol_len, self.alpha_len),
             self.selfies_alphabet,
         )
-        print(np.shape(np.var(code_decode_train, axis = 1)))
-        self.stdev = np.var(code_decode_train, axis = 1)
+        slice_vae_latent = []
+        for i in tqdm(train_data[0:10000]):
+            slice_vae_latent.append(self.encoder.predict(i.reshape(1,-1))[0])
+        slice_vae_latent = np.array(slice_vae_latent)
+        #slice_vae_latent = encoder_train[0,:,:]
+        self.stdev = np.var(slice_vae_latent, axis = 0)[0] * 10
 
     def hall_of_fame(self, pop, loss):
         max_temp = -1
@@ -558,9 +568,7 @@ class optimizer_vae(object):
 
 if __name__ == "__main__":
     from utils.selfies_util import smiles
-    mols_smiles = pd.read_hdf('../data/desc/DB3/desc_calc_DB3_self.h5')['name'].tolist()
     parser = argparse.ArgumentParser(description="parameters of VAE study")
-
     parser.add_argument(
         "--longi",
         action="store_true",
@@ -585,7 +593,7 @@ if __name__ == "__main__":
         "-start_pop",
         action="store",
         dest="start_pop_size",
-        default=20,
+        default=100,
         help="start pop size",
     )
     parser.add_argument(
@@ -600,6 +608,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--random", action="store_true", dest="random_bool", help="random crossing"
     )
+  
 
     results = parser.parse_args()
     long = bool(results.longitudnal)
@@ -609,10 +618,21 @@ if __name__ == "__main__":
     start_pop_size = int(results.start_pop_size)
     ckpt = bool(results.ckpt)
     random_bool = bool(results.random_bool)
-    algo = str(results.algo)
-    desc = str(results.desc)
+
+    #desc = str(results.desc)
+    #algo = str(results.algo)
     
-    
+    mols_smiles = []
+    files = glob("../data/xyz/DB3/*")
+    for i in tqdm(files):
+        try:
+            mol = next(pybel.readfile("xyz", i))
+            smi = mol.write(format="smi")
+            smi = Chem.CanonSmiles(smi)
+            mols_smiles.append(smi.split()[0].strip())
+        except:
+            pass
+
     mols_smiles = mols_smiles[0:int(results.mols_data)]
     SMILES_clean = list(filter(None, mols_smiles))
 
@@ -644,17 +664,5 @@ if __name__ == "__main__":
     model_performance = []
     retrain = False
     test = False
-    if test == False:
-        while True:
-            model_performance = opt.train_models(
-                test=True, retrain=retrain, ret_list=model_performance
-            )
-            if all(float(i) >= 0.1 for i in model_performance):
-                break
-            retrain = True
-    else:
-        model_performance = opt.train_models(
-            test=True, retrain=retrain, ret_list=model_performance
-        )
-
+    model_performance = opt.train_models()
     opt.enrich_pop()

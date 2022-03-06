@@ -585,8 +585,12 @@ class gnn_v3(Model):
             )
         self.pool = GlobalSumPool()
         self.dense1 = Dense(channels, activation="relu")
-        self.dropout = Dropout(0.5)
-        self.dense2 = Dense(1, activation="linear")
+        self.dropout1 = Dropout(0.5)
+        self.dense2 = Dense(500, activation="relu")
+        self.dropout2 = Dropout(0.5)
+        self.dense3 = Dense(500, activation="relu")
+        self.dropout3 = Dropout(0.5)
+        self.dense4 = Dense(1, activation="linear")
 
     def call(self, inputs):
         x, a, e = inputs
@@ -596,9 +600,14 @@ class gnn_v3(Model):
         for conv in self.convs:
             x = conv([x, a, e])
         x = self.pool(x)
+
         x = self.dense1(x)
-        x = self.dropout(x)
-        return self.dense2(x)
+        x = self.dropout1(x)
+        x = self.dense2(x)
+        x = self.dropout2(x)
+        x = self.dense3(x)
+        x = self.dropout3(x)
+        return self.dense4(x)
 
 
 class gnn_v4(Model):

@@ -157,9 +157,12 @@ def compare_equality(x_test, autoencoded_selfies, dim, selfies_alphabet):
 
         self_test = sf.encoding_to_selfies(one_hot.tolist(), selfies_alphabet, "one_hot")
         self_true = sf.encoding_to_selfies(one_hot_true.tolist(), selfies_alphabet, "one_hot")
-
-        canonical_smiles = Chem.CanonSmiles(sf.decoder(self_true))
-        canonical_autoencoder_smiles = Chem.CanonSmiles(sf.decoder(self_test))
+        try:
+            canonical_smiles = Chem.CanonSmiles(sf.decoder(self_true))
+            canonical_autoencoder_smiles = Chem.CanonSmiles(sf.decoder(self_test))
+        except:
+            canonical_smiles = 'f1'
+            canonical_smiles = 'f2'
         if(i == 1):
             print("Autoencoded Smiles: " + canonical_autoencoder_smiles)
             print("True Smiles: " + canonical_smiles)
@@ -397,7 +400,7 @@ def sdf(dir="../data/xyz/DB3/"):
 
                 except:
                     try:
-                        if ("item" == smi_shift_min):
+                        if (item == smi_shift_min):
                             ret.append(sdf_file_shift_min)
                             names.append(item)
                             homo_temp = float(list_to_sort[tmp + 1].split(":")[1])

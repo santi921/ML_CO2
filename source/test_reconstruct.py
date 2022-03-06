@@ -42,54 +42,20 @@ len_alphabet_mol = alpha_len * max_mol_len
 
 data_reshape = data.reshape(
     data.shape[0],
-    data.shape[1] * data.shape[2],
-)
+    data.shape[1] * data.shape[2],)
 
 encoder = keras.models.load_model("./encoder")
 decoder = keras.models.load_model("./decoder")
 
 
-(
-    selfies_list,
-    selfies_alphabet1,
-    largest_selfies_len,
-    smiles_list,
-    smiles_alphabet,
-    largest_smiles_len,
-) = get_selfie_and_smiles_encodings_for_dataset(ret_list)
-print(len(selfies_alphabet1))
-
-
-
-test = selfies_list
-(
-    selfies_list,
-    selfies_alphabet2,
-    largest_selfies_len,
-    smiles_list,
-    smiles_alphabet,
-    largest_smiles_len,
-) = get_selfie_and_smiles_encodings_for_dataset(ret_list)
-
-test = selfies_list
-data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet2)
-data_reshape = data.reshape(
-    data.shape[0],
-    data.shape[1] * data.shape[2],
-)
-
-print("data converted")
-print(np.shape(data_reshape))
-encoder.summary()
-decoder.summary()
-
 encoded_data = encoder.predict(data_reshape)
 code_decode = decoder.predict(encoded_data)
+
 print("prediction step")
 compare_equality(data, code_decode, (data.shape[1], data.shape[2]), selfies_alphabet)
 
 
 textfile = open("vae_alpha.txt", "w")
-for element in selfies_alphabet2:
+for element in selfies_alphabet:
     textfile.write(element + "\n")
 textfile.close()

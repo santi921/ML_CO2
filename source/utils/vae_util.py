@@ -5,6 +5,8 @@ os.system("export KERAS_BACKEND=tensorflow")
 from chemvae.vae_utils import VAEUtils
 from helpers import merge_dir_and_data
 
+from utils.selfies_util import compare_equality
+
 def vae(dir="../data/xyz/"):
     os.system("export KERAS_BACKEND=tensorflow") # you might need to run this command commandline
     vae = VAEUtils(directory='../data/models/zinc_properties')

@@ -1,3 +1,6 @@
+
+from glob import glob
+from rdkit import Chem
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping
@@ -5,7 +8,7 @@ from tensorflow.keras import layers, regularizers
 
 tf.get_logger().setLevel("INFO")
 
-import argparse
+import argparse, pybel
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -166,24 +169,18 @@ if __name__ == "__main__":
     nn_encode = results.nn_encode
     nn_decode = results.nn_decode
 
-    # files, ret_list = smiles(verbose=verbose)
-    # files, ret_list = smiles("../data/smi/DB3/", verbose=verbose)
-    # ret_list = []
-    """
-    ### This is one option for pulling smis for vae training
-    dir = "../data/smi/DB3/actual_smi/"
-    files = os.listdir(dir)
-    for file in files:
+    names = []
+    files = glob("../data/xyz/DB3/*")
+    for i in files:
         try:
-            with open(dir + file, "rb+") as filehandle:
-                ret_list.append(filehandle.readlines()[0].decode("utf-8"))
+            mol = next(pybel.readfile("xyz", i))
+            smi = mol.write(format="smi")
+            smi = Chem.CanonSmiles(smi)
+            print(smi)
+            names.append(smi.split()[0].strip())
         except:
             pass
-    """
-    # more standard method
 
-    names, ret_list, homo, homo1, diff = selfies()
-    print(ret_list[-10:])
 
     (
         selfies_list,
@@ -198,7 +195,6 @@ if __name__ == "__main__":
     print("len of alphabet: " + str(len(selfies_alphabet)))
     print("alphabet list: " + str(selfies_alphabet))
     print("number of molecules: " + str(len(names)))
-    [print(i) for i in selfies_list[-10:]]
 
     data = multiple_selfies_to_hot(selfies_list, largest_selfies_len, selfies_alphabet)
     data_smiles = multiple_smile_to_hot(
@@ -361,3 +357,9 @@ if __name__ == "__main__":
     print("epochs:" + str(epochs))
     print("latent dims:" + str(latent_dim))
     print("beta: " + str(coef))
+    
+    textfile = open("vae_alpha.txt", "w")
+    for element in selfies_alphabet:
+        textfile.write(element + "\n")
+    textfile.close()
+
