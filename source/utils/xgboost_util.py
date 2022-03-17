@@ -78,27 +78,6 @@ def xgboost(x, y, scale, dict=None):
     print("scaled MAE")
     print(scale * score_mae)
 
-    """
-    fimportance = reg.feature_importances_
-    #print(fimportance)
-    #print(zip(range(np.shape(x_test)[1])))
-    fimportance_dict  = {}
-    for i in range(np.shape(x_test)[1]):
-        fimportance_dict[i] = fimportance[i]
-    sorteddata = sorted(fimportance_dict.items(), key=lambda x: -x[1])
-    top10feat = [x[0] for x in sorteddata][:10]
-    print(top10feat)
-    worst = np.argsort(y_test)[0:20]
-    best = np.argsort(y_test)[-20:-1]
-    testidx = worst[0]
-    testmols = x_test
-
-    fp, bitinfo = mol2fp(testmols[testidx])
-    onbit = [bit for bit in bitinfo.keys()]
-    importantonbits = list(set(onbit) & set(top10feat))
-    tpls = [(testmols[testidx], x, bitinfo) for x in importantonbits]
-    Draw.DrawMorganBits(tpls, legends=[str(x) for x in importantonbits])
-    """
     return reg
 
 def xgboost_grid(x, y):

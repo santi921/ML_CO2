@@ -1,5 +1,10 @@
 import sys
-import pybel
+
+try:
+    from openbabel.pybel import *
+except:
+    import pybel
+    
 import os
 import numpy as np
 import pandas as pd

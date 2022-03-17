@@ -1,9 +1,12 @@
 
 import joblib, argparse, uuid, sigopt
+from tqdm import tqdm
 import pandas as pd
 from sklearn import preprocessing
 from utils.sklearn_util import *
 import random
+from rdkit import Chem
+
 
 def calc(
     x,
@@ -243,11 +246,6 @@ if __name__ == "__main__":
     if homo_tf:
         des = des + "_homo"
         print(".........................HOMO..................")
-        #scale_HOMO = np.max(HOMO) - np.min(HOMO)
-        #HOMO = (HOMO - np.min(HOMO)) / scale_HOMO
-        #reg_HOMO = calc(
-        #    mat, HOMO, des, scale_HOMO, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
-        #)
 
         reg_HOMO = calc(
             mat, HOMO, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
@@ -255,51 +253,70 @@ if __name__ == "__main__":
 
         if (benzo_tf):
             homo_benzo = df_benzo['homo']
-            #X_train, X_test, y_train, y_test = train_test_split(mat, homo_benzo, test_size=0.2)
-            y_test_pred = reg_HOMO.predict(mat_benzo)
-            print(np.min(y_test_pred), np.min(y_test_pred), np.std(y_test_pred))
+            mat_benzo = []
+            homo_compare = []
 
+            smi_list = df_benzo["smiles"]
+            mols = [Chem.MolFromSmiles(smi) for smi in smi_list]
+            for ind, i in enumerate(tqdm(mols)):
+                fp = Chem.AllChem.GetMorganFingerprintAsBitVect(i, 2, nBits=int(1024))
+                mat_benzo.append(fp)
+                homo_compare.append(homo_benzo[ind])
+
+            mat_benzo = np.array(mat_benzo)
+            y_test_pred = reg_HOMO.predict(mat_benzo)
+
+            print(np.min(y_test_pred), np.min(y_test_pred), np.std(y_test_pred))
             print(y_test_pred)
-            #y_test_pred = (y_test_pred - np.min(HOMO)) / scale_HOMO
             print(homo_benzo)
-            print("extrapolate benzo r^2: " + str(r2_score(homo_benzo, y_test_pred)))
+            print("extrapolate benzo r^2: " + str(r2_score(homo_compare, y_test_pred)))
 
     if homo1_tf:
         des = des + "_homo_1"
         print(".........................HOMO1..................")
-        #scale_HOMO_1 = np.max(HOMO_1) - np.min(HOMO_1)
-        #HOMO_1 = (HOMO_1 - np.min(HOMO_1)) / scale_HOMO_1
-        #reg_HOMO = calc(
-        #    mat, HOMO_1, des, scale_HOMO_1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
-        #)
+
         reg_HOMO = calc(
             mat, HOMO_1, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
         if (benzo_tf):
             homo1_benzo = df_benzo['homo1']
-            #X_train, X_test, y_train, y_test = train_test_split(mat, homo1_benzo, test_size=0.2)
+            print("homos")
+            print(HOMO_1)
+            print(homo1_benzo)
+            mat_benzo = []
+            homo1_compare = []
+
+            smi_list = df_benzo["smiles"]
+            mols = [Chem.MolFromSmiles(smi) for smi in smi_list]
+            for ind, i in enumerate(tqdm(mols)):
+                fp = Chem.AllChem.GetMorganFingerprintAsBitVect(i, 2, nBits=int(1024))
+                mat_benzo.append(fp)
+                homo1_compare.append(homo1_benzo[ind])
+            mat_benzo = np.array(mat_benzo)
             y_test_pred = reg_HOMO.predict(mat_benzo)
-            #y_test_pred = (y_test_pred - np.min(HOMO_1)) / scale_HOMO_1
-            print("extrapolate benzo r^2: " + str(r2_score(homo1_benzo, y_test_pred)))
+            print("extrapolate benzo r^2: " + str(r2_score(homo1_compare, y_test_pred)))
 
 
     if diff_tf:
         des = des + "_diff"
         print(".........................diff..................")
         scale_diff = np.max(diff) - np.min(diff)
-        # diff = (diff - np.min(diff)) / scale_diff
-        #reg_diff = calc(
-        #    mat, diff, des, scale_diff, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
-        #)
         reg_diff = calc(
             mat, diff, des, 1, rand_tf, grid_tf, bayes_tf, sigopt_tf, algo
         )
 
         if (benzo_tf):
             diff_benzo = df_benzo['diff']
-            #X_train, X_test, y_train, y_test = train_test_split(mat, diff_benzo, test_size=0.2)
+            diff_compare = []
+            mat_benzo = []
+            smi_list = df_benzo["smiles"]
+            mols = [Chem.MolFromSmiles(smi) for smi in smi_list]
+            for ind, i in enumerate(tqdm(mols)):
+                fp = Chem.AllChem.GetMorganFingerprintAsBitVect(i, 2, nBits=int(1024))
+                mat_benzo.append(fp)
+                diff_compare.append(diff_benzo[ind])
+            mat_benzo = np.array(mat_benzo)
             y_test_pred = reg_diff.predict(mat_benzo)
-            #y_test_pred = (y_test_pred - np.min(diff)) / scale_diff
-            print("extrapolate benzo r^2: " + str(r2_score(diff_benzo, y_test_pred)))
+            print("extrapolate benzo r^2: " + str(r2_score(diff_compare, y_test_pred)))
 
 

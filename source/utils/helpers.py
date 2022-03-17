@@ -3,8 +3,11 @@ import sys
 import time
 import pandas as pd
 import numpy as np
-import pybel
-
+try:
+    from openbabel.pybel import *
+except:
+    import pybel
+    
 from rdkit.Avalon import pyAvalonTools
 from rdkit.Chem import AllChem, SDMolSupplier
 from rdkit.Chem import rdRGroupDecomposition as rdRGD
