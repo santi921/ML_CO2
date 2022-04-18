@@ -289,6 +289,8 @@ def get_one_hot_data():
     return list_one_hot, homo, homo1
 
 
+def decode_one_hot(mol_smiles):
+
 class optimizer_genetic(object):
     def __init__(
         self,

@@ -16,8 +16,8 @@ from rdkit.Chem import rdRGroupDecomposition as rdRGD
 
 
 from xgboost import XGBRegressor
-
 from utils.tensorflow_util import *
+from utils.genetic_util import *
 
 import os
 import random
@@ -27,7 +27,6 @@ import selfies as sf
 from tqdm import tqdm
 from rdkit import Chem
 
-from utils.genetic_util import *
 
 
 

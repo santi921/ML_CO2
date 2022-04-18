@@ -37,6 +37,9 @@ def selfies_to_hot(selfie, largest_selfie_len, alphabet):
 
     return integer_encoded, np.array(onehot_encoded)
 
+
+
+
 def multiple_selfies_to_hot(selfies_list, largest_molecule_len, alphabet):
     """Convert a list of selfies strings to a one-hot encoding
     """

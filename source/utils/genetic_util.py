@@ -14,6 +14,7 @@ def random_mutation(one_hot, mut_chance=0.2):
 
     return one_hot
 
+
 def random_mutation_one_hot(one_hot, mut_chance=0.2):
 
     mutation_point = np.random.randint(0, len(one_hot))
@@ -28,6 +29,7 @@ def random_mutation_one_hot(one_hot, mut_chance=0.2):
         one_hot[mutation_point] = 1
 
     return one_hot
+
 
 def multi_mutation(one_hot, mut_steps=5, mut_chance=0.1):
     for _ in range(mut_steps):
@@ -63,7 +65,7 @@ def cross_one_hot(one_hot_1, one_hot_2):
 
 def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
     total_loss = 0
-    k = 1
+    k = 0.05
 
     if(boltz == True):
         try:
