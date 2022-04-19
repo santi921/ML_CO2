@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 
-def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
 
+def check_file(dir="../data/desc/ZZ/", dir_orig="../data/sdf/ZZ/"):
 
     ls_dir = "ls " + dir_orig
     temp = os.popen(ls_dir).read()
@@ -16,7 +16,7 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
     print("dbs to check " + str(temp))
 
     for db in temp:
-        if(db[-1] == "l"):
+        if db[-1] == "l":
             try:
                 df_reload = pd.read_pickle("../data/desc/" + filename + ".pkl")
                 print(db + " converted: " + str(df_reload.shape[0]))
@@ -29,4 +29,3 @@ def check_file(dir = "../data/desc/ZZ/", dir_orig = "../data/sdf/ZZ/"):
                 print(db + " converted: " + str(df_reload2.shape[0]))
             except:
                 print(db + " isn't working")
-

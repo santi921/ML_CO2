@@ -9,23 +9,45 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.layers import Dense, Input, Dropout
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
+gpus = tf.config.experimental.list_physical_devices("GPU")
 if gpus:
     try:
         for gpu in gpus:
             tf.config.experimental.set_memory_growth(gpu, True)
     except RuntimeError as e:
-        print(e)  
+        print(e)
 
 
-from spektral.data import BatchLoader, Graph, Dataset, Loader, utils, DisjointLoader, MixedLoader, SingleLoader
+from spektral.data import (
+    BatchLoader,
+    Graph,
+    Dataset,
+    Loader,
+    utils,
+    DisjointLoader,
+    MixedLoader,
+    SingleLoader,
+)
 from spektral.datasets import QM9
 
 from spektral.utils import label_to_one_hot, load_sdf, load_csv
 from spektral.models import GeneralGNN, GCN
 
-from spektral.layers import AGNNConv, ECCConv, GlobalSumPool,DiffusionConv, GATConv, GINConv,\
-     GeneralConv, GlobalAttentionPool, GCNConv,CrystalConv, MessagePassing, MinCutPool, GlobalAvgPool
+from spektral.layers import (
+    AGNNConv,
+    ECCConv,
+    GlobalSumPool,
+    DiffusionConv,
+    GATConv,
+    GINConv,
+    GeneralConv,
+    GlobalAttentionPool,
+    GCNConv,
+    CrystalConv,
+    MessagePassing,
+    MinCutPool,
+    GlobalAvgPool,
+)
 from spektral.layers.convolutional import GCSConv, MessagePassing, GeneralConv, GATConv
 from spektral.transforms.normalize_adj import NormalizeAdj
 from spektral.layers.pooling import MinCutPool, TopKPool
@@ -35,7 +57,7 @@ from sklearn.metrics import r2_score
 
 from tqdm import tqdm
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from scipy import sparse as sp
 
 from joblib import Parallel, delayed
@@ -178,7 +200,6 @@ SYMBOL_TO_NUM = {v: k for k, v in NUM_TO_SYMBOL.items()}
 
 def atom_to_feature(atom):
 
-        
     atomic_num = label_to_one_hot(atom["atomic_num"], ATOM_TYPES)
     coords = atom["coords"]
     charge = atom["charge"]
@@ -186,9 +207,8 @@ def atom_to_feature(atom):
     return np.concatenate((atomic_num, coords, [charge, iso]), -1)
 
 
-
 def mol_to_adj(mol):
-    
+
     row, col, edge_features = [], [], []
     for bond in mol["bonds"]:
         start, end = bond["start_atom"], bond["end_atom"]
@@ -202,7 +222,6 @@ def mol_to_adj(mol):
         edge_features=label_to_one_hot(edge_features, BOND_TYPES),
     )
     return a, e
-
 
 
 def reorder(edge_index, edge_weight=None, edge_features=None):
@@ -232,7 +251,6 @@ def reorder(edge_index, edge_weight=None, edge_features=None):
     return tuple(output)
 
 
-
 def edge_index_to_matrix(edge_index, edge_weight, edge_features=None, shape=None):
     reordered = reorder(edge_index, edge_weight, edge_features)
     a = sp.csr_matrix((reordered[1], reordered[0].T), shape=shape)
@@ -249,9 +267,8 @@ def read_mol(mol):
     return x, a, e
 
 
-
 def parse_sdf(sdf):
-    #print(sdf)
+    # print(sdf)
     sdf_out = {}
     sdf = sdf.split("\n")
     sdf_out["name"], sdf_out["details"], sdf_out["comment"] = _parse_header(sdf)
@@ -263,7 +280,6 @@ def parse_sdf(sdf):
     )
     sdf_out["data"] = _parse_data_fields(sdf)
     return sdf_out
-
 
 
 def _get_atomic_num(symbol):
@@ -412,7 +428,7 @@ def load_sdf(filename, amount=None):
     :param amount: only load the first `amount` molecules from the file
     :return: a list of molecules in the internal SDF format (see documentation).
     """
-    #print("Reading SDF")
+    # print("Reading SDF")
     with open(filename) as f:
         return parse_sdf_file(f, amount=amount)
 
@@ -426,7 +442,7 @@ def sp_matrix_to_sp_tensor(m):
     :return: a SparseTensor.
     """
     x = sp.csr_matrix(m)
-    
+
     if len(x.shape) != 2:
         raise ValueError("x must have rank 2")
     row, col, values = sp.find(x)
@@ -434,27 +450,32 @@ def sp_matrix_to_sp_tensor(m):
         indices=np.array([row, col]).T, values=values, dense_shape=x.shape
     )
     return tf.sparse.reorder(out)
-    
+
+
 class dataset(Dataset):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def read(self):
         names, ret, homo, homo1, diff = sdf()
-        #print(ret[0]) 
+        # print(ret[0])
         mean = np.mean(diff)
         std = np.std(diff)
         diff_scale = (diff - mean) / std
         mean = np.mean(homo)
         std = np.std(homo)
         homo_scale = (homo - mean) / std
-        #homo_scale = homo # change back
+        # homo_scale = homo # change back
 
         data_sdf = [parse_sdf(i) for i in ret]
-        data = Parallel(n_jobs=1)(delayed(read_mol)(mol) for mol in tqdm(data_sdf, ncols=80))
+        data = Parallel(n_jobs=1)(
+            delayed(read_mol)(mol) for mol in tqdm(data_sdf, ncols=80)
+        )
         x_list, a_list, e_list = list(zip(*data))
-        dataset = [Graph(x=x, a=a, e=e, y = y) for x, a, e, y 
-                   in zip(x_list, a_list, e_list, homo_scale)]
+        dataset = [
+            Graph(x=x, a=a, e=e, y=y)
+            for x, a, e, y in zip(x_list, a_list, e_list, homo_scale)
+        ]
 
         return dataset
 
@@ -468,27 +489,32 @@ class dataset_benzo(Dataset):
         data_graph = []
         df = pd.read_hdf("../data/benzo/compiled.h5")
         sdf_full = glob("../data/benzo/*/input1.sdf")
-        
+
         homo = df["homo"].tolist()
         homo1 = df["homo1"].tolist()
-        diff = df['diff'].tolist()
+        diff = df["diff"].tolist()
         smiles = df["smiles"].tolist()
-        smiles = [Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles]
-        
+        smiles = [
+            Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles
+        ]
+
         mean = np.mean(np.array(homo))
         std = np.std(np.array(homo))
         homo_scale = (np.array(homo) - mean) / std
-        #homo_scale = np.array(homo)
+        # homo_scale = np.array(homo)
 
-        with open('../data/benzo/save_smiles.txt') as f: 
+        with open("../data/benzo/save_smiles.txt") as f:
             smiles_full_line = f.readlines()
 
         smiles_files = [i.split(":")[1] for i in smiles_full_line]
-        smiles_files = [Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True) for i in smiles_files]
-        for ind in range(len(smiles)):    
-            if(smiles[ind] in smiles_files):
-                ret.append(pybel.readstring("smi",smiles[ind]).write("sdf"))
-        
+        smiles_files = [
+            Chem.MolToSmiles(Chem.MolFromSmiles(i), canonical=True)
+            for i in smiles_files
+        ]
+        for ind in range(len(smiles)):
+            if smiles[ind] in smiles_files:
+                ret.append(pybel.readstring("smi", smiles[ind]).write("sdf"))
+
         data = [parse_sdf(i) for i in ret]
 
         for mol in tqdm(data, ncols=80):
@@ -497,60 +523,61 @@ class dataset_benzo(Dataset):
             except:
                 print("failed molecule")
                 pass
-        #data = Parallel(n_jobs=-1)(delayed(read_mol)(mol) for mol in tqdm(data, ncols=80))
+        # data = Parallel(n_jobs=-1)(delayed(read_mol)(mol) for mol in tqdm(data, ncols=80))
         x_list, a_list, e_list = list(zip(*data_graph))
 
-        dataset = [Graph(x=x, a=a, e=e, y = y) for x, a, e, y 
-                   in zip(x_list, a_list, e_list, homo_scale)]
+        dataset = [
+            Graph(x=x, a=a, e=e, y=y)
+            for x, a, e, y in zip(x_list, a_list, e_list, homo_scale)
+        ]
         return dataset
 
 
 def partition_dataset(dataset):
     learning_rate = 1e-3  # Learning rate
     epochs = 50  # Number of training epochs
-    batch_size = 100 # Batch size
-    
+    batch_size = 100  # Batch size
+
     # Train/test split
     idxs = np.random.permutation(len(dataset))
     split = int(0.85 * len(dataset))
     idx_tr, idx_te = np.split(idxs, [split])
     idx_tr = [int(i) for i in idx_tr]
     idx_te = [int(i) for i in idx_te]
-    dataset_train = dataset[idx_tr]  
-    dataset_test = dataset[idx_te] 
-    
-    #steps_per_epoch = len(dataset) /  batch_size
-    loader = BatchLoader(dataset, epochs = epochs, batch_size = batch_size)
+    dataset_train = dataset[idx_tr]
+    dataset_test = dataset[idx_te]
 
-    #steps_per_epoch = len(dataset_train) /  batch_size
-    loader_train = BatchLoader(dataset_train, epochs = epochs, batch_size = batch_size)
+    # steps_per_epoch = len(dataset) /  batch_size
+    loader = BatchLoader(dataset, epochs=epochs, batch_size=batch_size)
 
-    #steps_per_epoch = len(dataset_test) /  batch_size
-    loader_test = BatchLoader(dataset_test, batch_size = batch_size)
+    # steps_per_epoch = len(dataset_train) /  batch_size
+    loader_train = BatchLoader(dataset_train, epochs=epochs, batch_size=batch_size)
+
+    # steps_per_epoch = len(dataset_test) /  batch_size
+    loader_test = BatchLoader(dataset_test, batch_size=batch_size)
 
     return loader_train, loader_test, loader
-
 
 
 class gnn_v5(Model):
     def __init__(self, N):
         super().__init__()
-        
-        #self.mask = GraphMasking()
+
+        # self.mask = GraphMasking()
         self.conv1 = GCSConv(32, activation="relu")
         self.pool = MinCutPool(N / 2)
         self.conv2 = GCSConv(32, activation="relu")
-        #self.global_pool = GlobalSumPool()
+        # self.global_pool = GlobalSumPool()
         self.dense1 = Dense(1)
 
     def call(self, inputs):
 
         x, a, _ = inputs
-        #x = self.mask(x)
+        # x = self.mask(x)
         x = self.conv1([x, a])
         x_pool, a_pool = self.pool([x, a])
         x_pool = self.conv2([x_pool, a_pool])
-        #output = self.global_pool(x_pool)
+        # output = self.global_pool(x_pool)
         output = self.dense1(output)
         return output
 
@@ -558,7 +585,7 @@ class gnn_v5(Model):
 class gnn_v2(Model):
     def __init__(self):
         super().__init__()
-        #self.masking = GraphMasking()
+        # self.masking = GraphMasking()
         self.conv1 = ECCConv(32, activation="relu")
         self.conv2 = ECCConv(32, activation="relu")
         self.global_pool = GlobalSumPool()
@@ -566,7 +593,7 @@ class gnn_v2(Model):
 
     def call(self, inputs):
         x, a, e = inputs
-        #x = self.masking(x)
+        # x = self.masking(x)
         x = self.conv1([x, a, e])
         x = self.conv2([x, a, e])
         output = self.global_pool(x)
@@ -575,7 +602,7 @@ class gnn_v2(Model):
 
 
 class gnn_v3(Model):
-    def __init__(self, channels = 64, n_layers = 3):
+    def __init__(self, channels=64, n_layers=3):
         super().__init__()
         self.conv1 = ECCConv(channels, epsilon=0, mlp_hidden=[channels, channels])
         self.convs = []
@@ -594,8 +621,8 @@ class gnn_v3(Model):
 
     def call(self, inputs):
         x, a, e = inputs
-        #a = sp_matrix_to_sp_tensor(a)
-        
+        # a = sp_matrix_to_sp_tensor(a)
+
         x = self.conv1([x, a, e])
         for conv in self.convs:
             x = conv([x, a, e])
@@ -613,7 +640,7 @@ class gnn_v3(Model):
 class gnn_v4(Model):
     def __init__(self):
         super().__init__()
-        #self.masking = GraphMasking()
+        # self.masking = GraphMasking()
         self.conv1 = GCSConv(32, activation="relu")
         self.conv2 = GCSConv(32, activation="relu")
         self.global_pool = GlobalSumPool()
@@ -622,7 +649,7 @@ class gnn_v4(Model):
 
     def call(self, inputs):
         x, a, e = inputs
-        #x = self.masking(x)
+        # x = self.masking(x)
         x = self.conv1([x, a])
         x = self.conv2([x, a])
         output = self.global_pool(x)
@@ -633,7 +660,6 @@ class gnn_v4(Model):
 
 
 class gnn_v1(Model):
-
     def __init__(self):
         super().__init__()
         self.conv1 = GCSConv(32, activation="relu")

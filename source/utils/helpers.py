@@ -605,6 +605,55 @@ def pull_chembl_smiles(SMILES = [], ratio = 1.0, save = False, use_file = False,
     SMILES_ret = np.random.choice(set(SMILES_ret), size = int(ratio * len(SMILES)), replace=False)
     return SMILES_ret
 
+def list_to_smiles(list_combin, benzo=True, anthra=False, napth=False):
+    benzo_list = ["C1(", ")=C(", ")C(=O)C(", ")=C(", ")C1=O"]
+    anthraquinone_list = ['c1cc(', ')c2c(c(', ')1)C(=O)c3c(', ')ccc(', ')c3C2=O']
+    naphtoquinone_list = ['O=C1C(', ')=C(', ')C(=O)C2=C(', ')C=CC(', ')=C12']
+
+    if (benzo == True):
+        master_list = benzo_list
+    if (anthra ==True):
+        master_list = anthraquinone_list
+    if (napth == True):
+        master_list = naphtoquinone_list
+
+    list_values = list_combin.split("_")
+    ring_sub = []
+    shift = 3
+    for ind, i in enumerate(list_values):
+        out_res = np.array([int(char.isdigit()) for char in i])
+        digit = np.max(out_res)
+        if (digit > 0):
+            shift += 1
+            list_values[ind] = list_values[ind].replace('1', str(shift), 2)
+    # removes para to account for no functionalization
+    if (list_values[0] == 'z'):
+        master_list[0] = master_list[0][0:-1]
+        master_list[1] = master_list[1][1:]
+    if (list_values[1] == 'z'):
+        master_list[1] = master_list[1][0:-1]
+        master_list[2] = master_list[2][1:]
+    if (list_values[2] == 'z'):
+        master_list[2] = master_list[2][0:-1]
+        master_list[3] = master_list[3][1:]
+    if (list_values[3] == 'z'):
+        master_list[-2] = master_list[-2][0:-1]
+        master_list[-1] = master_list[-1][1:]
+
+    shift = 0  # inserts functionalization into list
+    if (list_values[0] != 'z'):
+        master_list.insert(1, list_values[0])
+        shift += 1
+    if (list_values[1] != 'z'):
+        master_list.insert(2 + shift, list_values[1])
+        shift += 1
+    if (list_values[2] != 'z'):
+        master_list.insert(3 + shift, list_values[2])
+        shift += 1
+    if (list_values[3] != 'z'):
+        master_list.insert(4 + shift, list_values[3])
+    return ''.join(master_list)
+
 
 def quinone_check(mol_smiles):
     mol = Chem.MolFromSmiles(mol_smiles)
@@ -693,3 +742,372 @@ def quinone_check(mol_smiles):
                                 else:
                                     success = 0
     return success
+
+
+def napht_check(mol_smiles):
+
+    mol = Chem.MolFromSmiles(mol_smiles)
+    res_1 = []
+    anthra = Chem.MolFromSmiles("O=C1c2ccccc2C(=O)c3ccccc13")
+
+    frag_list = []
+
+    success = 0
+    res1, unmatched = rdRGD.RGroupDecompose([anthra], [mol], asSmiles=True)
+
+    if len(res1) != 0:
+        frag_list.append(res1)
+        success = 1
+    return frag_list
+
+
+def anthra_check(mol_smiles):
+
+    mol = Chem.MolFromSmiles(mol_smiles)
+    res_1 = []
+    anthra = Chem.MolFromSmiles("O=C1c2ccccc2C(=O)c3ccccc13")
+
+    frag_list = []
+
+    success = 0
+    res1, unmatched = rdRGD.RGroupDecompose([anthra], [mol], asSmiles=True)
+
+    if len(res1) != 0:
+        frag_list.append(res1)
+        success = 1
+    return frag_list
+
+def one_hot_to_smiles(one_hot, napht, anthra, benzo = True):
+    list_out = one_hot_to_list(one_hot, napht, anthra, benzo)
+    return list_to_smiles(list_out, benzo=True, anthra=False, napth=False)
+
+def one_hot_to_list(one_hot, napht, anthra, benzo = True):
+    
+    list = []
+    one_hot
+
+    if(benzo):
+         for i in range(4):
+            
+            temp_ind = np.argmax(one_hot)[0]
+            one_hot[temp_ind] -= 1
+            
+            if temp_ind == 0:
+                list.append('[N](C)(C)C')
+            elif temp_ind == 1:
+                list.append("[N+](=O)[O-]")
+            elif temp_ind == 2:
+                list.append('C#N')         
+            elif temp_ind == 3:
+                list.append('C[N](C)(C)C')
+            elif temp_ind == 4:
+                list.append('CC(=O)O')                
+            elif temp_ind == 5:
+                list.append("Br")
+            elif temp_ind == 6:
+                list.append("Cl")
+            elif temp_ind == 7:
+                list.append('C(=O)OC')
+            elif temp_ind == 8:
+                list.append('C(F)(F)F')
+            elif temp_ind == 9:
+                list.append("CC(N)=O")
+            elif temp_ind == 10:
+                list.append("c1ccccc1")
+            elif temp_ind == 11:
+                list.append("F")
+            elif temp_ind == 12:
+                list.append("Oc1ccccc1")
+            elif temp_ind == 13: 
+                list.append('Nc1ccccc1')
+            elif temp_ind == 14:       
+                list.append('O')
+            elif temp_ind == 15:
+                list.append("CO")
+            elif temp_ind == 16:
+                list.append("c1ccccc1")
+            elif temp_ind == 17:       
+                list.append('OC')
+            elif temp_ind == 18:       
+                list.append('N')
+            elif temp_ind == 19:       
+                list.append('CN')
+            elif temp_ind == 20:   
+                list.append('C')
+            elif temp_ind == 21: 
+                list.append('CC')
+            elif temp_ind == 22: 
+                list.append('CC(C)C')
+            elif temp_ind == 23:   
+                list.append('N(C)C')            
+            elif temp_ind == 24: 
+                list.append('S')
+            elif temp_ind == 25:  
+                list.append('SC')
+            elif temp_ind == 26:  
+                list.append('S(=O)C')
+            elif temp_ind == 27:  
+                list.append('S(=O)(=O)O')
+            elif temp_ind == 28:  
+                list.append('S(=O)(=O)C')    
+            elif temp_ind == 29:       
+                list.append('S(=O)(=O)OC')
+            elif temp_ind == 30:  
+                list.append('S(=O)(=O)c1ccccc1')    
+            elif temp_ind == 31:  
+                list.append('H')                 
+            else: 
+                print("failed")
+
+    elif(napht):
+        for i in range(4):
+            
+            temp_ind = np.argmax(one_hot)[0]
+            one_hot[temp_ind] -= 1
+            
+            if temp_ind == 0:
+                list.append("[N+](=O)[O-]")
+
+            elif temp_ind == 1:
+                list.append('COC=O')
+
+            if temp_ind == 2:
+                list.apend('CC(O)(O)O')
+                
+            if temp_ind == 3:
+                list.append("Br")
+
+            if temp_ind == 4:
+                list.append("Cl")
+
+            elif temp_ind == 5:
+                list.append('C(=O)OC')
+
+            elif temp_ind == 6:
+                list.append('C(F)(F)F')
+
+            elif temp_ind == 7:
+                list.append("CC(N)=O")
+                
+            elif temp_ind == 8:
+                list.append("c1ccccc1")
+
+            elif temp_ind == 9:
+                list.append("F")
+
+            elif temp_ind == 10:
+                list.append("Oc1ccccc1")
+
+            elif temp_ind == 11:
+                list.append("Nc1ccccc1")
+
+            elif temp_ind == 12:
+                list.append("O")
+
+            elif temp_ind == 13: 
+                list.append('S(=O)(=O)c1ccccc1')
+
+            elif temp_ind == 14:       
+                list.append('S(=O)(=O)OC')
+            
+            elif temp_ind == 15:       
+                list.append('OC')
+
+            elif temp_ind == 16:       
+                list.append('N')
+
+            elif temp_ind == 17:       
+                list.append('CN')
+
+            elif temp_ind == 18:   
+                list.append('C')
+
+            elif temp_ind == 19: 
+                list.append('CC')
+    
+            elif temp_ind == 20: 
+                list.append('CC(C)C')
+    
+            elif temp_ind == 21:   
+                list.append('CNC')
+            
+            elif temp_ind == 22: 
+                list.append('S')
+
+            elif temp_ind == 23:  
+                list.append('SC')
+    
+            elif temp_ind == 24:  
+                list.append('S(=O)C')
+                
+            elif temp_ind == 25:  
+                list.append('S(=O)(=O)O')
+
+            elif temp_ind == 26:  
+                list.append('S(=O)(=O)C')                 
+
+            else: 
+                print("failed")
+
+    elif(anthra): 
+        for i in range(4):
+
+            temp_ind = np.argmax(one_hot)[0]
+            one_hot[temp_ind] -= 1
+            
+            if temp_ind == 0:
+                list.append("[N+](=O)[O-]")
+
+            elif temp_ind == 1:
+                list.append('COC=O')
+
+            if temp_ind == 2:
+                list.apend('CC(O)(O)O')
+                
+            if temp_ind == 3:
+                list.append("Br")
+
+            if temp_ind == 4:
+                list.append("Cl")
+
+            elif temp_ind == 5:
+                list.append('C(=O)OC')
+
+            elif temp_ind == 6:
+                list.append('C(F)(F)F')
+
+            elif temp_ind == 7:
+                list.append("CC(N)=O")
+                
+            elif temp_ind == 8:
+                list.append("c1ccccc1")
+
+            elif temp_ind == 9:
+                list.append("F")
+
+            elif temp_ind == 10:
+                list.append("Oc1ccccc1")
+
+            elif temp_ind == 11:
+                list.append("Nc1ccccc1")
+
+            elif temp_ind == 12:
+                list.append("O")
+
+            elif temp_ind == 13: 
+                list.append('S(=O)(=O)c1ccccc1')
+
+            elif temp_ind == 14:       
+                list.append('H')
+            
+            elif temp_ind == 15:       
+                list.append('OC')
+
+            elif temp_ind == 16:       
+                list.append('N')
+
+            elif temp_ind == 17:       
+                list.append('CN')
+
+            elif temp_ind == 18:   
+                list.append('C')
+
+            elif temp_ind == 19: 
+                list.append('CC')
+    
+            elif temp_ind == 20: 
+                list.append('CC(C)C')
+    
+            elif temp_ind == 21:   
+                list.append('CNC')
+            
+            elif temp_ind == 22: 
+                list.append('S')
+
+            elif temp_ind == 23:  
+                list.append('SC')
+    
+            elif temp_ind == 24:  
+                list.append('S(=O)C')
+                
+            elif temp_ind == 25:  
+                list.append('S(=O)(=O)O')
+
+            elif temp_ind == 26:  
+                list.append('S(=O)(=O)C')
+
+            elif temp_ind == 27:  
+                list.append('S(=O)(=O)OC')                    
+
+            else: 
+                print("failed")
+
+    else: 
+        print("failed conversion, returning base molecule")
+        list = []
+    
+    product = list[0] + "_" + list[1] + "_" + list[2] + "_" + list[3]
+    return product
+
+def list_to_smiles(list_combin, benzo=True, anthra=False, napth=False):
+    master_string = "C1(C)=C(C)C(=O)C(C)=C(C)C1=O"
+    master_list = ["C1(", ")=C(", ")C(=O)C(", ")=C(", ")C1=O"]
+    benzo_list = ["C1(", ")=C(", ")C(=O)C(", ")=C(", ")C1=O"]
+    anthraquinone_list = ['c1cc(', ')c2c(c(', ')1)C(=O)c3c(', ')ccc(', ')c3C2=O']
+    naphtoquinone_list = ['O=C1C(', ')=C(', ')C(=O)C2=C(', ')C=CC(', ')=C12']
+    thiol = 'S'
+    thio_me = 'SC'
+    sulfoxide = 'S(=O)C'
+    sulfone = 'S(=O)(=O)C'
+    sulfonate = 'S(=O)(=O)O'
+    sulfonate_me = 'S(=O)(=O)OC'
+    phenyl_sulfulnate = 'S(=O)(=O)c1ccccc1'
+    ng = [thiol, thio_me, sulfoxide, sulfone, sulfonate, sulfonate_me, phenyl_sulfulnate]
+    pg = ['C#N', 'CC(=O)O', 'F', 'N', 'CN', 'CC(O)(O)O', 'C(F)(F)F', 'CC(N)=O', 'O', 'CNC', 'COC=O', 'Oc1ccccc1',
+        '[N+](=O)[O-]', 'CO', 'Cl', 'C', 'CC', 'CC(C)C', 'Br', 'Nc1ccccc1', 'Cc1ccccc1', 'c1ccccc1']
+    dono_list = ['C#N', 'CC(=O)O', 'N', 'CC(O)(O)O', 'CC(N)=O', 'O', 'CNC', 'COC=O', 'Oc1ccccc1', 'CO', 'Nc1ccccc1',
+                'Cc1ccccc1', 'C', 'CC', 'CC(C)C', 'c1ccccc1']
+
+    if (benzo == True):
+        master_list = benzo_list
+    if (anthra ==True):
+        master_list = anthraquinone_list
+    if (napth == True):
+        master_list = naphtoquinone_list
+
+    list_values = list_combin.split("_")
+    ring_sub = []
+    shift = 3
+    for ind, i in enumerate(list_values):
+        out_res = np.array([int(char.isdigit()) for char in i])
+        digit = np.max(out_res)
+        if (digit > 0):
+            shift += 1
+            list_values[ind] = list_values[ind].replace('1', str(shift), 2)
+    # removes para to account for no functionalization
+    if (list_values[0] == 'z'):
+        master_list[0] = master_list[0][0:-1]
+        master_list[1] = master_list[1][1:]
+    if (list_values[1] == 'z'):
+        master_list[1] = master_list[1][0:-1]
+        master_list[2] = master_list[2][1:]
+    if (list_values[2] == 'z'):
+        master_list[2] = master_list[2][0:-1]
+        master_list[3] = master_list[3][1:]
+    if (list_values[3] == 'z'):
+        master_list[-2] = master_list[-2][0:-1]
+        master_list[-1] = master_list[-1][1:]
+
+    shift = 0  # inserts functionalization into list
+    if (list_values[0] != 'z'):
+        master_list.insert(1, list_values[0])
+        shift += 1
+    if (list_values[1] != 'z'):
+        master_list.insert(2 + shift, list_values[1])
+        shift += 1
+    if (list_values[2] != 'z'):
+        master_list.insert(3 + shift, list_values[2])
+        shift += 1
+    if (list_values[3] != 'z'):
+        master_list.insert(4 + shift, list_values[3])
+    return ''.join(master_list)

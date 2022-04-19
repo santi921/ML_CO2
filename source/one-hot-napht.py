@@ -24,23 +24,9 @@ from rdkit import Chem
 
 #from utils.sklearn_util import *
 from utils.genetic_util import *
+from utils.helpers import nap, napht_check
 from sklearn.kernel_ridge import KernelRidge
 
-def napht_check(mol_smiles):
-
-    mol = Chem.MolFromSmiles(mol_smiles)
-    res_1 = []
-    anthra = Chem.MolFromSmiles("O=C1c2ccccc2C(=O)c3ccccc13")
-
-    frag_list = []
-
-    success = 0
-    res1, unmatched = rdRGD.RGroupDecompose([anthra], [mol], asSmiles=True)
-
-    if len(res1) != 0:
-        frag_list.append(res1)
-        success = 1
-    return frag_list
 
 def get_one_hot_data():
     df_napht= pd.read_hdf("../data/napth/compiled.h5")
@@ -145,6 +131,7 @@ def get_one_hot_data():
             elif split == "S(=O)(=O)c1ccccc1" or split == "O=S(=O)(c1ccccc1)":
                 list_temp[13] += 1
                 list_groups.append(13)
+                
             elif split == "S(=O)(=O)OC" or split == "COS(=O)(=O)":
                 list_temp[14] += 1
                 list_groups.append(14)
@@ -287,9 +274,6 @@ def get_one_hot_data():
     
 
     return list_one_hot, homo, homo1
-
-
-def decode_one_hot(mol_smiles):
 
 class optimizer_genetic(object):
     def __init__(

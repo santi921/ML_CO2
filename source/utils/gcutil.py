@@ -10,14 +10,14 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-#                                                   
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
-# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Utilities for gc.py
 
 import numpy as np
@@ -37,7 +37,7 @@ def replace_vars(vlist, variables):
 
 
 def readxyz(filename):
-    xyzf = open(filename, 'r')
+    xyzf = open(filename, "r")
     xyzarr = np.zeros([1, 3])
     atomnames = []
     if not xyzf.closed:
@@ -51,7 +51,7 @@ def readxyz(filename):
         i = 0
         for line in xyzf:
             words = line.split()
-            if (len(words) > 3):
+            if len(words) > 3:
                 atomnames.append(words[0])
                 xyzarr[i][0] = float(words[1])
                 xyzarr[i][1] = float(words[2])
@@ -61,7 +61,7 @@ def readxyz(filename):
 
 
 def readzmat(filename):
-    zmatf = open(filename, 'r')
+    zmatf = open(filename, "r")
     atomnames = []
     rconnect = []
     rlist = []
@@ -74,7 +74,7 @@ def readzmat(filename):
     if not zmatf.closed:
         for line in zmatf:
             words = line.split()
-            eqwords = line.split('=')
+            eqwords = line.split("=")
 
             if len(eqwords) > 1:
                 varname = str(eqwords[0]).strip()
@@ -140,7 +140,7 @@ def dihedral(xyzarr, i, j, k, l):
     y = np.dot(m1, v2)
     chi = np.arctan2(y, x)
     chi = -180.0 - 180.0 * chi / np.pi
-    if (chi < -180.0):
+    if chi < -180.0:
         chi = chi + 360.0
     return chi
 
@@ -158,75 +158,79 @@ def write_zmat(xyzarr, distmat, atomnames, rvar=False, avar=False, dvar=False):
             # and the second, with distance from first
             n = atomnames[1]
             rlist.append(distmat[0][1])
-            if (rvar):
-                r = 'R1'
+            if rvar:
+                r = "R1"
             else:
-                r = '{:>11.5f}'.format(rlist[0])
-            print('{:<3s} {:>4d}  {:11s}'.format(n, 1, r))
+                r = "{:>11.5f}".format(rlist[0])
+            print("{:<3s} {:>4d}  {:11s}".format(n, 1, r))
 
             if npart > 2:
                 n = atomnames[2]
 
                 rlist.append(distmat[0][2])
-                if (rvar):
-                    r = 'R2'
+                if rvar:
+                    r = "R2"
                 else:
-                    r = '{:>11.5f}'.format(rlist[1])
+                    r = "{:>11.5f}".format(rlist[1])
 
                 alist.append(angle(xyzarr, 2, 0, 1))
-                if (avar):
-                    t = 'A1'
+                if avar:
+                    t = "A1"
                 else:
-                    t = '{:>11.5f}'.format(alist[0])
+                    t = "{:>11.5f}".format(alist[0])
 
-                print('{:<3s} {:>4d}  {:11s} {:>4d}  {:11s}'.format(n, 1, r, 2, t))
+                print("{:<3s} {:>4d}  {:11s} {:>4d}  {:11s}".format(n, 1, r, 2, t))
 
                 if npart > 3:
                     for i in range(3, npart):
                         n = atomnames[i]
 
                         rlist.append(distmat[i - 3][i])
-                        if (rvar):
-                            r = 'R{:<4d}'.format(i)
+                        if rvar:
+                            r = "R{:<4d}".format(i)
                         else:
-                            r = '{:>11.5f}'.format(rlist[i - 1])
+                            r = "{:>11.5f}".format(rlist[i - 1])
 
                         alist.append(angle(xyzarr, i, i - 3, i - 2))
-                        if (avar):
-                            t = 'A{:<4d}'.format(i - 1)
+                        if avar:
+                            t = "A{:<4d}".format(i - 1)
                         else:
-                            t = '{:>11.5f}'.format(alist[i - 2])
+                            t = "{:>11.5f}".format(alist[i - 2])
 
                         dlist.append(dihedral(xyzarr, i, i - 3, i - 2, i - 1))
-                        if (dvar):
-                            d = 'D{:<4d}'.format(i - 2)
+                        if dvar:
+                            d = "D{:<4d}".format(i - 2)
                         else:
-                            d = '{:>11.5f}'.format(dlist[i - 3])
-                        print('{:3s} {:>4d}  {:11s} {:>4d}  {:11s} {:>4d}  {:11s}'.format(n, i - 2, r, i - 1, t, i, d))
-    if (rvar):
+                            d = "{:>11.5f}".format(dlist[i - 3])
+                        print(
+                            "{:3s} {:>4d}  {:11s} {:>4d}  {:11s} {:>4d}  {:11s}".format(
+                                n, i - 2, r, i - 1, t, i, d
+                            )
+                        )
+    if rvar:
         print(" ")
         for i in range(npart - 1):
-            print('R{:<4d} = {:>11.5f}'.format(i + 1, rlist[i]))
-    if (avar):
+            print("R{:<4d} = {:>11.5f}".format(i + 1, rlist[i]))
+    if avar:
         print(" ")
         for i in range(npart - 2):
-            print('A{:<4d} = {:>11.5f}'.format(i + 1, alist[i]))
-    if (dvar):
+            print("A{:<4d} = {:>11.5f}".format(i + 1, alist[i]))
+    if dvar:
         print(" ")
         for i in range(npart - 3):
-            print('D{:<4d} = {:>11.5f}'.format(i + 1, dlist[i]))
+            print("D{:<4d} = {:>11.5f}".format(i + 1, dlist[i]))
 
 
 def write_xyz(atomnames, rconnect, rlist, aconnect, alist, dconnect, dlist):
     npart = len(atomnames)
     print(npart)
-    print('INSERT TITLE CARD HERE')
+    print("INSERT TITLE CARD HERE")
 
     xyzarr = np.zeros([npart, 3])
-    if (npart > 1):
+    if npart > 1:
         xyzarr[1] = [rlist[0], 0.0, 0.0]
 
-    if (npart > 2):
+    if npart > 2:
         i = rconnect[1] - 1
         j = aconnect[0] - 1
         r = rlist[1]
@@ -235,7 +239,7 @@ def write_xyz(atomnames, rconnect, rlist, aconnect, alist, dconnect, dlist):
         y = r * np.sin(theta)
         a_i = xyzarr[i]
         b_ij = xyzarr[j] - xyzarr[i]
-        if (b_ij[0] < 0):
+        if b_ij[0] < 0:
             x = a_i[0] - x
             y = a_i[1] - y
         else:
@@ -277,4 +281,8 @@ def write_xyz(atomnames, rconnect, rlist, aconnect, alist, dconnect, dlist):
         xyzarr[n] = [new_x, new_y, new_z]
 
     for i in range(npart):
-        print('{:<4s}\t{:>11.5f}\t{:>11.5f}\t{:>11.5f}'.format(atomnames[i], xyzarr[i][0], xyzarr[i][1], xyzarr[i][2]))
+        print(
+            "{:<4s}\t{:>11.5f}\t{:>11.5f}\t{:>11.5f}".format(
+                atomnames[i], xyzarr[i][0], xyzarr[i][1], xyzarr[i][2]
+            )
+        )

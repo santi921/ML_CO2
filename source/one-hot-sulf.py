@@ -18,6 +18,7 @@ from rdkit.Chem import rdRGroupDecomposition as rdRGD
 from xgboost import XGBRegressor
 from utils.tensorflow_util import *
 from utils.genetic_util import *
+from utils.helpers import quinone_check
 
 import os
 import random
@@ -331,7 +332,6 @@ def get_one_hot_data():
                 list_temp[29] += 1
                 list_groups.append(29)
             elif split == "S(=O)(=O)c1ccccc1":
-
                 list_temp[30] += 1
                 list_groups.append(30)
             elif split == "H":

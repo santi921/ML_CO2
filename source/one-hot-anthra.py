@@ -1,5 +1,5 @@
 from re import I
-import joblib, argparse, uuid, sigopt, random
+import argparse, random
 import numpy as np
 import pandas as pd
 import scipy as sp
@@ -22,6 +22,7 @@ from xgboost import XGBRegressor
 from boruta import BorutaPy
 
 from utils.tensorflow_util import *
+from utils.helpers import anthra_check
 
 import os
 import random
@@ -33,24 +34,6 @@ from rdkit import Chem
 
 #from utils.sklearn_util import *
 from utils.genetic_util import *
-
-
-def anthra_check(mol_smiles):
-
-    mol = Chem.MolFromSmiles(mol_smiles)
-    res_1 = []
-    anthra = Chem.MolFromSmiles("O=C1c2ccccc2C(=O)c3ccccc13")
-
-    frag_list = []
-
-    success = 0
-    res1, unmatched = rdRGD.RGroupDecompose([anthra], [mol], asSmiles=True)
-
-    if len(res1) != 0:
-        frag_list.append(res1)
-        success = 1
-    return frag_list
-
 
 
 def get_one_hot_data():
@@ -187,24 +170,31 @@ def get_one_hot_data():
             elif split == "N(C)C" or split == "CNC":
                 list_temp[21] += 1
                 list_groups.append(21)
+
             elif split == "S":
                 list_temp[22] += 1
                 list_groups.append(22)
+
             elif split == "SC" or split == "CS":
                 list_temp[23] += 1
                 list_groups.append(23)
+
             elif split == "S(=O)C" or split == "CS(=O)":
                 list_temp[24] += 1
                 list_groups.append(24)
+
             elif split == "S(=O)(=O)O" or split == "O=S(=O)(O)":
                 list_temp[25] += 1
                 list_groups.append(25)
+
             elif split == "S(=O)(=O)C" or split == "CS(=O)(=O)":
                 list_temp[26] += 1
                 list_groups.append(26)
+
             elif split == "S(=O)(=O)OC" or split == "COS(=O)(=O)":
                 list_temp[27] += 1
                 list_groups.append(27)
+                
             else:
                 fail += 1
                 add = False

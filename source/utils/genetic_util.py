@@ -19,11 +19,11 @@ def random_mutation_one_hot(one_hot, mut_chance=0.2):
 
     mutation_point = np.random.randint(0, len(one_hot))
     mutation_draw = np.random.random()
-    #mutation_type = np.random.randint(0, len(one_hot[0]))
+    # mutation_type = np.random.randint(0, len(one_hot[0]))
 
     if mutation_draw < mut_chance:
         hot_loc = np.argmax(one_hot)
-        if(np.sum(np.array(one_hot)) == 4):
+        if np.sum(np.array(one_hot)) == 4:
             one_hot[hot_loc] -= 1
 
         one_hot[mutation_point] = 1
@@ -54,20 +54,20 @@ def cross(one_hot_1, one_hot_2):
 
 
 def cross_one_hot(one_hot_1, one_hot_2):
-    
+
     cross_point = np.random.randint(0, len(one_hot_1))
     temp = one_hot_1[:cross_point]
     temp_2 = one_hot_2[:cross_point]
     [temp.append(i) for i in one_hot_2[cross_point:]]
-    [temp_2.append(i) for i in one_hot_1[cross_point:] ]
+    [temp_2.append(i) for i in one_hot_1[cross_point:]]
     return temp, temp_2
 
 
-def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
+def draw_from_pop_dist(pop_loss, quinone_tf, boltz=False):
     total_loss = 0
     k = 0.05
 
-    if(boltz == True):
+    if boltz == True:
         try:
             for ind, i in enumerate(pop_loss):
                 total_loss += np.exp(i / k) + quinone_tf[ind]
@@ -92,7 +92,7 @@ def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
 
     while track < draw:
         ind += 1
-        if(boltz):
+        if boltz:
             track += np.exp(pop_loss[ind] / k)
         else:
             track += pop_loss[ind]
@@ -101,11 +101,11 @@ def draw_from_pop_dist(pop_loss, quinone_tf, boltz = False):
     return ind
 
 
-def draw_from_pop_dist_no_tf(pop_loss, boltz = True):
+def draw_from_pop_dist_no_tf(pop_loss, boltz=True):
     total_loss = 0
     k = 0.2
 
-    if(boltz == True):
+    if boltz == True:
         try:
             for ind, i in enumerate(pop_loss):
                 total_loss += np.exp(i / k)
@@ -114,7 +114,6 @@ def draw_from_pop_dist_no_tf(pop_loss, boltz = True):
 
             for ind, i in enumerate(pop_loss):
                 total_loss += np.exp(i[0] / k)
-
 
             track = np.exp(pop_loss[0] / k)
     else:
@@ -128,7 +127,7 @@ def draw_from_pop_dist_no_tf(pop_loss, boltz = True):
 
     while track < draw:
         ind += 1
-        if(boltz):
+        if boltz:
             track += np.exp(pop_loss[ind] / k)
         else:
             track += pop_loss[ind]

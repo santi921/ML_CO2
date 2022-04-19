@@ -1,5 +1,6 @@
 import sklearn.utils.fixes
 from numpy.ma import MaskedArray
+
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
 from datetime import datetime
@@ -16,33 +17,49 @@ from skopt.searchcv import BayesSearchCV
 from skopt.callbacks import DeadlineStopper, CheckpointSaver
 from skopt.space import Real, Integer
 
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score,\
-    make_scorer
+from sklearn.metrics import (
+    mean_squared_error,
+    mean_absolute_error,
+    r2_score,
+    make_scorer,
+)
 
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV,\
-    ShuffleSplit, cross_val_score
+from sklearn.model_selection import (
+    train_test_split,
+    GridSearchCV,
+    RandomizedSearchCV,
+    ShuffleSplit,
+    cross_val_score,
+)
 
 csv_loc_rand = "../data/train/rand.csv"
 csv_loc_bayes = "../data/train/bayes.csv"
 
+
 def xgboost(x, y, scale, dict=None):
-    
+
     x = np.array(x)
     y = np.array(y)
     try:
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
     except:
         x = list(x)
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    if(dict == None):
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
+    if dict == None:
         params = {
             "colsample_bytree": 0.58,
             "learning_rate": 0.1,
-            "max_depth": 5, "gamma": 0.00,
+            "max_depth": 5,
+            "gamma": 0.00,
             "lambda": 0.0,
             "alpha": 0.2,
             "eta": 0.1,
-            "n_estimators": 5000}
+            "n_estimators": 5000,
+        }
     else:
         params = {}
         params["colsample_bytree"] = dict["colsample_bytree"]
@@ -53,7 +70,9 @@ def xgboost(x, y, scale, dict=None):
         params["eta"] = dict["eta"]
         params["n_estimators"] = dict["n_estimators"]
 
-    reg = xgb.XGBRegressor(**params, objective="reg:squarederror", tree_method="gpu_hist")
+    reg = xgb.XGBRegressor(
+        **params, objective="reg:squarederror", tree_method="gpu_hist"
+    )
 
     t1 = time.time()
     # non grid
@@ -80,22 +99,30 @@ def xgboost(x, y, scale, dict=None):
 
     return reg
 
+
 def xgboost_grid(x, y):
     try:
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
     except:
         x = list(x)
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
 
-    params = {"objective": ['reg:squarederror'],
-              "colsample_bytree": [0.25, 0.5, 0.75],
-              "learning_rate": [0.01, 0.1, 0.2, 0.3],
-              "max_depth": [10, 20, 50], "gamma": [i * 0.05 for i in range(0, 5)],
-              "lambda": [i * 0.05 for i in range(0, 4)],
-              "alpha": [i * 0.05 for i in range(0, 4)],
-              "eta": [i * 0.05 for i in range(0, 4)],
-              "n_estimators": [400, 4000],
-              "tree_method": ["gpu_hist"]}
+    params = {
+        "objective": ["reg:squarederror"],
+        "colsample_bytree": [0.25, 0.5, 0.75],
+        "learning_rate": [0.01, 0.1, 0.2, 0.3],
+        "max_depth": [10, 20, 50],
+        "gamma": [i * 0.05 for i in range(0, 5)],
+        "lambda": [i * 0.05 for i in range(0, 4)],
+        "alpha": [i * 0.05 for i in range(0, 4)],
+        "eta": [i * 0.05 for i in range(0, 4)],
+        "n_estimators": [400, 4000],
+        "tree_method": ["gpu_hist"],
+    }
 
     xgb_temp = xgb.XGBRegressor()
     reg = GridSearchCV(xgb_temp, params, verbose=5, cv=3)
@@ -103,25 +130,33 @@ def xgboost_grid(x, y):
     time_to_stop = 60 * 60
     ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost.pkl"
     checkpoint_callback = CheckpointSaver(ckpt_loc)
-    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
+    reg.fit(
+        x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback]
+    )
     print(reg.best_params_)
     print(reg.best_score_)
     return reg
 
-def xgboost_bayes_basic(x, y, csv_loc= "../data/train/bayes.csv"):
+
+def xgboost_bayes_basic(x, y, csv_loc="../data/train/bayes.csv"):
 
     global csv_loc_bayes
     csv_loc_bayes = csv_loc
 
     try:
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
     except:
         x = list(x)
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=42
+        )
 
     xgb_temp = xgb.XGBRegressor()
     reg = BayesSearchCV(
-        xgb_temp, {
+        xgb_temp,
+        {
             "colsample_bytree": Real(0.5, 0.99),
             "max_depth": Integer(5, 25),
             "lambda": Real(0, 0.25),
@@ -131,10 +166,12 @@ def xgboost_bayes_basic(x, y, csv_loc= "../data/train/bayes.csv"):
             "gamma": Real(0, 0.1),
             "n_estimators": Integer(500, 5000),
             "objective": ["reg:squarederror"],
-            "tree_method": ["gpu_hist"]
+            "tree_method": ["gpu_hist"],
         },
         n_iter=10000,
-        verbose=4, cv=3)
+        verbose=4,
+        cv=3,
+    )
 
     time_to_stop = 60 * 60 * 47
 
@@ -145,16 +182,16 @@ def xgboost_bayes_basic(x, y, csv_loc= "../data/train/bayes.csv"):
     hour = now.strftime("%H")
     minute = now.strftime("%M")
     sec = now.strftime("%S")
-    #ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost" + str(year) + "_"+ str(month) + "_" + str(day) + "_" + \
+    # ckpt_loc = "../data/train/bayes/ckpt_bayes_xgboost" + str(year) + "_"+ str(month) + "_" + str(day) + "_" + \
     #           str(hour) + "_" + str(minute) + "_" + str(sec) + ".pkl"
-    #checkpoint_callback = CheckpointSaver(ckpt_loc)
-    #reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
-
-
+    # checkpoint_callback = CheckpointSaver(ckpt_loc)
+    # reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), checkpoint_callback])
 
     custom_scorer = custom_skopt_scorer
-    reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop), custom_scorer(x,y)])
-    #reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop)])
+    reg.fit(
+        x_train, y_train, callback=[DeadlineStopper(time_to_stop), custom_scorer(x, y)]
+    )
+    # reg.fit(x_train, y_train, callback=[DeadlineStopper(time_to_stop)])
 
     score = str(mean_squared_error(reg.predict(x_test), y_test))
     print("MSE score:   " + str(score))
@@ -164,7 +201,8 @@ def xgboost_bayes_basic(x, y, csv_loc= "../data/train/bayes.csv"):
     print("r2 score:   " + str(score))
     return reg
 
-def xgboost_rand(x, y, csv_loc = "../data/train/rand.csv"):
+
+def xgboost_rand(x, y, csv_loc="../data/train/rand.csv"):
     global csv_loc_rand
     csv_loc_rand = csv_loc
 
@@ -174,18 +212,27 @@ def xgboost_rand(x, y, csv_loc = "../data/train/rand.csv"):
         x = list(x)
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
 
-    params = {"colsample_bytree": stats.uniform(0.2, 0.8),
-              "learning_rate": stats.uniform(0, 0.5),
-              "max_depth": stats.randint(5, 25),
-              "gamma": stats.uniform(0, 0.1),
-              "lambda": stats.uniform(0.1, 0.2),
-              "alpha": stats.uniform(0.0, 0.2),
-              "eta": stats.uniform(0.0, 0.2),
-              "n_estimators": stats.randint(300,2000)}
+    params = {
+        "colsample_bytree": stats.uniform(0.2, 0.8),
+        "learning_rate": stats.uniform(0, 0.5),
+        "max_depth": stats.randint(5, 25),
+        "gamma": stats.uniform(0, 0.1),
+        "lambda": stats.uniform(0.1, 0.2),
+        "alpha": stats.uniform(0.0, 0.2),
+        "eta": stats.uniform(0.0, 0.2),
+        "n_estimators": stats.randint(300, 2000),
+    }
 
-    xgb_temp = xgb.XGBRegressor(objective = 'reg:squarederror', tree_method= "gpu_hist")
-    reg = RandomizedSearchCV(xgb_temp, scoring = custom_sklearn_scorer , param_distributions = params, verbose=3, cv=3, n_iter = 5000)
-    #reg = RandomizedSearchCV(xgb_temp , param_distributions = params, verbose=3, cv=3)
+    xgb_temp = xgb.XGBRegressor(objective="reg:squarederror", tree_method="gpu_hist")
+    reg = RandomizedSearchCV(
+        xgb_temp,
+        scoring=custom_sklearn_scorer,
+        param_distributions=params,
+        verbose=3,
+        cv=3,
+        n_iter=5000,
+    )
+    # reg = RandomizedSearchCV(xgb_temp , param_distributions = params, verbose=3, cv=3)
 
     reg.fit(x_train, y_train)
 
@@ -194,31 +241,37 @@ def xgboost_rand(x, y, csv_loc = "../data/train/rand.csv"):
 
     return reg
 
+
 def xgboost_bayes_sigopt(x, y):
 
-    params = {"objective": "reg:squarederror", "tree_method": "gpu_hist",
-         "colsample_bytree": sigopt.get_parameter("colsample_bytree", default = 0.5),
-         "max_depth": sigopt.get_parameter("max_depth", default = 10),
-         "lambda": sigopt.get_parameter("lambda", default = 0.0),
-         "learning_rate": sigopt.get_parameter("learning_rate", default = 0.1),
-         "alpha": sigopt.get_parameter("alpha", default = 0.0),
-         "eta": sigopt.get_parameter("eta", default =0.01),
-         "gamma": sigopt.get_parameter("gamma", default = 0),
-         "n_estimators": sigopt.get_parameter("n_estimators", default= 200)}
+    params = {
+        "objective": "reg:squarederror",
+        "tree_method": "gpu_hist",
+        "colsample_bytree": sigopt.get_parameter("colsample_bytree", default=0.5),
+        "max_depth": sigopt.get_parameter("max_depth", default=10),
+        "lambda": sigopt.get_parameter("lambda", default=0.0),
+        "learning_rate": sigopt.get_parameter("learning_rate", default=0.1),
+        "alpha": sigopt.get_parameter("alpha", default=0.0),
+        "eta": sigopt.get_parameter("eta", default=0.01),
+        "gamma": sigopt.get_parameter("gamma", default=0),
+        "n_estimators": sigopt.get_parameter("n_estimators", default=200),
+    }
 
     xgb_reg = xgb.XGBRegressor(**params)
 
     return xgb_reg
 
+
 def evaluate_model(reg, x, y):
 
     cv = ShuffleSplit(n_splits=3)
-    cv_mse = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_squared_error")
-    cv_mae = cross_val_score(reg, x, y, cv=cv, scoring = "neg_mean_absolute_error")
-    cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring = "r2")
+    cv_mse = cross_val_score(reg, x, y, cv=cv, scoring="neg_mean_squared_error")
+    cv_mae = cross_val_score(reg, x, y, cv=cv, scoring="neg_mean_absolute_error")
+    cv_r2 = cross_val_score(reg, x, y, cv=cv, scoring="r2")
     return np.mean(cv_mse), np.mean(cv_mae), np.mean(cv_r2)
 
-def custom_sklearn_scorer(reg,x,y):
+
+def custom_sklearn_scorer(reg, x, y):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
     reg.fit(x_train, y_train)
@@ -229,7 +282,7 @@ def custom_sklearn_scorer(reg,x,y):
     mean_absolute_error = mean_absolute_error(y_test, y_pred)
     r2_score = r2_score(y_test, y_pred)
 
-    alpha =  reg.get_params()["reg_alpha"]
+    alpha = reg.get_params()["reg_alpha"]
     lamb = reg.get_params()["reg_lambda"]
     learn_rate = reg.get_params()["learning_rate"]
     colsamples = reg.get_params()["colsample_bytree"]
@@ -241,14 +294,36 @@ def custom_sklearn_scorer(reg,x,y):
     mae = mean_absolute_error
     r2 = r2_score
 
-    str_csv = str(alpha) + ", " + str(colsamples) + ", " + str(eta) + ", " + str(gamma) + ", " \
-              + str(lamb) + ", " + str(learn_rate) + ", " + str(max_depth) + ", " + str(n_estimators) \
-              + ", " + str(mse) + ", " + str(mae) + ", " + str(r2) + "\n"
+    str_csv = (
+        str(alpha)
+        + ", "
+        + str(colsamples)
+        + ", "
+        + str(eta)
+        + ", "
+        + str(gamma)
+        + ", "
+        + str(lamb)
+        + ", "
+        + str(learn_rate)
+        + ", "
+        + str(max_depth)
+        + ", "
+        + str(n_estimators)
+        + ", "
+        + str(mse)
+        + ", "
+        + str(mae)
+        + ", "
+        + str(r2)
+        + "\n"
+    )
 
-    with open(csv_loc_rand, 'a') as fd:
+    with open(csv_loc_rand, "a") as fd:
         fd.write(str_csv)
 
     return np.mean(mean_squared_error)
+
 
 class custom_skopt_scorer(object):
     def __init__(self, x, y):
@@ -260,14 +335,22 @@ class custom_skopt_scorer(object):
         from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
         dict = {
-            "objective":"reg:squarederror", "tree_method":"gpu_hist",
-             "alpha":res["x"][0], "colsample_bytree":res["x"][1],"eta":res["x"][2],
-            "gamma":res["x"][3], "lambda": res["x"][4], "learning_rate":res["x"][5],
-            "max_depth":res["x"][6],"n_estimators":res["x"][7]
+            "objective": "reg:squarederror",
+            "tree_method": "gpu_hist",
+            "alpha": res["x"][0],
+            "colsample_bytree": res["x"][1],
+            "eta": res["x"][2],
+            "gamma": res["x"][3],
+            "lambda": res["x"][4],
+            "learning_rate": res["x"][5],
+            "max_depth": res["x"][6],
+            "n_estimators": res["x"][7],
         }
         reg = xgb.XGBRegressor(**dict)
 
-        x_train, x_test, y_train, y_test = train_test_split(self.x, self.y, test_size=0.2)
+        x_train, x_test, y_train, y_test = train_test_split(
+            self.x, self.y, test_size=0.2
+        )
         reg.fit(x_train, y_train)
         y_pred = np.array(reg.predict(x_test))
 
@@ -284,11 +367,31 @@ class custom_skopt_scorer(object):
         mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
 
-        str_csv = str(alpha) + ", " + str(colsamples) + ", " + str(eta) + ", " + str(gamma) + ", " \
-                  + str(lamb) + ", " + str(learn_rate) + ", " + str(max_depth) + ", " + str(n_estimators) \
-                  + ", " + str(mse) + ", " + str(mae) + "," + str(r2) + "\n"
-        with open(self.dir, 'a') as fd:
+        str_csv = (
+            str(alpha)
+            + ", "
+            + str(colsamples)
+            + ", "
+            + str(eta)
+            + ", "
+            + str(gamma)
+            + ", "
+            + str(lamb)
+            + ", "
+            + str(learn_rate)
+            + ", "
+            + str(max_depth)
+            + ", "
+            + str(n_estimators)
+            + ", "
+            + str(mse)
+            + ", "
+            + str(mae)
+            + ","
+            + str(r2)
+            + "\n"
+        )
+        with open(self.dir, "a") as fd:
             fd.write(str_csv)
 
         return 0
-
