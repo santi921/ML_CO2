@@ -3,14 +3,10 @@ from numpy.ma import MaskedArray
 
 sklearn.utils.fixes.MaskedArray = MaskedArray
 
-from boruta import BorutaPy
 import numpy as np
 
-import time, sigopt
-from sigopt import Connection
-from skopt.callbacks import DeadlineStopper, CheckpointSaver
-from skopt.searchcv import BayesSearchCV
-from skopt.space import Real, Integer
+import time 
+
 
 from sklearn.svm import SVR
 from sklearn.preprocessing import scale
@@ -42,6 +38,8 @@ def evaluate_model(reg, x, y):
 
 
 def bayes_sigopt(x, y, method="sgd"):
+    import sigopt
+    from sigopt import Connection
 
     conn = Connection(client_token="BQQYYDTUYJASQCFMUKVLJJEAWAESEKTAHTFKSBHTVBACYTDZ")
     if method == "grad":
@@ -174,7 +172,10 @@ def bayes_sigopt(x, y, method="sgd"):
 
 
 def bayes(x, y, method="sgd", des="rdkit"):
-
+    from skopt.callbacks import DeadlineStopper, CheckpointSaver
+    from skopt.searchcv import BayesSearchCV
+    from skopt.space import Real, Integer
+    
     if method == "nn":
         print(".........neural network optimization selected.........")
         params = {
@@ -877,6 +878,7 @@ def sk_nn(x, y, scale):
 
 
 def boruta(x, y):
+    from boruta import BorutaPy
 
     params = {
         "max_depth": 30,

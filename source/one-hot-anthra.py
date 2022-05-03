@@ -34,6 +34,7 @@ from rdkit import Chem
 
 #from utils.sklearn_util import *
 from utils.genetic_util import *
+from utils.helpers import anthra_check
 
 
 def get_one_hot_data():

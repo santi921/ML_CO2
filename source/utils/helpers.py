@@ -256,8 +256,6 @@ def layer(dir="../data/sdf/DB/"):
     layer = np.array(layer)
     return names, layer, homo, homo1, diff
 
-# TODO: multiprocess all of this
-# this script converts xyz files to rdkit/openbabel-readable sdf
 # Input: not implemented here but a directory with xyz files
 # Input: directory of xyz files
 # Output: None, saves SDF type files to and sdf folder for later
